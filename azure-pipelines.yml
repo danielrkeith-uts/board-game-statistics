@@ -18,10 +18,10 @@ steps:
 
 - task: JavaToolInstaller@1
   inputs:
-    versionSpec: '24'
+    versionSpec: '21'
     jdkArchitectureOption: 'x64'
     jdkSourceOption: 'PreInstalled'
-  displayName: 'Install Java 24'
+  displayName: 'Install Java 21'
 
 - script: |
     npm --prefix board-game-statistics install
