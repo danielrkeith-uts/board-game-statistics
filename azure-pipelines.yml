@@ -14,26 +14,31 @@ steps:
 - task: NodeTool@0
   inputs:
     versionSpec: '20.x'
-  displayName: 'Install Node.js'
+  displayName: 'Frontend - Install Node.js'
+
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: 'board-game-statistics'
+  displayName: 'Frontend - Install'
+
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: 'board-game-statistics'
+    customCommand: 'run build'
+  displayName: 'Frontend - Build'
 
 - task: JavaToolInstaller@1
   inputs:
     versionSpec: '21'
     jdkArchitectureOption: 'x64'
     jdkSourceOption: 'PreInstalled'
-  displayName: 'Install Java 21'
-
-- script: |
-    npm --prefix board-game-statistics install
-  displayName: 'Frontend - install'
-
-- script: |
-    npm --prefix board-game-statistics run build
-  displayName: 'Frontend - build'
+  displayName: 'Backend - Install Java 21'
 
 - task: Maven@4
   inputs:
-    mavenPomFile: 'pom.xml'
+    mavenPomFile: 'board-game-statistics-api/pom.xml'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
@@ -41,4 +46,4 @@ steps:
     mavenAuthenticateFeed: false
     effectivePomSkip: false
     sonarQubeRunAnalysis: false
-  displayName: 'Backend - package'
+  displayName: 'Backend - Package'
