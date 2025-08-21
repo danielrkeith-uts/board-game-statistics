@@ -24,6 +24,8 @@ steps:
     npm --prefix board-game-statistics run build
   displayName: 'Frontend - build'
 
-- script: |
-    mvn -f board-game-statistics-api package
-  displayName: 'Backend - build and test'
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'board-game-statistics-api/pom.xml'
+    goals: 'package'
+  displayName: 'Backend - package'
