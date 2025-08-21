@@ -18,5 +18,12 @@ steps:
 
 - script: |
     npm --prefix board-game-statistics install
+  displayName: 'Frontend - install'
+
+- script: |
     npm --prefix board-game-statistics run build
-  displayName: 'Frontend - install and build'
+  displayName: 'Frontend - build'
+
+-script: |
+    mvn -f board-game-statistics-api package
+  displayName: 'Backend - build and test'
