@@ -1,0 +1,49 @@
+
+# Node.js with React
+# Build a Node.js project that uses React.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '20.x'
+  displayName: 'Frontend - Install Node.js'
+
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: 'board-game-statistics'
+  displayName: 'Frontend - Install'
+
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: 'board-game-statistics'
+    customCommand: 'run build'
+  displayName: 'Frontend - Build'
+
+- task: JavaToolInstaller@1
+  inputs:
+    versionSpec: '21'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
+  displayName: 'Backend - Install Java 21'
+
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'board-game-statistics-api/pom.xml'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+  displayName: 'Backend - Package'
