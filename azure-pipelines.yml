@@ -24,6 +24,6 @@ steps:
     npm --prefix board-game-statistics run build
   displayName: 'Frontend - build'
 
--script: |
+- script: |
     mvn -f board-game-statistics-api package
   displayName: 'Backend - build and test'
