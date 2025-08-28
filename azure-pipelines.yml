@@ -10,10 +10,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-variables:
-  BGS_DB_PASSWORD: $(DB_PASSWORD)
-  BGS_ADMIN_PASSWORD: $(ADMIN_PASSWORD)
-
 steps:
 - task: NodeTool@0
   inputs:
@@ -41,6 +37,9 @@ steps:
   displayName: 'Backend - Install Java 21'
 
 - task: Maven@4
+  env:
+    BGS_DB_PASSWORD: $(DB_PASSWORD)
+    BGS_ADMIN_PASSWORD: $(ADMIN_PASSWORD)
   inputs:
     mavenPomFile: 'board-game-statistics-api/pom.xml'
     publishJUnitResults: true
