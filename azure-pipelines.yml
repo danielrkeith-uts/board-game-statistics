@@ -11,8 +11,8 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  BGS_DB_PASSWORD: $(BGS_DB_PASSWORD)
-  BGS_ADMIN_PASSWORD: $(BGS_ADMIN_PASSWORD)
+  BGS_DB_PASSWORD: $(DB_PASSWORD)
+  BGS_ADMIN_PASSWORD: $(ADMIN_PASSWORD)
 
 steps:
 - task: NodeTool@0
