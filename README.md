@@ -33,7 +33,7 @@ To log in with the admin user: `psql -U <username>`
 2. Run `CREATE DATABASE board_game_statistics_local OWNER bgs_admin_local;`
 
 Now run the backend API, and use Postman (or some other tool) to rebuild the schema using the API:
-1. Create a `POST` request to `http://localhost:8000/api/admin/db/rebuild-schema`
+1. Create a `POST` request to `http://localhost:8080/api/admin/db/rebuild-schema`
 2. Include a header with key `ADMIN-AUTHENTICATION` and value `<BGS_ADMIN_PASSWORD>`
    * Replace `<BGS_ADMIN_PASSWORD>` with the corresponding environment variable
 
