@@ -1,4 +1,4 @@
-package com.asd.board_game_statistics_api.config;
+package com.asd.board_game_statistics_api.admin;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

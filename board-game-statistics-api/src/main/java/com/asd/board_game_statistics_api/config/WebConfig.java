@@ -1,5 +1,6 @@
 package com.asd.board_game_statistics_api.config;
 
+import com.asd.board_game_statistics_api.admin.AdminAuthenticationInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
