@@ -4,6 +4,6 @@ import com.asd.board_game_statistics_api.account.exceptions.CreateAccountExcepti
 
 public interface IAccountService {
 
-    void createAccount(String username, String password, String firstName, String lastName) throws CreateAccountException;
+    void createAccount(String email, String password, String firstName, String lastName) throws CreateAccountException;
 
 }

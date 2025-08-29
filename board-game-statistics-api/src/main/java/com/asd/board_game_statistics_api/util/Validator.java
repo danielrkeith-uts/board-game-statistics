@@ -6,7 +6,11 @@ public class Validator {
 
     public static final int MINIMUM_PASSWORD_LENGTH = 8;
 
-    public static boolean isPasswordValid(String password) {
+    public static boolean isValidEmail(String email) {
+        return Pattern.compile("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$").matcher(email).matches();
+    }
+
+    public static boolean isValidPassword(String password) {
         Pattern letter = Pattern.compile("[a-zA-z]");
         Pattern digit = Pattern.compile("[0-9]");
         Pattern special = Pattern.compile ("[^a-zA-Z0-9]");
@@ -16,4 +20,5 @@ public class Validator {
                 && special.matcher(password).find()
                 && password.length() >= MINIMUM_PASSWORD_LENGTH;
     }
+
 }
