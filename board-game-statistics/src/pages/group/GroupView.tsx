@@ -1,4 +1,3 @@
-import React from 'react'
 import GroupDropDown from './GroupDropDown'
 import './styles.css'
 
