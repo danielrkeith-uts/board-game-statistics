@@ -11859,5 +11859,9 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+.mainContainer {
+  height: calc(100vh - 1.875rem - 0.5rem * 2 - 0.3125rem * 2);
+  background: #000;
+}
 
 /*# sourceMappingURL=custom.css.map */
