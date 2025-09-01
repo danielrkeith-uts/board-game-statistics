@@ -4,7 +4,7 @@ import { AccountContext } from "../../context/AccountContext";
 const GamesView = () => {
   const account = useContext(AccountContext);
 
-  return account && (
+  return account?.firstName && (
     <p>{account.firstName} waz here</p>
   )
 }
