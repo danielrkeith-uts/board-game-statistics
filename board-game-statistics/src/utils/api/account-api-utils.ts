@@ -13,6 +13,10 @@ export const apiLogin = (email: string, password: string): Promise<boolean> =>
             throw new Error(`Error logging in: ${res.statusText}`);
         })
 
+export const apiLogout = (): Promise<Response> => 
+    apiPost("/account/logout")
+
+
 export const apiGetLoggedInAccount = (): Promise<Account> => 
     apiGet("/account/me")
         .then(res => {

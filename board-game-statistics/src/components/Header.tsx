@@ -4,6 +4,12 @@ import '../css/custom.css'
 import './styles.css'
 import { useContext } from 'react'
 import { AccountContext } from '../AccountContext'
+import { apiLogout } from '../utils/api/account-api-utils'
+
+const logout = () => 
+	apiLogout()
+		.then(() => window.location.replace("/"));
+
 
 const Header = () => {
 	const account = useContext(AccountContext);
@@ -24,7 +30,7 @@ const Header = () => {
 				<ul className='navbar-nav'>
 					<li className='nav-item'>
 						{account ? (
-							<Link className='nav-link' to={LOGIN_PAGE_URL}>Logout</Link>
+							<Link className='nav-link' to="#" onClick={logout}>Logout</Link>
 						) : (
 							<Link className='nav-link' to={LOGIN_PAGE_URL}>Login</Link>
 						)}
