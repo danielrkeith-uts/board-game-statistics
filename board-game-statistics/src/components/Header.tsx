@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom'
 import { GAMES_PAGE_URL, GROUPS_PAGE_URL, HOME_PAGE_URL, LOGIN_PAGE_URL } from '../utils/constants'
-import '../css/custom.css'
-import './styles.css'
 
 const Header = () => {
 	return (
