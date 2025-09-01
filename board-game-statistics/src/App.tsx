@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom"
 import { CREATE_ACCOUNT_PAGE_URL, GAMES_PAGE_URL, GROUPS_PAGE_URL, HOME_PAGE_URL, LOGIN_PAGE_URL, MANAGE_ACCOUNT_PAGE_URL } from "./utils/constants"
 import HomeView from "./pages/home/HomeView"
 import GroupView from "./pages/group/GroupView"
-import { LoginView } from "./pages/login/LoginView"
+import LoginView from "./pages/login/LoginView"
 
 function App() {
   return (
