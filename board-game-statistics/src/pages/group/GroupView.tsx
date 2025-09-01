@@ -5,7 +5,7 @@ import GroupHomeView from './GroupHomeView'
 const GroupView = () => {
   return (
     <>
-      <div className="container mt-4 px-0 d-flex justify-content-end gap-3">
+      <div className="container px-0 d-flex justify-content-end gap-3">
         <button className='btn btn-sm btn-success'>Create new group</button>
         <button className='btn btn-sm btn-danger'>Leave group</button>
       </div>
