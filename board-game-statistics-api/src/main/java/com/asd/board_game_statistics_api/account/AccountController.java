@@ -2,6 +2,8 @@ package com.asd.board_game_statistics_api.account;
 
 import com.asd.board_game_statistics_api.account.dto.LoginRequest;
 import com.asd.board_game_statistics_api.account.dto.CreateAccountRequest;
+import com.asd.board_game_statistics_api.account.dto.MeResponse;
+import com.asd.board_game_statistics_api.model.Account;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +35,7 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
+    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password());
 
         Authentication authentication = authenticationManager.authenticate(authToken);
@@ -49,17 +51,16 @@ public class AccountController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request) {
+    public ResponseEntity<String> logout(HttpServletRequest request) {
         request.getSession().invalidate();
         SecurityContextHolder.clearContext();
         return ResponseEntity.ok("Logged out");
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(Map.of(
-                "email", userDetails.getUsername()
-        ));
+    public ResponseEntity<MeResponse> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        Account account = accountService.account(userDetails.getUsername());
+        return ResponseEntity.ok(new MeResponse(account.firstName(), account.lastName(), account.email()));
     }
 
 }

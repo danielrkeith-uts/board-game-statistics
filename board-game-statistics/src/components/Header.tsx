@@ -1,7 +1,19 @@
 import { Link } from 'react-router-dom'
 import { GAMES_PAGE_URL, GROUPS_PAGE_URL, HOME_PAGE_URL, LOGIN_PAGE_URL } from '../utils/constants'
+import '../css/custom.css'
+import './styles.css'
+import { useContext } from 'react'
+import { AccountContext } from '../context/AccountContext'
+import { apiLogout } from '../utils/api/account-api-utils'
+
+const logout = () => 
+	apiLogout()
+		.then(() => window.location.replace("/"));
+
 
 const Header = () => {
+	const account = useContext(AccountContext);
+
 	return (
 		<nav className='navbar navbar-expand bg-primary-subtle'>
 			<div className="container">
@@ -16,7 +28,13 @@ const Header = () => {
 					</ul>
 				</div>
 				<ul className='navbar-nav'>
-					<li className='nav-item'><Link className='nav-link' to={LOGIN_PAGE_URL}>Login</Link></li>
+					<li className='nav-item'>
+						{account ? (
+							<Link className='nav-link' to="#" onClick={logout}>Logout</Link>
+						) : (
+							<Link className='nav-link' to={LOGIN_PAGE_URL}>Login</Link>
+						)}
+					</li>
 				</ul>
 			</div>
 		</nav>
