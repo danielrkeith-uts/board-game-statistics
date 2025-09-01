@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+$primary: rgb(41, 237, 240);
+$success: rgb(48, 215, 48);
+$danger: rgb(255, 78, 78);
+
+$font-family-base: "Montserrat";
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+.mainContainer {
+    height: calc(100vh - #{$navbar-brand-height} - #{$navbar-padding-y} * 2 - #{$navbar-brand-padding-y} * 2);
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+}
