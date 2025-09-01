@@ -29,6 +29,20 @@ steps:
     customCommand: 'run build'
   displayName: 'Frontend - Build'
 
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: 'board-game-statistics'
+    customCommand: 'run prettier'
+  displayName: 'Frontend - Prettier'
+
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: 'board-game-statistics'
+    customCommand: 'run lint'
+  displayName: 'Frontend - Lint'
+
 - task: JavaToolInstaller@1
   inputs:
     versionSpec: '21'
