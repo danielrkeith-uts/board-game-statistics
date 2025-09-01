@@ -1,7 +1,10 @@
-import { Tabs, Tab, Modal, Button } from 'react-bootstrap'
 import GroupHomeView from './GroupHomeView'
 import GroupDropDown from './GroupDropDown'
 import { useState } from 'react'
+import CreateGroupModal from './CreateGroupModal'
+import LeaveGroupModal from './LeaveGroupModal'
+import Tabs from 'react-bootstrap/Tabs'
+import Tab from 'react-bootstrap/Tab'
 
 const GroupView = () => {
   const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
@@ -24,7 +27,7 @@ const GroupView = () => {
     handleCloseCreateGroupModal();
   }
 
-  const handleLeaveGroup = (e: React.FormEvent) => {
+  const handleLeaveGroup = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     alert(`Leaving currently selected group`);
@@ -48,53 +51,17 @@ const GroupView = () => {
         </div>
       </div>
 
-      <Modal show={showCreateGroupModal} onHide={handleCloseCreateGroupModal}>
-        <form id="newGroupForm" onSubmit={handleCreateGroup}>
-          <Modal.Header closeButton>
-            <Modal.Title>Create new group</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-              <div className="form-floating">
-                <input
-                  type="text"
-                  className="form-control"
-                  id="groupNameInput"
-                  name="groupNameInput"
-                  placeholder="Group Name"
-                  required
-                />
-                <label htmlFor="groupNameInput">Group name</label>
-              </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseCreateGroupModal}>
-              Cancel
-            </Button>
-            <Button variant="success" type='submit'>
-              Create
-            </Button>
-          </Modal.Footer>
-        </form>
-      </Modal>
+      <CreateGroupModal
+        show={showCreateGroupModal}
+        handleClose={handleCloseCreateGroupModal}
+        onSubmit={handleCreateGroup}
+      />
 
-      <Modal show={showLeaveGroupModal} onHide={handleCloseLeaveGroupModal}>
-        <form id="newGroupForm" onSubmit={handleLeaveGroup}>
-          <Modal.Header closeButton>
-            <Modal.Title>Leave group</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-              Are you sure you want to leave *INSERT GROUP NAME HERE*?
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseLeaveGroupModal}>
-              Cancel
-            </Button>
-            <Button variant="danger" type='submit'>
-              Leave
-            </Button>
-          </Modal.Footer>
-        </form>
-      </Modal>
+      <LeaveGroupModal
+        show={showLeaveGroupModal}
+        handleClose={handleCloseLeaveGroupModal}
+        onSubmit={handleLeaveGroup}
+      />
 
       <div className="container">
         <Tabs
