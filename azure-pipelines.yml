@@ -26,13 +26,6 @@ steps:
   inputs:
     command: 'custom'
     workingDir: 'board-game-statistics'
-    customCommand: 'run build'
-  displayName: 'Frontend - Build'
-
-- task: Npm@1
-  inputs:
-    command: 'custom'
-    workingDir: 'board-game-statistics'
     customCommand: 'run prettier'
   displayName: 'Frontend - Prettier'
 
@@ -42,6 +35,13 @@ steps:
     workingDir: 'board-game-statistics'
     customCommand: 'run lint'
   displayName: 'Frontend - Lint'
+
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: 'board-game-statistics'
+    customCommand: 'run build'
+  displayName: 'Frontend - Build'
 
 - task: JavaToolInstaller@1
   inputs:
