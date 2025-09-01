@@ -4,10 +4,11 @@ import { CREATE_ACCOUNT_PAGE_URL, GAMES_PAGE_URL, GROUPS_PAGE_URL, HOME_PAGE_URL
 import HomeView from "./pages/home/HomeView"
 import GroupView from "./pages/group/GroupView"
 import LoginView from "./pages/login/LoginView"
+import { AccountContextProvider } from "./AccountContext"
 
 function App() {
   return (
-    <>
+    <AccountContextProvider>
       <Header />
       <div className="m-4">
         <Routes>
@@ -20,7 +21,7 @@ function App() {
           <Route path={CREATE_ACCOUNT_PAGE_URL} />
         </Routes>
       </div>
-    </>
+    </AccountContextProvider>
   )
 }
 

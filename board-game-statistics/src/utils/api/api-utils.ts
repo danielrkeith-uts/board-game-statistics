@@ -7,5 +7,13 @@ export const apiPost = (endpoint: string, body?: object) =>
         body: JSON.stringify(body),
         headers: {
             "Content-Type": "application/json",
-        }
+        },
+        credentials: "include"
     });
+
+export const apiGet = (endpoint: string) => 
+    fetch(baseUrl + endpoint, {
+        method: 'GET',
+        credentials: "include"
+    });
+
