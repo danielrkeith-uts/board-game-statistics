@@ -6,14 +6,14 @@ const LoginView = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const [hasInvalidCridentials, setHasInvalidCridentials] = useState(false);
+    const [hasInvalidCredentials, setHasInvalidCredentials] = useState(false);
 
     const login = () => {
         apiLogin(email, password).then(isLoggedIn => {
             if (isLoggedIn) {
                 window.location.replace("/");
             } else {
-                setHasInvalidCridentials(true);
+                setHasInvalidCredentials(true);
                 setPassword("");
             }
         })
@@ -32,18 +32,18 @@ const LoginView = () => {
                     <Form.Label>Email address</Form.Label>
                     <Form.Control type="email" placeholder="name@example.com" value={email} onChange={(e) => {
                         setEmail(e.target.value);
-                        setHasInvalidCridentials(false);
+                        setHasInvalidCredentials(false);
                     }}/>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="loginForm.password">
                     <Form.Label>Password</Form.Label>
                     <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => {
                         setPassword(e.target.value);
-                        setHasInvalidCridentials(false);
+                        setHasInvalidCredentials(false);
                     }}/>
                 </Form.Group>
-                {hasInvalidCridentials && (
-                    <p className="text-danger">Invalid login cridentials</p>
+                {hasInvalidCredentials && (
+                    <p className="text-danger">Invalid login credentials</p>
                 )}
                 <Button type="submit">Log in</Button>
             </Form>

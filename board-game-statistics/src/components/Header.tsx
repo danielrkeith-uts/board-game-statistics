@@ -3,7 +3,7 @@ import { GAMES_PAGE_URL, GROUPS_PAGE_URL, HOME_PAGE_URL, LOGIN_PAGE_URL } from '
 import '../css/custom.css'
 import './styles.css'
 import { useContext } from 'react'
-import { AccountContext } from '../AccountContext'
+import { AccountContext } from '../context/AccountContext'
 import { apiLogout } from '../utils/api/account-api-utils'
 
 const logout = () => 
