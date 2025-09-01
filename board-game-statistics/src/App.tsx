@@ -4,7 +4,7 @@ import { CREATE_ACCOUNT_PAGE_URL, GAMES_PAGE_URL, GROUPS_PAGE_URL, HOME_PAGE_URL
 import HomeView from "./pages/home/HomeView"
 import GroupView from "./pages/group/GroupView"
 import LoginView from "./pages/login/LoginView"
-import { AccountContextProvider } from "./AccountContext"
+import { AccountContextProvider } from "./context/AccountContext"
 import GamesView from "./pages/games/GamesView"
 
 function App() {

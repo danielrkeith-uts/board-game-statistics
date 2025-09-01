@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
-import { apiGetLoggedInAccount } from "./utils/api/account-api-utils";
-import type { Account } from "./utils/types";
+import { apiGetLoggedInAccount } from "../utils/api/account-api-utils";
+import type { Account } from "../utils/types";
 
 
 interface AccountContextProviderProps {

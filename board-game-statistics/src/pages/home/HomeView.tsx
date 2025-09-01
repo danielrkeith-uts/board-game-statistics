@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { CREATE_ACCOUNT_PAGE_URL } from "../../utils/constants"
 import { useContext } from "react";
-import { AccountContext } from "../../AccountContext";
+import { AccountContext } from "../../context/AccountContext";
 
 const HomeView = () => {
   const account = useContext(AccountContext);

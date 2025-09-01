@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AccountContext } from "../../AccountContext";
+import { AccountContext } from "../../context/AccountContext";
 
 const GamesView = () => {
   const account = useContext(AccountContext);
