@@ -4,13 +4,16 @@ $primary: rgb(41, 237, 240);
 $success: rgb(48, 215, 48);
 $danger: rgb(255, 78, 78);
 
-$font-family-base: "Montserrat";
+$font-family-base: 'Montserrat';
 
-@import "../../node_modules/bootstrap/scss/bootstrap";
+@import '../../node_modules/bootstrap/scss/bootstrap';
 
 .mainContainer {
-    height: calc(100vh - #{$navbar-brand-height} - #{$navbar-padding-y} * 2 - #{$navbar-brand-padding-y} * 2);
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
+	height: calc(
+		100vh - #{$navbar-brand-height} - #{$navbar-padding-y} * 2 - #{$navbar-brand-padding-y} *
+			2
+	);
+	// display: flex;
+	// justify-content: center;
+	// align-items: center;
 }
