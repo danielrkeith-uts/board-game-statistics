@@ -14,6 +14,7 @@ const LoginView = () => {
                 window.location.replace("/");
             } else {
                 setHasInvalidCridentials(true);
+                setPassword("");
             }
         })
     }
