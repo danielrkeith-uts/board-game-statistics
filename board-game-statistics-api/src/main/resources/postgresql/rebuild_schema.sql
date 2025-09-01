@@ -3,6 +3,9 @@ DROP SCHEMA IF EXISTS bgs CASCADE;
 CREATE SCHEMA bgs;
 
 CREATE TABLE bgs.account (
-    username VARCHAR(100),
-    password VARCHAR(100)
+    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(100),
+    first_name VARCHAR(100),
+    last_name VARCHAR(100)
 );

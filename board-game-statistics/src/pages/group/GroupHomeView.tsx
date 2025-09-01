@@ -1,5 +1,3 @@
-import GroupDropDown from "./GroupDropDown"
-
 const GroupHomeView = () => {
   return (
     <div className="container mt-3">
@@ -8,11 +6,7 @@ const GroupHomeView = () => {
 					className="col-3 border"
 				>
 					<div className="container vstack">
-						<GroupDropDown />
-
-						<hr />
-
-						<div className="list-group mb-3">
+						<div className="list-group mt-3">
 							<h6>Available games</h6>
 							<a href="#" className="list-group-item list-group-item-action">Game 1</a>
 							<a href="#" className="list-group-item list-group-item-action">Game 2</a>
@@ -21,25 +15,25 @@ const GroupHomeView = () => {
 					</div>
 				</div>
 				<div className="col border">
-					<table className='table'>
+					<table className='table mt-1'>
 						<thead>
 							<tr>
-									<th scope="col">Name</th>
-									<th scope="col">Date joined</th>
+                <th scope="col">Name</th>
+                <th scope="col">Date joined</th>
 							</tr>
 							</thead>
 							<tbody>
 							<tr>
-									<td>Mark Otto</td>
-									<td>03/08/2025</td>
+                <td>Mark Otto</td>
+                <td>03/08/2025</td>
 							</tr>
 							<tr>
-									<td>Jacob Thornton</td>
-									<td>05/08/2025</td>
+                <td>Jacob Thornton</td>
+                <td>05/08/2025</td>
 							</tr>
 							<tr>
-									<td>John Doe</td>
-									<td>03/08/2025</td>
+                <td>John Doe</td>
+                <td>03/08/2025</td>
 							</tr>
 						</tbody>
 					</table>
