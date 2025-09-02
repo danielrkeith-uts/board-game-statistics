@@ -92,6 +92,7 @@ export default function ManageAccountView() {
   const handleDeleteSuccess = () => {
     setSuccess('Account deleted successfully');
   };
+  const [showDelete, setShowDelete] = useState(false);
 
   return (
     <div className="container mt-4">
@@ -246,7 +247,15 @@ export default function ManageAccountView() {
                   <strong>Warning:</strong> Deleting your account will permanently
                   remove all your data and cannot be undone.
                 </div>
-                <DeleteAccountModal onDeleteSuccess={handleDeleteSuccess} />
+                <button className="btn btn-danger" onClick={() => setShowDelete(true)}>
+                  DELETE ACCOUNT
+                </button>
+                <DeleteAccountModal 
+                  show={showDelete}
+                  onClose={() => setShowDelete(false)}
+                  onDeleteSuccess={handleDeleteSuccess}
+                />
+
               </div>
             </div>
           </div>
