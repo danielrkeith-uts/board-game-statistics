@@ -1,6 +1,9 @@
 import DeleteAccountModal from "./DeleteAccountModal";
+import { useContext } from 'react';
+import { AccountContext } from '../../context/AccountContext';
 
 export default function ManageAccountView() {
+  const account = useContext(AccountContext);
   return (
     <div className="container mt-4">
       <div className="row justify-content-center">
@@ -15,11 +18,15 @@ export default function ManageAccountView() {
                 <h4>Account Information</h4>
                 <div className="row">
                   <div className="col-sm-4 fw-bold">Email:</div>
-                  <div className="col-sm-8">user@example.com</div>
+                  <div className="col-sm-8">{account?.email || 'Not available'}</div>
                 </div>
                 <div className="row">
-                  <div className="col-sm-4 fw-bold">Username:</div>
-                  <div className="col-sm-8">username</div>
+                  <div className="col-sm-4 fw-bold">First Name:</div>
+                  <div className="col-sm-8">{account?.firstName || 'Not available'}</div>
+                </div>
+                <div className="row">
+                  <div className="col-sm-4 fw-bold">Last Name:</div>
+                  <div className="col-sm-8">{account?.lastName || 'Not available'}</div>
                 </div>
               </div>
 
@@ -27,23 +34,36 @@ export default function ManageAccountView() {
                 <h4>Edit Profile</h4>
                 <form>
                   <div className="mb-3">
-                    <label className="form-label">Username</label>
+                    <label className="form-label">First Name</label>
                     <input
                       type="text"
                       className="form-control"
-                      id="username"
-                      name="username"
-                      placeholder="Enter Username"
+                      id="firstName"
+                      name="firstName"
+                      placeholder="Enter First Name"
+                      defaultValue={account?.firstName || ''}
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Last Name</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="lastName"
+                      name="lastName"
+                      placeholder="Enter Last Name"
+                      defaultValue={account?.lastName || ''}
                     />
                   </div>
                   <div className="mb-3">
                     <label className="form-label">Email</label>
                     <input
-                      type="text"
+                      type="email"
                       className="form-control"
                       id="email"
                       name="email"
                       placeholder="Enter Email"
+                      defaultValue={account?.email || ''}
                     />
                   </div>
                   <button type="submit" className="btn btn-primary">
