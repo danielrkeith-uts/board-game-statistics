@@ -2,6 +2,7 @@ import { Tabs, Tab, Modal, Button } from 'react-bootstrap'
 import GroupHomeView from './GroupHomeView'
 import GroupDropDown from './GroupDropDown'
 import { useState } from 'react'
+import MembersListView from "./MembersListView.tsx";
 
 const GroupView = () => {
   const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
@@ -110,6 +111,7 @@ const GroupView = () => {
           </Tab>
           <Tab eventKey="members" title="Members">
             Members list
+            <br/><MembersListView/>
           </Tab>
           <Tab eventKey="games" title="Games">
             Games
