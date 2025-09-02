@@ -50,8 +50,28 @@ export default function ManageAccountView() {
       return;
     }
 
+    if (newPassword === currentPassword) {
+      setError('New password must be different from current password');
+      return;
+    }
+
     if (newPassword.length < 8) {
       setError('New password must be at least 8 characters long');
+      return;
+    }
+    const hasLetter = /[A-Za-z]/.test(newPassword);
+    const hasNumber = /\d/.test(newPassword);
+    const hasSpecial = /[^A-Za-z0-9]/.test(newPassword);
+    if (!hasLetter) {
+      setError('New password must include at least one letter');
+      return;
+    }
+    if (!hasNumber) {
+      setError('New password must include at least one number');
+      return;
+    }
+    if (!hasSpecial) {
+      setError('New password must include at least one special character');
       return;
     }
 
