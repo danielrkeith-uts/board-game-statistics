@@ -17,3 +17,19 @@ export const apiGet = (endpoint: string) =>
         credentials: "include"
     });
 
+export const apiPut = (endpoint: string, body?: object) => 
+    fetch(baseUrl + endpoint, {
+        method: 'PUT',
+        body: JSON.stringify(body),
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include"
+    });
+
+export const apiDelete = (endpoint: string) => 
+    fetch(baseUrl + endpoint, {
+        method: 'DELETE',
+        credentials: "include"
+    });
+

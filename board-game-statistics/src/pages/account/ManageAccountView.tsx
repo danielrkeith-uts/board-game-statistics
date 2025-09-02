@@ -1,9 +1,78 @@
-import DeleteAccountModal from "./DeleteAccountModal";
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { AccountContext } from '../../context/AccountContext';
+import { apiUpdateAccount, apiChangePassword } from '../../utils/api/account-api-utils';
+import DeleteAccountModal from './DeleteAccountModal';
 
 export default function ManageAccountView() {
   const account = useContext(AccountContext);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  const handleUpdateProfile = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
+    const formData = new FormData(e.currentTarget);
+    const firstName = formData.get('firstName') as string;
+    const lastName = formData.get('lastName') as string;
+    const email = formData.get('email') as string;
+
+    try {
+      const success = await apiUpdateAccount(firstName, lastName, email);
+      if (success) {
+        setSuccess('Profile updated successfully!');
+        setIsEditing(false);
+        // Refresh the page to get updated data
+        window.location.reload();
+      } else {
+        setError('Failed to update profile. Please try again.');
+      }
+    } catch (err) {
+      setError('Failed to update profile. Please try again.');
+    }
+  };
+
+  const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
+    const formData = new FormData(e.currentTarget);
+    const currentPassword = formData.get('currentPassword') as string;
+    const newPassword = formData.get('newPassword') as string;
+    const confirmPassword = formData.get('confirmPassword') as string;
+
+    if (newPassword !== confirmPassword) {
+      setError('New passwords do not match');
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setError('New password must be at least 8 characters long');
+      return;
+    }
+
+    try {
+      const success = await apiChangePassword(currentPassword, newPassword);
+      if (success) {
+        setSuccess('Password changed successfully!');
+        setIsChangingPassword(false);
+        e.currentTarget.reset();
+      } else {
+        setError('Failed to change password. Please check your current password.');
+      }
+    } catch (err) {
+      setError('Failed to change password. Please try again.');
+    }
+  };
+
+  const handleDeleteSuccess = () => {
+    setSuccess('Account deleted successfully');
+  };
+
   return (
     <div className="container mt-4">
       <div className="row justify-content-center">
@@ -14,6 +83,16 @@ export default function ManageAccountView() {
             </div>
 
             <div className="card-body">
+              {error && (
+                <div className="alert alert-danger" role="alert">
+                  {error}
+                </div>
+              )}
+              {success && (
+                <div className="alert alert-success" role="alert">
+                  {success}
+                </div>
+              )}
               <div className="mb-4">
                 <h4>Account Information</h4>
                 <div className="row">
@@ -31,8 +110,19 @@ export default function ManageAccountView() {
               </div>
 
               <div className="mb-4">
-                <h4>Edit Profile</h4>
-                <form>
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <h4>Edit Profile</h4>
+                  <button
+                    type="button"
+                    className="btn btn-outline-primary btn-sm"
+                    onClick={() => setIsEditing(!isEditing)}
+                  >
+                    {isEditing ? 'Cancel' : 'Edit'}
+                  </button>
+                </div>
+                
+                {isEditing && (
+                  <form onSubmit={handleUpdateProfile}>
                   <div className="mb-3">
                     <label className="form-label">First Name</label>
                     <input
@@ -66,15 +156,27 @@ export default function ManageAccountView() {
                       defaultValue={account?.email || ''}
                     />
                   </div>
-                  <button type="submit" className="btn btn-primary">
-                    Update Profile
-                  </button>
-                </form>
+                    <button type="submit" className="btn btn-primary">
+                      Update Profile
+                    </button>
+                  </form>
+                )}
               </div>
 
               <div className="mb-4">
-                <h4>Change Password</h4>
-                <form>
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <h4>Change Password</h4>
+                  <button
+                    type="button"
+                    className="btn btn-outline-warning btn-sm"
+                    onClick={() => setIsChangingPassword(!isChangingPassword)}
+                  >
+                    {isChangingPassword ? 'Cancel' : 'Change Password'}
+                  </button>
+                </div>
+                
+                {isChangingPassword && (
+                  <form onSubmit={handleChangePassword}>
                   <div className="mb-3">
                     <label htmlFor="currentPassword" className="form-label">
                       Current Password
@@ -111,10 +213,11 @@ export default function ManageAccountView() {
                       required
                     />
                   </div>
-                  <button type="submit" className="btn btn-warning">
-                    Change Password
-                  </button>
-                </form>
+                    <button type="submit" className="btn btn-warning">
+                      Change Password
+                    </button>
+                  </form>
+                )}
               </div>
 
               <div className="border-top pt-4">
@@ -123,9 +226,7 @@ export default function ManageAccountView() {
                   <strong>Warning:</strong> Deleting your account will permanently
                   remove all your data and cannot be undone.
                 </div>
-
-                
-                <DeleteAccountModal />
+                <DeleteAccountModal onDeleteSuccess={handleDeleteSuccess} />
               </div>
             </div>
           </div>
