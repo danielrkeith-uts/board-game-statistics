@@ -7,6 +7,7 @@ export default function ManageAccountView() {
   const account = useContext(AccountContext);
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [updatingProfile, setUpdatingProfile] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -14,6 +15,7 @@ export default function ManageAccountView() {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+    setUpdatingProfile(true);
 
     const formData = new FormData(e.currentTarget);
     const firstName = formData.get('firstName') as string;
@@ -25,13 +27,17 @@ export default function ManageAccountView() {
       if (success) {
         setSuccess('Profile updated successfully!');
         setIsEditing(false);
-        // Refresh the page to get updated data
-        window.location.reload();
+        // Small delay to let the user read the success message, then refresh
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
       } else {
         setError('Failed to update profile. Please try again.');
+        setUpdatingProfile(false);
       }
     } catch (err) {
       setError('Failed to update profile. Please try again.');
+      setUpdatingProfile(false);
     }
   };
 
@@ -177,8 +183,8 @@ export default function ManageAccountView() {
                       defaultValue={account?.email || ''}
                     />
                   </div>
-                    <button type="submit" className="btn btn-primary">
-                      Update Profile
+                    <button type="submit" className="btn btn-primary" disabled={updatingProfile}>
+                      {updatingProfile ? 'Updating...' : 'Update Profile'}
                     </button>
                   </form>
                 )}
