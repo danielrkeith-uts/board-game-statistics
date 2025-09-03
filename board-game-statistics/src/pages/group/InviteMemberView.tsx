@@ -28,7 +28,7 @@ export default function InviteMemberView() {
 
     return(
         <>
-            <Button className={"btn btn-sm btn-success"} onClick={handleOpenInviteNewMemberModal}>+</Button>
+            <Button className={"btn btn-sm btn-success"} onClick={handleOpenInviteNewMemberModal}>Invite New Member</Button>
             <Modal show={showInviteNewMemberModal} onHide={handleCloseInviteNewMemberModal}>
                 <form id={"inviteNewMemberForm"} onSubmit={handleInviteSent}>
                     <Modal.Header closeButton>

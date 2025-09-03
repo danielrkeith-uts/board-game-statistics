@@ -110,15 +110,14 @@ const GroupView = () => {
             Leaderboard
           </Tab>
           <Tab eventKey="members" title="Members">
-            Members list
-            <br/><MembersListView/>
+              <MembersListView/>
           </Tab>
           <Tab eventKey="games" title="Games">
             Games
           </Tab>
-          <Tab eventKey="invite" title="Invite">
-            Invite
-          </Tab>
+          {/*<Tab eventKey="invite" title="Invite">*/}
+          {/*  Invite*/}
+          {/*</Tab>*/}
           <Tab eventKey="manage" title="Manage">
             Manage perms and kick users?
           </Tab>
