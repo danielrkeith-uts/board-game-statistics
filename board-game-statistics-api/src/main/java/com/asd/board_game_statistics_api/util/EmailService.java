@@ -1,0 +1,36 @@
+package com.asd.board_game_statistics_api.util;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+@Service
+public class EmailService{
+
+    @Autowired
+    private JavaMailSender emailSender;
+
+    public void testSendEmail() {
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        message.setFrom("noreply@boardgamestats.com");
+        message.setTo("aaron.falco2@gmail.com");
+        message.setSubject("Test");
+        message.setText("Testy testy test. Test test test.");
+
+        emailSender.send(message);
+    }
+
+
+    public void sendEmail(String to, String from, String subject, String text) {
+        SimpleMailMessage message = new SimpleMailMessage();
+
+        message.setFrom(from);
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+
+        emailSender.send(message);
+    }
+}
