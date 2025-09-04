@@ -6,6 +6,7 @@ import GroupView from "./pages/group/GroupView"
 import LoginView from "./pages/login/LoginView"
 import { AccountContextProvider } from "./context/AccountContext"
 import GamesView from "./pages/games/GamesView"
+import SignupView from "./pages/signup/SignUpView"
 
 function App() {
   return (
