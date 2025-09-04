@@ -36,7 +36,7 @@ export default function ManageAccountView() {
         setUpdatingProfile(false);
       }
     } catch (err) {
-      setError('Failed to update profile. Please try again.');
+      setError('Something went wrong. Please try again.');
       setUpdatingProfile(false);
     }
   };
@@ -86,7 +86,9 @@ export default function ManageAccountView() {
       if (success) {
         setSuccess('Password changed successfully!');
         setIsChangingPassword(false);
-        e.currentTarget.reset();
+        if (e.currentTarget) {
+          e.currentTarget.reset();
+        }
       } else {
         setError('Failed to change password. Please check your current password.');
       }
