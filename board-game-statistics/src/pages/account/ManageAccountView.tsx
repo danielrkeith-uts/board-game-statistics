@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { AccountContext } from '../../context/AccountContext';
 import { apiUpdateAccount, apiChangePassword } from '../../utils/api/account-api-utils';
 import DeleteAccountModal from './DeleteAccountModal';
+import UpdateProfileModal from './UpdateProfileModal';
 
 export default function ManageAccountView() {
   const account = useContext(AccountContext);
@@ -10,35 +11,48 @@ export default function ManageAccountView() {
   const [updatingProfile, setUpdatingProfile] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
+  const [pendingProfile, setPendingProfile] = useState<{ firstName: string; lastName: string; email: string } | null>(null);
 
-  const handleUpdateProfile = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUpdateProfile = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
-    setUpdatingProfile(true);
 
     const formData = new FormData(e.currentTarget);
     const firstName = formData.get('firstName') as string;
     const lastName = formData.get('lastName') as string;
     const email = formData.get('email') as string;
 
+    setPendingProfile({ firstName, lastName, email });
+    setPendingEmail(email);
+    setShowUpdateModal(true);
+  };
+
+  const confirmUpdate = async () => {
+    if (!pendingProfile) return;
+    setUpdatingProfile(true);
     try {
-      const success = await apiUpdateAccount(firstName, lastName, email);
+      const success = await apiUpdateAccount(pendingProfile.firstName, pendingProfile.lastName, pendingProfile.email);
       if (success) {
         setSuccess('Profile updated successfully!');
         setIsEditing(false);
-        // Small delay to let the user read the success message, then refresh
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
+        setShowUpdateModal(false);
       } else {
         setError('Failed to update profile. Please try again.');
-        setUpdatingProfile(false);
       }
     } catch (err) {
       setError('Something went wrong. Please try again.');
+    } finally {
       setUpdatingProfile(false);
+      setPendingProfile(null);
     }
+  };
+
+  const cancelUpdate = () => {
+    setShowUpdateModal(false);
+    setPendingProfile(null);
   };
 
   const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -161,6 +175,7 @@ export default function ManageAccountView() {
                       name="firstName"
                       placeholder="Enter First Name"
                       defaultValue={account?.firstName || ''}
+                      required
                     />
                   </div>
                   <div className="mb-3">
@@ -172,6 +187,7 @@ export default function ManageAccountView() {
                       name="lastName"
                       placeholder="Enter Last Name"
                       defaultValue={account?.lastName || ''}
+                      required
                     />
                   </div>
                   <div className="mb-3">
@@ -183,6 +199,7 @@ export default function ManageAccountView() {
                       name="email"
                       placeholder="Enter Email"
                       defaultValue={account?.email || ''}
+                      required
                     />
                   </div>
                     <button type="submit" className="btn btn-primary" disabled={updatingProfile}>
@@ -269,6 +286,12 @@ export default function ManageAccountView() {
           </div>
         </div>
       </div>
+      <UpdateProfileModal 
+        show={showUpdateModal} 
+        onClose={cancelUpdate} 
+        onConfirm={confirmUpdate}
+        email={pendingEmail ?? account?.email ?? ''}
+      />
     </div>
   );
 }
