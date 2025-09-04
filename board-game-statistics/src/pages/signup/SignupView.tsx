@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Container, Form } from "react-bootstrap";
 import { apiCreateAccount, apiLogin } from "../../utils/api/account-api-utils";
 
-const SignupView = () => {
+const SignUpView = () => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -120,4 +120,4 @@ const SignupView = () => {
   );
 };
 
-export default SignupView;
+export default SignUpView;
