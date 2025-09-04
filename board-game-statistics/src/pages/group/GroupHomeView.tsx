@@ -1,3 +1,4 @@
+import InviteMemberView from "./InviteMemberView.tsx";
 
 const GroupHomeView = () => {
   return (
@@ -16,6 +17,11 @@ const GroupHomeView = () => {
 					</div>
 				</div>
 				<div className="col border">
+					<div>
+						<br/>
+						<InviteMemberView/>
+						<br/>
+					</div>
 					<table className='table mt-1'>
 						<thead>
 							<tr>
