@@ -4,6 +4,7 @@ import {Button, Modal} from "react-bootstrap";
 export default function InviteMemberView() {
     const [showInviteNewMemberModal, setShowInviteNewMemberModel] = useState(false);
     const [inviteNewMemberEmailInputValue, setInviteNewMemberEmailInputValue] = useState('');
+    //const [inviteError, setInviteError] = useState(null);
 
     const handleOpenInviteNewMemberModal = () => setShowInviteNewMemberModel(true);
     const handleCloseInviteNewMemberModal = () => {
@@ -17,10 +18,27 @@ export default function InviteMemberView() {
         const formData: FormData = new FormData(e.currentTarget);
         const inviteEmail: string = formData.get("inviteEmailInput") as string;
 
+        // fetch('http://localhost:3000/send-invite')
+        //     .then(response =>{
+        //         if(!response.ok){
+        //             throw new Error(`HTTP error. Status: ${response.status}`);
+        //         }
+        //         //return response.json();
+        //     })
+        //     .catch(inviteError => setInviteError(inviteError))
+
         alert(`Invitation sent to ${inviteEmail}`);
 
         handleCloseInviteNewMemberModal()
     }
+
+    // useEffect(() => {
+    //
+    // }, []);
+
+    // if(inviteError){
+    //     return <div>Error sending invitation: {inviteError}</div>
+    // }
 
     function onInviteNewMemberEmailInputValueChange(event: { target: { value: SetStateAction<string>; }; }){
         setInviteNewMemberEmailInputValue(event.target.value);
