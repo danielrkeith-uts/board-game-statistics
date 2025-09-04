@@ -13,7 +13,7 @@ import GroupView from "./pages/group/GroupView";
 import LoginView from "./pages/login/LoginView";
 import { AccountContextProvider } from "./context/AccountContext";
 import GamesView from "./pages/games/GamesView";
-import SignUpView from "./pages/signup/SignUpView";
+import SignupView from "./pages/signup/SignupView";
 
 function App() {
   return (
