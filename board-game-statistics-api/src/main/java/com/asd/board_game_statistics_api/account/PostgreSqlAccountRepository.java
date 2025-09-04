@@ -25,4 +25,27 @@ public class PostgreSqlAccountRepository implements IAccountRepository {
         return jdbcTemplate.query(sql, Account::fromResultSet, email);
     }
 
+    @Override
+    public void update(String email, String firstName, String lastName, String newEmail) {
+        if (newEmail != null && !newEmail.equals(email)) {
+            String sql = "UPDATE bgs.account SET email = ?, first_name = ?, last_name = ? WHERE email = ?;";
+            jdbcTemplate.update(sql, newEmail, firstName, lastName, email);
+        } else {
+            String sql = "UPDATE bgs.account SET first_name = ?, last_name = ? WHERE email = ?;";
+            jdbcTemplate.update(sql, firstName, lastName, email);
+        }
+    }
+
+    @Override
+    public void updatePassword(String email, String newPassword) {
+        String sql = "UPDATE bgs.account SET password = ? WHERE email = ?;";
+        jdbcTemplate.update(sql, newPassword, email);
+    }
+
+    @Override
+    public void delete(String email) {
+        String sql = "DELETE FROM bgs.account WHERE email = ?;";
+        jdbcTemplate.update(sql, email);
+    }
+
 }
