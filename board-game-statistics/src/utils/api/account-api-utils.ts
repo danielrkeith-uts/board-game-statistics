@@ -16,6 +16,21 @@ export const apiLogin = (email: string, password: string): Promise<boolean> =>
 export const apiLogout = (): Promise<Response> => 
     apiPost("/account/logout")
 
+export const apiCreateAccount = (
+  email: string,
+  firstName: string,
+  lastName: string,
+  password: string
+): Promise<boolean> =>
+  apiPost("/account/create", { email, firstName, lastName, password })
+    .then((res) => {
+      if (res.ok) return true;
+      if (res.status === 400) return false;
+      throw new Error(
+        `Error creating account: ${res.status} ${res.statusText}`
+      );
+    })
+    .catch(() => false);
 
 export const apiGetLoggedInAccount = (): Promise<Account> => 
     apiGet("/account/me")
