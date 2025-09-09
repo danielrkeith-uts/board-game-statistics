@@ -59,7 +59,7 @@ public class AccountController {
 
     @GetMapping("/me")
     public ResponseEntity<MeResponse> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
-        Account account = accountService.account(userDetails.getUsername());
+        Account account = (Account) userDetails;
         return ResponseEntity.ok(new MeResponse(account.firstName(), account.lastName(), account.email()));
     }
 
