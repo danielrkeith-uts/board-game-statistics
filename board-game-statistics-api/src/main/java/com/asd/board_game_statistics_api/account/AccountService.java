@@ -37,9 +37,4 @@ public class AccountService implements IAccountService {
         accountRepository.create(email, hashedPassword, firstName, lastName);
     }
 
-    @Override
-    public Account account(String email) {
-        return accountRepository.get(email);
-    }
-
 }
