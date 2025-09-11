@@ -26,4 +26,17 @@ public class PostgreSqlDbManagementService implements IDbManagementService {
 
         jdbcTemplate.execute(rebuildSchemaSql);
     }
+
+    @Override
+    public void insertSampleData() {
+        String insertSampleDataSql;
+
+        try {
+            insertSampleDataSql = resourceReader.getResourceAsString("postgresql/insert_sample_data.sql");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        jdbcTemplate.execute(insertSampleDataSql);
+    }
 }
