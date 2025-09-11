@@ -1,7 +1,7 @@
 interface Account {
-    email: string,
-    firstName: string,
-    lastName: string
+	email: string;
+	firstName: string;
+	lastName: string;
 }
 
-export type { Account }
+export type { Account };

@@ -18,10 +18,10 @@ npm run dev
 
 The following dependency packages are used in this repository:
 
--   React
--   React-router-DOM
--   SCSS
--   Bootstrap
+- React
+- React-router-DOM
+- SCSS
+- Bootstrap
 
 ### Using SCSS
 
