@@ -4,6 +4,7 @@ import com.asd.board_game_statistics_api.account.exceptions.CreateAccountExcepti
 import com.asd.board_game_statistics_api.account.exceptions.InvalidEmailException;
 import com.asd.board_game_statistics_api.account.exceptions.InvalidPasswordException;
 import com.asd.board_game_statistics_api.account.exceptions.EmailTakenException;
+import com.asd.board_game_statistics_api.model.Account;
 import com.asd.board_game_statistics_api.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
