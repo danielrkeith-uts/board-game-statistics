@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 import { AccountContext } from '../../context/AccountContext';
 import { apiUpdateAccount, apiChangePassword } from '../../utils/api/account-api-utils';
+import { apiLogin } from '../../utils/api/account-api-utils';
 import DeleteAccountModal from './DeleteAccountModal';
 import UpdateProfileModal from './UpdateProfileModal';
 
@@ -12,7 +13,6 @@ export default function ManageAccountView() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
-  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
   const [pendingProfile, setPendingProfile] = useState<{ firstName: string; lastName: string; email: string } | null>(null);
 
   const handleUpdateProfile = (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,24 +26,36 @@ export default function ManageAccountView() {
     const email = formData.get('email') as string;
 
     setPendingProfile({ firstName, lastName, email });
-    setPendingEmail(email);
     setShowUpdateModal(true);
   };
 
-  const confirmUpdate = async () => {
+  const confirmUpdate = async (password: string) => {
     if (!pendingProfile) return;
     setUpdatingProfile(true);
     try {
-      const success = await apiUpdateAccount(pendingProfile.firstName, pendingProfile.lastName, pendingProfile.email);
-      if (success) {
-        setSuccess('Profile updated successfully!');
-        setIsEditing(false);
-        setShowUpdateModal(false);
-      } else {
+      const originalEmail = account?.email ?? '';
+      const newEmail = pendingProfile.email;
+
+      const updated = await apiUpdateAccount(pendingProfile.firstName, pendingProfile.lastName, newEmail);
+      if (!updated) {
         setError('Failed to update profile. Please try again.');
+        return;
       }
+
+      if (newEmail && newEmail !== originalEmail) {
+        const loggedIn = await apiLogin(newEmail, password);
+        if (!loggedIn) {
+          setError('Profile updated, but re-login failed. Please log in with your new email.');
+          return;
+        }
+      }
+
+      setSuccess('Profile updated successfully!');
+      setIsEditing(false);
+      setShowUpdateModal(false);
+      window.location.reload();
     } catch (err) {
-      setError('Something went wrong. Please try again.');
+        setError('Failed to update profile. Please try again.');
     } finally {
       setUpdatingProfile(false);
       setPendingProfile(null);
@@ -290,7 +302,6 @@ export default function ManageAccountView() {
         show={showUpdateModal} 
         onClose={cancelUpdate} 
         onConfirm={confirmUpdate}
-        email={pendingEmail ?? account?.email ?? ''}
       />
     </div>
   );
