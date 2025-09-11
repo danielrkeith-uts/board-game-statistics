@@ -3,9 +3,9 @@ package com.asd.board_game_statistics_api.account;
 import com.asd.board_game_statistics_api.model.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-@Service
+@Repository
 public class PostgreSqlAccountRepository implements IAccountRepository {
 
     @Autowired
@@ -24,5 +24,4 @@ public class PostgreSqlAccountRepository implements IAccountRepository {
 
         return jdbcTemplate.query(sql, Account::fromResultSet, email);
     }
-
 }
