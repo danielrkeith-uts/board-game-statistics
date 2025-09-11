@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class SendGroupMemberInvitation {
 
     @Autowired
-    private JavaMailSender emailSender;
+    EmailService emailService;
 
     private void testSendEmail() {
         SimpleMailMessage message = new SimpleMailMessage();
