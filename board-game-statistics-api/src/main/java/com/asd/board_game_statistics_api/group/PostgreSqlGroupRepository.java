@@ -49,9 +49,13 @@ public class PostgreSqlGroupRepository implements IGroupRepository {
     }
 
     @Override
-    public List<Group> get(int userId) {
-        String sql = "SELECT * FROM bgs.game_group WHERE account_id = ?;";
+    public List<Group> get(int accountId) {
+        String sql = """
+                SELECT gg.id, gg.group_name, gg.creation_time FROM bgs.game_group AS gg
+                INNER JOIN bgs.group_membership AS gm ON gg.id = gm.group_id
+                WHERE gm.account_id = ?;
+                """;
 
-        return jdbcTemplate.query(sql, Group::fromRow, userId);
+        return jdbcTemplate.query(sql, Group::fromRow, accountId);
     }
 }

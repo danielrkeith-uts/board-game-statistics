@@ -1,6 +1,7 @@
 package com.asd.board_game_statistics_api.group;
 
 import com.asd.board_game_statistics_api.group.dto.CreateGroupRequest;
+import com.asd.board_game_statistics_api.group.dto.GroupResponse;
 import com.asd.board_game_statistics_api.model.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,8 @@ public class GroupController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Group>> getGroupsByUserId(int userId) {
-        List<Group> groups = groupService.getGroupsByUserId(userId);
-        return ResponseEntity.ok(List.of());
+    public ResponseEntity<List<GroupResponse>> getGroupsByAccountId(@RequestParam Integer accountId) {
+        List<GroupResponse> groups = groupService.getGroupsByAccountId(accountId);
+        return ResponseEntity.ok(groups);
     }
 }

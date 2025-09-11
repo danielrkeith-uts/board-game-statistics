@@ -8,5 +8,5 @@ import java.util.List;
 public interface IGroupRepository {
     int create(String groupName, Instant creationTime);
     List<Group> get();
-    List<Group> get(int userId);
+    List<Group> get(int accountId);
 }
