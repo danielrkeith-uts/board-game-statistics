@@ -1,3 +1,4 @@
 package com.asd.board_game_statistics_api.group.dto;
 
-public record CreateGroupRequest(String groupName) { }
+public record LeaveGroupRequest(int groupId) {
+}

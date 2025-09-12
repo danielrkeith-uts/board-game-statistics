@@ -5,9 +5,9 @@ CREATE SCHEMA bgs;
 CREATE TABLE bgs.account (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     email VARCHAR(100) UNIQUE,
-    password VARCHAR(100),
-    first_name VARCHAR(100),
-    last_name VARCHAR(100)
+    password VARCHAR(100) NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE bgs.game_group (
@@ -21,6 +21,7 @@ CREATE TABLE bgs.group_membership (
     group_id INT NOT NULL,
     account_id INT NOT NULL,
     permissions_string VARCHAR(8),
+    join_timestamp TIMESTAMP NOT NULL,
     FOREIGN KEY (group_id) REFERENCES bgs.game_group(id),
     FOREIGN KEY (account_id) REFERENCES bgs.account(id)
 );
