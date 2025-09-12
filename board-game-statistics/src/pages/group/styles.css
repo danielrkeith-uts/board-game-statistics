@@ -1,23 +1,22 @@
 .gridContainer {
-    height: 100%;
-    display: grid;
-    grid-template-columns: 20rem 1fr;
+	height: 100%;
+	display: grid;
+	grid-template-columns: 20rem 1fr;
 }
 
 .groupFlexWrapper > div {
-    margin: 1rem;
-    width: auto;
+	margin: 1rem;
+	width: auto;
 }
 
 .leftPanel {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-content: space-between;
-    background-color: aqua;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-content: space-between;
+	background-color: aqua;
 }
 
 .memberList {
-    background-color: blueviolet;
-
+	background-color: blueviolet;
 }
