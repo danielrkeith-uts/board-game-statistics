@@ -11,7 +11,7 @@
 		"prettier": "prettier . --write",
 		"preview": "vite preview",
 		"sass": "sass --watch ./src/scss/custom.scss ./src/css/custom.css",
-		"prepare": "cd .. && git config core.hooksPath board-game-statistics/.husky"
+		"prepare": "cd .. && git config core.hooksPath board-game-statistics/.husky && chmod +x board-game-statistics/.husky/*"
 	},
 	"dependencies": {
 		"bootstrap": "^5.3.8",
