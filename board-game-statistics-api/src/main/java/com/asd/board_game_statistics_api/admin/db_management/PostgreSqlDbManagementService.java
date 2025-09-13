@@ -1,6 +1,7 @@
 package com.asd.board_game_statistics_api.admin.db_management;
 
 import com.asd.board_game_statistics_api.util.ResourceReader;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.util.Collections;
 
 @Service
+@AllArgsConstructor
 public class PostgreSqlDbManagementService implements IDbManagementService {
 
     @Autowired
