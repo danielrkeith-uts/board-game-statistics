@@ -8,6 +8,9 @@ interface GroupHomeViewProps {
 const GroupHomeView = (props: GroupHomeViewProps) => {
 	const { members } = props.currentGroup;
 
+	// Change later to draw from permissions
+	const ownerEmail = 'matthew@adler.id.au';
+
 	return (
 		<div className="container mh-70">
 			<div className="row">
@@ -39,7 +42,14 @@ const GroupHomeView = (props: GroupHomeViewProps) => {
 						<tbody>
 							{members.map((member) => (
 								<tr key={member.email}>
-									<td>{getAccountFullName(member)}</td>
+									<td>
+										{getAccountFullName(member)}{' '}
+										{member.email === ownerEmail ? (
+											<span className="badge text-bg-secondary ms-2">
+												Owner {/* Replace w a yellow crown icon */}
+											</span>
+										) : null}
+									</td>
 									<td>{formatDate(new Date(member.joinTimestamp))}</td>
 								</tr>
 							))}
