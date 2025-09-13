@@ -56,3 +56,8 @@ This will run the backend on port 8080
 3. Run `npm dev`
 
 This will run the frontend on port 3000
+
+## Tests
+If you would like to write JUnit tests using a mocked PostgreSQL database, please ensure your test class extends the "TestsWithMockedDatabase" abstract class.
+
+The database will be automatically created before tests run, and rebuilt before each individual test. Your repository classes will function as expected when using the mocked database.
