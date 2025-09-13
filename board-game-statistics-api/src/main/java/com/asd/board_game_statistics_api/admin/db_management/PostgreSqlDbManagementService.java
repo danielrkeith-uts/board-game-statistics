@@ -7,9 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 
 @Service
 public class PostgreSqlDbManagementService implements IDbManagementService {
@@ -43,11 +41,17 @@ public class PostgreSqlDbManagementService implements IDbManagementService {
             throw new RuntimeException(e);
         }
 
-        // Sample password to be inserted with sample accounts
+        // Sample password to be inserted with all sample accounts
         String samplePassword = "test#123456";
         String hashedPassword = passwordEncoder.encode(samplePassword);
 
-        // Passing in the same password for every test account - I could not think of a nicer way to pass in the passwords other than passing it in 8 times
-        jdbcTemplate.update(insertSampleDataSql, hashedPassword, hashedPassword, hashedPassword, hashedPassword, hashedPassword, hashedPassword, hashedPassword, hashedPassword);
+        // Count the number of account rows being inserted
+        String accountInsertQuery = insertSampleDataSql.split(";")[0].strip();
+        String[] rows = accountInsertQuery.split("\n");
+        int numberOfAccounts = rows.length - 1;
+
+        String[] hashedPasswordArray = Collections.nCopies(numberOfAccounts, hashedPassword).toArray(new String[0]);
+
+        jdbcTemplate.update(insertSampleDataSql, (Object[]) hashedPasswordArray);
     }
 }
