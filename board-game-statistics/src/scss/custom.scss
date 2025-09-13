@@ -11,11 +11,23 @@ $font-family-base: 'Montserrat';
 .centerContainer {
 	/* This looks so ugly but the height is basically 100vh - header-height * 2 - m-4 from App.tsx */
 	height: calc(
-		100vh - #{$navbar-brand-height} - #{$navbar-padding-y} * 2 - #{$navbar-brand-padding-y} *
-			2 - $spacer * 1.5 /* default value for m-4 */ - #{$navbar-brand-height} -
+		100vh - #{$navbar-brand-height} - #{$navbar-padding-y} * 2 -
+			#{$navbar-brand-padding-y} * 2 - $spacer * 1.5
+			/* default value for m-4 */ - #{$navbar-brand-height} -
 			#{$navbar-padding-y} * 2 - #{$navbar-brand-padding-y} * 2
 	);
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.scrollable-table {
+	max-height: 20rem;
+	overflow-y: scroll;
+}
+
+#memberTable thead tr th {
+	position: sticky;
+	top: 0;
+	z-index: 1;
 }

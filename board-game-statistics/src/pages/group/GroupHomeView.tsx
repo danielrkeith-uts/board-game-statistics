@@ -12,7 +12,7 @@ const GroupHomeView = (props: GroupHomeViewProps) => {
 	const ownerEmail = 'matthew@adler.id.au';
 
 	return (
-		<div className="container mh-70">
+		<div className="container">
 			<div className="row">
 				<div className="col-3 border">
 					<div className="container vstack">
@@ -31,30 +31,31 @@ const GroupHomeView = (props: GroupHomeViewProps) => {
 					</div>
 				</div>
 				<div className="col border">
-					<table className="table mt-1">
-						{/* Populate members table */}
-						<thead>
-							<tr>
-								<th scope="col">Name</th>
-								<th scope="col">Date joined</th>
-							</tr>
-						</thead>
-						<tbody>
-							{members.map((member) => (
-								<tr key={member.email}>
-									<td>
-										{getAccountFullName(member)}{' '}
-										{member.email === ownerEmail ? (
-											<span className="badge text-bg-secondary ms-2">
-												Owner {/* Replace w a yellow crown icon */}
-											</span>
-										) : null}
-									</td>
-									<td>{formatDate(new Date(member.joinTimestamp))}</td>
+					<div className="scrollable-table mt-1">
+						<table id="memberTable" className="table">
+							<thead className="position-sticky">
+								<tr>
+									<th scope="col">Name</th>
+									<th scope="col">Date joined</th>
 								</tr>
-							))}
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+								{members.map((member) => (
+									<tr key={member.email}>
+										<td>
+											{getAccountFullName(member)}{' '}
+											{member.email === ownerEmail ? (
+												<span className="badge text-bg-secondary ms-2">
+													Owner {/* Replace w a yellow crown icon */}
+												</span>
+											) : null}
+										</td>
+										<td>{formatDate(new Date(member.joinTimestamp))}</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<div className="col-3 border">
 					<div className="list-group mt-3">

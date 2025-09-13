@@ -11868,4 +11868,15 @@ textarea.form-control-lg {
   align-items: center;
 }
 
+.scrollable-table {
+  max-height: 20rem;
+  overflow-y: scroll;
+}
+
+#memberTable thead tr th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
 /*# sourceMappingURL=custom.css.map */
