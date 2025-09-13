@@ -6,8 +6,8 @@ Project for 41026 Advanced Software Development
 Environment variables can be set in multiple ways; pick one of the below.
 
 These environment variables must be set to a password of your choice:
-- BGS_DB_PASSWORD
-- BGS_ADMIN_PASSWORD
+- BGS_DB_PASSWORD (The password for the bgs_admin_local account)
+- BGS_ADMIN_PASSWORD (A password of your choosing)
 
 **Write these passwords down somewhere**
 
@@ -33,7 +33,10 @@ To log in with the admin user: `psql -U <username>`
 2. Run `CREATE DATABASE board_game_statistics_local OWNER bgs_admin_local;`
 
 Now run the backend API, and use Postman (or some other tool) to rebuild the schema using the API:
-1. Create a `POST` request to `http://localhost:8080/api/admin/db/rebuild-schema`
+1. Create a `POST` request to one of the following endpoints:
+    - `http://localhost:8080/api/admin/db/rebuild-schema` - builds the schema with empty tables
+    - `http://localhost:8080/api/admin/db/rebuild-with-sample-data` - builds the schema with sample data inserted into tables
+        - Note: all sample accounts are inserted with the same password: "test#123456"
 2. Include a header with key `ADMIN-AUTHENTICATION` and value `<BGS_ADMIN_PASSWORD>`
    * Replace `<BGS_ADMIN_PASSWORD>` with the corresponding environment variable
 
