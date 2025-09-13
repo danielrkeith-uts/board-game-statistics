@@ -1,5 +1,6 @@
 package com.asd.board_game_statistics_api.group;
 
+import com.asd.board_game_statistics_api.account.dto.MeResponse;
 import com.asd.board_game_statistics_api.group.dto.GroupMemberResponse;
 import com.asd.board_game_statistics_api.group.dto.GroupResponse;
 import com.asd.board_game_statistics_api.group.exceptions.EmptyGroupException;
@@ -37,7 +38,7 @@ public class GroupService implements IGroupService {
         return getGroupByGroupId(groupId);
     }
 
-    private GroupResponse getGroupByGroupId(int groupId) throws GroupException {
+    public GroupResponse getGroupByGroupId(int groupId) throws GroupException {
         Group group = groupRepository.getByGroupId(groupId);
 
         if (group == null) {
@@ -57,6 +58,10 @@ public class GroupService implements IGroupService {
             throw new GroupException("Failed to find groups for accountId " + accountId);
         }
 
+        if (groups.isEmpty()) {
+            return null;
+        }
+
         // Map list of Group objects to GroupResponse objects that contain a list of members
         List<GroupResponse> groupResponses = new ArrayList<>();
 
@@ -71,11 +76,18 @@ public class GroupService implements IGroupService {
 
     @Override
     public void leaveGroup(Account account, int groupId) throws GroupException {
-        // Confirm group membership
-        List<GroupMemberResponse> groupMembers = groupMembershipRepository.getGroupMembers(groupId);
+        GroupResponse group = getGroupByGroupId(groupId);
 
+        // Confirm the group exists
+        if (group == null) {
+            throw new EmptyGroupException("The group with groupId " + groupId + " does not exist.");
+        }
+
+        List<GroupMemberResponse> groupMembers = group.members();
+
+        // Confirm the group has members
         if (groupMembers == null) {
-            throw new GroupException("The group with groupId " + groupId + " either does not exist or has no members.");
+            throw new EmptyGroupException("The group with groupId " + groupId + " has no members.");
         }
 
         boolean isMember = false;
@@ -90,12 +102,12 @@ public class GroupService implements IGroupService {
             throw new GroupException("User is not a member of the group with groupId " + groupId);
         }
 
-        // Check if group has one member only
+        // Check if a group has one member only
         if (groupMembers.size() == 1) {
-            throw new EmptyGroupException();
+            throw new EmptyGroupException("Leaving this group is not allowed as you are the last member.");
         }
 
-        // Leave group
+        // Leave a group
         if (!groupMembershipRepository.delete(groupId, account.id())) {
             throw new GroupException("Failed to leave group.");
         }
