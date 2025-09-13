@@ -4,7 +4,7 @@ export const getAccountFullName = (account: Account) =>
 	account.firstName + ' ' + account.lastName;
 
 export const formatDate = (date: Date) => {
-	let month = String(date.getMonth());
+	let month = String(date.getMonth() + 1);
 	let day = String(date.getDate());
 	const year = String(date.getFullYear());
 

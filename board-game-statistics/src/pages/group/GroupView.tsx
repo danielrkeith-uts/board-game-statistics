@@ -111,10 +111,12 @@ const GroupView = () => {
 					setSuccess(`Left group ${currentGroup.groupName} successfully!`);
 
 					// Remove group from state
-					updateGroupState(
-						groups.filter((group) => group.id != currentGroup.id)
+					const filteredGroups = groups.filter(
+						(group) => group.id != currentGroup.id
 					);
-					setCurrentGroup(groups[0]);
+
+					updateGroupState(filteredGroups);
+					setCurrentGroup(filteredGroups[0]);
 				})
 				.catch((err: Error) => setError(err.message));
 

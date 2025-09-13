@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.Collections;
 
 @Service
-@AllArgsConstructor
 public class PostgreSqlDbManagementService implements IDbManagementService {
 
     @Autowired

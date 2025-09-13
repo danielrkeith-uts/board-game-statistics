@@ -43,16 +43,13 @@ public abstract class TestsWithMockedDatabase {
     @Autowired
     protected ResourceReader autowiredResourceReader;
 
+    @Autowired
     private PostgreSqlDbManagementService dbManagementService;
 
     @BeforeAll
     void setupMocks() {
         // Instantiate a jdbcTemplate on the mocked database
         jdbcTemplate = new JdbcTemplate(mockedPostgreSqlDatabase);
-
-        // Rebuild schema with sample data
-        dbManagementService =
-                new PostgreSqlDbManagementService(jdbcTemplate, autowiredResourceReader, passwordEncoder);
     }
 
     @BeforeEach
@@ -61,6 +58,7 @@ public abstract class TestsWithMockedDatabase {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         when(autowiredPasswordEncoder.encode(anyString()))
                 .thenAnswer(invocation -> bCryptPasswordEncoder.encode(invocation.getArgument(0)));
+
         dbManagementService.rebuildSchema();
         // FIXME: The sample data insert can be removed if not everyone wants to use the sample data
         dbManagementService.insertSampleData();

@@ -6,7 +6,7 @@ interface CreateGroupButtonProps {
 const CreateGroupButton = (props: CreateGroupButtonProps) => {
 	return (
 		<button
-			className={`btn btn-${props.size ?? ''} btn-success`}
+			className={`btn ${props.size ? `btn-${props.size}` : ''} btn-success`}
 			onClick={props.onClick}
 		>
 			Create new group

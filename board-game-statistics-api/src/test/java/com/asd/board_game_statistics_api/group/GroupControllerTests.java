@@ -3,7 +3,6 @@ package com.asd.board_game_statistics_api.group;
 import com.asd.board_game_statistics_api.account.AccountService;
 import com.asd.board_game_statistics_api.account.PostgreSqlAccountRepository;
 import com.asd.board_game_statistics_api.group.dto.GroupResponse;
-import com.asd.board_game_statistics_api.group.exceptions.EmptyGroupException;
 import com.asd.board_game_statistics_api.group.exceptions.ExistingGroupNameException;
 import com.asd.board_game_statistics_api.group.exceptions.GroupException;
 import com.asd.board_game_statistics_api.model.Account;
