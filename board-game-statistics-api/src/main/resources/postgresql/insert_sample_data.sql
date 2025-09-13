@@ -18,7 +18,8 @@ INSERT INTO bgs.account (email, password, first_name, last_name) VALUES
 ('paul@example.com', ?, 'Paul', 'Rodriguez'),
 ('quinn@example.com', ?, 'Quinn', 'Lewis'),
 ('ruby@example.com', ?, 'Ruby', 'Lee'),
-('sam@example.com', ?, 'Sam', 'Walker');
+('sam@example.com', ?, 'Sam', 'Walker'),
+('bianca@example.com', ?, 'Bianca', 'Bankingman');
 
 -- Game Groups
 INSERT INTO bgs.game_group (group_name, creation_time) VALUES
