@@ -113,8 +113,12 @@ const GroupDashboard = (props: GroupDashboardProps) => {
 			/>
 
 			<div className="container">
-				<Tabs defaultActiveKey="home" id="group-view-tabs" className="mb-3">
-					<Tab eventKey="home" title="Home">
+				<Tabs
+					defaultActiveKey="home"
+					id="group-view-tabs"
+					className="bg-white justify-content-start mb-3 h-auto"
+				>
+					<Tab eventKey="home" title="Home" className="pb-n3">
 						<GroupHomeView currentGroup={currentGroup} />
 					</Tab>
 					<Tab eventKey="leaderboard" title="Leaderboard">

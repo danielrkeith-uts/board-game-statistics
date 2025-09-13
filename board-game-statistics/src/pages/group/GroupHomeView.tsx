@@ -9,7 +9,7 @@ const GroupHomeView = (props: GroupHomeViewProps) => {
 	const { members } = props.currentGroup;
 
 	return (
-		<div className="container mt-3 mh-70">
+		<div className="container mh-70">
 			<div className="row">
 				<div className="col-3 border">
 					<div className="container vstack">
