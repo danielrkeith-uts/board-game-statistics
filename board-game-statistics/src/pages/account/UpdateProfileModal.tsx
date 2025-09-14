@@ -1,15 +1,26 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import { Modal, Form, Button} from "react-bootstrap";
 
 interface UpdateProfileModalProps {
     show: boolean;
     onClose: () => void;
     onConfirm: (password: string) => void;
+    error?: string | null;
+    isUpdating?: boolean;
+    onClearError?: () => void;
+    onResetUpdating?: () => void;
 };
   
-export default function UpdateProfileModal({ show, onClose, onConfirm }: UpdateProfileModalProps) {
+export default function UpdateProfileModal({ show, onClose, onConfirm, error, isUpdating, onClearError, onResetUpdating }: UpdateProfileModalProps) {
 const [password, setPassword] = useState("");
 const [hasInvalidCredentials, setHasInvalidCredentials] = useState(false);
+
+useEffect(() => {
+    if (show) {
+        setPassword("");
+        setHasInvalidCredentials(false);
+    }
+}, [show]);
 
 const handleConfirm = (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,6 +28,7 @@ const handleConfirm = (e: React.FormEvent) => {
         setHasInvalidCredentials(true);
         return;
     }
+    setHasInvalidCredentials(false);
     onConfirm(password);
 }
 
@@ -32,13 +44,23 @@ const handleConfirm = (e: React.FormEvent) => {
                     <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => {
                         setPassword(e.target.value);
                         setHasInvalidCredentials(false);
-                        
+                        if (onClearError) {
+                            onClearError();
+                        }
+                        if (onResetUpdating) {
+                            onResetUpdating();
+                        }
                     }}/>
                 </Form.Group>
                 {hasInvalidCredentials && (
-                    <p className="text-danger">Your password is incorrect</p>
+                    <p className="text-danger">Password is required</p>
                 )}
-                <Button type="submit">Confirm</Button>
+                {error && (
+                    <p className="text-danger">{error}</p>
+                )}
+                <Button type="submit" disabled={isUpdating}>
+                    {isUpdating ? 'Updating...' : 'Confirm'}
+                </Button>
                 </form>
             </Modal.Body>
         </Modal>

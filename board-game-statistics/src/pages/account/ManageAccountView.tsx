@@ -14,16 +14,56 @@ export default function ManageAccountView() {
   const [success, setSuccess] = useState<string | null>(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [pendingProfile, setPendingProfile] = useState<{ firstName: string; lastName: string; email: string } | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
+
+  // Email validation function
+  const validateEmail = (email: string): string | null => {
+    if (!email.trim()) {
+      return 'Email is required';
+    }
+    
+    // Basic email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return 'Please enter a valid email address';
+    }
+    
+
+    if (email.includes('..') || email.startsWith('.') || email.endsWith('.')) {
+      return 'Email address format is invalid';
+    }
+    
+    // Check for consecutive dots in domain
+    if (email.split('@')[1]?.includes('..')) {
+      return 'Email address format is invalid';
+    }
+    
+    return null;
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const email = e.target.value;
+    const error = validateEmail(email);
+    setEmailError(error);
+  };
 
   const handleUpdateProfile = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+    setEmailError(null);
 
     const formData = new FormData(e.currentTarget);
     const firstName = formData.get('firstName') as string;
     const lastName = formData.get('lastName') as string;
     const email = formData.get('email') as string;
+
+    // Validate email before proceeding
+    const emailValidationError = validateEmail(email);
+    if (emailValidationError) {
+      setEmailError(emailValidationError);
+      return;
+    }
 
     setPendingProfile({ firstName, lastName, email });
     setShowUpdateModal(true);
@@ -36,9 +76,17 @@ export default function ManageAccountView() {
       const originalEmail = account?.email ?? '';
       const newEmail = pendingProfile.email;
 
+      const passwordValid = await apiLogin(originalEmail, password);
+      if (!passwordValid) {
+        setError('Incorrect password. Please try again.');
+        setUpdatingProfile(false);
+        return;
+      }
+
       const updated = await apiUpdateAccount(pendingProfile.firstName, pendingProfile.lastName, newEmail);
       if (!updated) {
         setError('Failed to update profile. Please try again.');
+        setUpdatingProfile(false);
         return;
       }
 
@@ -46,6 +94,7 @@ export default function ManageAccountView() {
         const loggedIn = await apiLogin(newEmail, password);
         if (!loggedIn) {
           setError('Profile updated, but re-login failed. Please log in with your new email.');
+          setUpdatingProfile(false);
           return;
         }
       }
@@ -53,18 +102,27 @@ export default function ManageAccountView() {
       setSuccess('Profile updated successfully!');
       setIsEditing(false);
       setShowUpdateModal(false);
+      setPendingProfile(null);
       window.location.reload();
     } catch (err) {
         setError('Failed to update profile. Please try again.');
+        setUpdatingProfile(false);
     } finally {
-      setUpdatingProfile(false);
-      setPendingProfile(null);
     }
   };
 
   const cancelUpdate = () => {
     setShowUpdateModal(false);
     setPendingProfile(null);
+    setError(null);
+  };
+
+  const clearError = () => {
+    setError(null);
+  };
+
+  const resetUpdating = () => {
+    setUpdatingProfile(false);
   };
 
   const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -170,7 +228,12 @@ export default function ManageAccountView() {
                   <button
                     type="button"
                     className="btn btn-outline-primary btn-sm"
-                    onClick={() => setIsEditing(!isEditing)}
+                    onClick={() => {
+                      setIsEditing(!isEditing);
+                      if (!isEditing) {
+                        setEmailError(null);
+                      }
+                    }}
                   >
                     {isEditing ? 'Cancel' : 'Edit'}
                   </button>
@@ -206,15 +269,25 @@ export default function ManageAccountView() {
                     <label className="form-label">Email</label>
                     <input
                       type="email"
-                      className="form-control"
+                      className={`form-control ${emailError ? 'is-invalid' : ''}`}
                       id="email"
                       name="email"
                       placeholder="Enter Email"
                       defaultValue={account?.email || ''}
+                      onChange={handleEmailChange}
                       required
                     />
+                    {emailError && (
+                      <div className="invalid-feedback">
+                        {emailError}
+                      </div>
+                    )}
                   </div>
-                    <button type="submit" className="btn btn-primary" disabled={updatingProfile}>
+                    <button 
+                      type="submit" 
+                      className="btn btn-primary" 
+                      disabled={updatingProfile || !!emailError}
+                    >
                       {updatingProfile ? 'Updating...' : 'Update Profile'}
                     </button>
                   </form>
@@ -302,6 +375,10 @@ export default function ManageAccountView() {
         show={showUpdateModal} 
         onClose={cancelUpdate} 
         onConfirm={confirmUpdate}
+        error={error}
+        isUpdating={updatingProfile}
+        onClearError={clearError}
+        onResetUpdating={resetUpdating}
       />
     </div>
   );
