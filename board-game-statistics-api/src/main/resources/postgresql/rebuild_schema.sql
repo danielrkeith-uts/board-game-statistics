@@ -9,3 +9,10 @@ CREATE TABLE bgs.account (
     first_name VARCHAR(100),
     last_name VARCHAR(100)
 );
+
+CREATE TABLE bgs.invitation (
+    invite_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    user_email VARCHAR(100),
+    invite_code INT DEFAULT  floor((999999 * random()) + 100000)::int,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
