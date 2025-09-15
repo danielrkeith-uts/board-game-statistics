@@ -1,5 +1,6 @@
 import {useState, type SetStateAction} from "react";
 import {Button, Modal} from "react-bootstrap";
+import {apiInvite} from "../../utils/api/invitation-api-utils.ts";
 
 export default function InviteMemberView() {
     const [showInviteNewMemberModal, setShowInviteNewMemberModel] = useState(false);
@@ -18,18 +19,18 @@ export default function InviteMemberView() {
         const formData: FormData = new FormData(e.currentTarget);
         const inviteEmail: string = formData.get("inviteEmailInput") as string;
 
-        // fetch('http://localhost:3000/send-invite')
-        //     .then(response =>{
-        //         if(!response.ok){
-        //             throw new Error(`HTTP error. Status: ${response.status}`);
-        //         }
-        //         //return response.json();
-        //     })
-        //     .catch(inviteError => setInviteError(inviteError))
 
-        alert(`Invitation sent to ${inviteEmail}`);
+        apiInvite("test").then(sent => {
+            if (sent) {
+                alert(`Invitation sent to ${inviteEmail}`);
 
-        handleCloseInviteNewMemberModal()
+                handleCloseInviteNewMemberModal();
+            }
+            else {
+                alert('Failed to send invitation. Please try again.')
+            }
+        })
+
     }
 
     // useEffect(() => {

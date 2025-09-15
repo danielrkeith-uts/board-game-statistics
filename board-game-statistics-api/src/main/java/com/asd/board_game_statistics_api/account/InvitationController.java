@@ -5,9 +5,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
 import jakarta.servlet.http.HttpServletRequest;
 import com.asd.board_game_statistics_api.util.EmailService;
+import com.asd.board_game_statistics_api.account.dto.SendInvitationRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -16,7 +18,8 @@ import org.springframework.stereotype.Service;
 
 
 @RestController
-public class SendGroupMemberInvitation {
+@RequestMapping("/api/invite")
+public class InvitationController {
 
     @Autowired
     EmailService emailService;
@@ -29,12 +32,12 @@ public class SendGroupMemberInvitation {
         message.setSubject("Test");
         message.setText("Testy testy test. Test test test.");
 
-        emailSender.send(message);
+        //emailService.sendEmail(message);
     }
 
-    @GetMapping("/send-invite")
-    public ResponseEntity<?> SendInvitation(){
-        testSendEmail();
+    @PostMapping("/send")
+    public ResponseEntity<?> SendInvitation(@RequestBody SendInvitationRequest sendInvitationRequest){
+        //emailService.testSendEmail();
         return ResponseEntity.ok("Invite Sent");
     }
 }
