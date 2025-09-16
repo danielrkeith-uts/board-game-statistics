@@ -29,6 +29,12 @@ export default tseslint.config([
 			'default-case': 'warn',
 			'default-case-last': 'warn',
 			eqeqeq: 'error',
+			'@typescript-eslint/no-unused-vars': [
+				'error',
+				{
+					caughtErrors: 'none',
+				},
+			],
 		},
 	},
 ]);
