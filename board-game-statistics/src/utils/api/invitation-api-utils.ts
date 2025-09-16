@@ -3,7 +3,7 @@ import {apiPost} from "./api-utils.ts";
 export const apiInvite = (email: string): Promise<boolean> =>
 
 
-    apiPost("/invite/send", {email}).then(response => {
+    apiPost('/invite/send', {email}).then(response => {
         if (response.ok){
             return true
         }

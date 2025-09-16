@@ -4,45 +4,36 @@ import {apiInvite} from "../../utils/api/invitation-api-utils.ts";
 
 export default function InviteMemberView() {
     const [showInviteNewMemberModal, setShowInviteNewMemberModel] = useState(false);
-    const [inviteNewMemberEmailInputValue, setInviteNewMemberEmailInputValue] = useState('');
+    const [inviteEmail, setInviteEmail] = useState('');
     //const [inviteError, setInviteError] = useState(null);
 
     const handleOpenInviteNewMemberModal = () => setShowInviteNewMemberModel(true);
     const handleCloseInviteNewMemberModal = () => {
-        setInviteNewMemberEmailInputValue('');
+        setInviteEmail('');
         setShowInviteNewMemberModel(false);
     }
 
-    const handleInviteSent = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+    const sendInvitation = () => {
 
-        const formData: FormData = new FormData(e.currentTarget);
-        const inviteEmail: string = formData.get("inviteEmailInput") as string;
-
-
-        apiInvite("test").then(sent => {
+        apiInvite(inviteEmail).then((sent) => {
             if (sent) {
                 alert(`Invitation sent to ${inviteEmail}`);
 
-                handleCloseInviteNewMemberModal();
+                //handleCloseInviteNewMemberModal();
             }
             else {
                 alert('Failed to send invitation. Please try again.')
             }
-        })
-
+        });
     }
 
-    // useEffect(() => {
-    //
-    // }, []);
-
-    // if(inviteError){
-    //     return <div>Error sending invitation: {inviteError}</div>
-    // }
+    const handleInviteSent =  (event: React.FormEvent) => {
+        event.preventDefault();
+        sendInvitation();
+    }
 
     function onInviteNewMemberEmailInputValueChange(event: { target: { value: SetStateAction<string>; }; }){
-        setInviteNewMemberEmailInputValue(event.target.value);
+        setInviteEmail(event.target.value);
     }
 
     return(
@@ -57,7 +48,7 @@ export default function InviteMemberView() {
                         <div className={"form-floating"}>
                             <input
                                 type={"email"}
-                                value={inviteNewMemberEmailInputValue}
+                                value={inviteEmail}
                                 onChange={onInviteNewMemberEmailInputValueChange}
                                 className={"form-control"}
                                 id={"inviteEmailInput"}
