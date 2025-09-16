@@ -1,11 +1,11 @@
-import InviteMemberView from "./InviteMemberView.tsx";
+import InviteMemberView from './InviteMemberView.tsx';
 
 const MembersListView = () => {
-    return(
-        <>
-            <InviteMemberView/>
-        </>
-    )
-}
+	return (
+		<>
+			<InviteMemberView />
+		</>
+	);
+};
 
-export default MembersListView
+export default MembersListView;

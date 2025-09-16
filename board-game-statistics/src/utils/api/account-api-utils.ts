@@ -1,20 +1,18 @@
 import type { Account } from '../types.ts';
 import { apiGet, apiPost, apiPut, apiDelete } from './api-utils.ts';
 
-export const apiLogin = (email: string, password: string): Promise<boolean> => 
-    apiPost("/account/login", { email, password })
-        .then(res => {
-            if (res.ok) {
-                return true;
-            }
-            if (res.status === 401) {
-                return false;
-            }
-            throw new Error(`Error logging in: ${res.statusText}`);
-        })
+export const apiLogin = (email: string, password: string): Promise<boolean> =>
+	apiPost('/account/login', { email, password }).then((res) => {
+		if (res.ok) {
+			return true;
+		}
+		if (res.status === 401) {
+			return false;
+		}
+		throw new Error(`Error logging in: ${res.statusText}`);
+	});
 
-export const apiLogout = (): Promise<Response> => 
-    apiPost("/account/logout")
+export const apiLogout = (): Promise<Response> => apiPost('/account/logout');
 
 
 export const apiGetLoggedInAccount = (): Promise<Account> => 

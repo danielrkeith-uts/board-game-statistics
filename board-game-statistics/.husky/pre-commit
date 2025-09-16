@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+cd board-game-statistics
+npx lint-staged --allow-empty

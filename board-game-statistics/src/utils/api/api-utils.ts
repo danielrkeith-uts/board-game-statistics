@@ -32,4 +32,3 @@ export const apiDelete = (endpoint: string) =>
         method: 'DELETE',
         credentials: "include"
     });
-
