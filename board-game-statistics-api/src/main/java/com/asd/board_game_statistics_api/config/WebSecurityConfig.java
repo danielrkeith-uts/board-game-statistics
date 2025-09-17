@@ -22,7 +22,7 @@ public class WebSecurityConfig {
         return http
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/admin/**", "/api/account/login", "/api/account/create").permitAll()
+                    .requestMatchers("/api/admin/**", "/api/account/login", "/api/account/create", "api/invite/**").permitAll()
                     .anyRequest().authenticated()
             )
             .formLogin(AbstractHttpConfigurer::disable)

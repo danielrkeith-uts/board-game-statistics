@@ -25,20 +25,15 @@ public class InvitationController {
     @Autowired
     EmailService emailService;
 
-    private void testSendEmail() {
-        SimpleMailMessage message = new SimpleMailMessage();
-
-        message.setFrom("noreply@boardgamestats.com");
-        message.setTo("aaron.falco2@gmail.com");
-        message.setSubject("Test");
-        message.setText("Testy testy test. Test test test.");
-
-        //emailService.sendEmail(message);
-    }
-
     @PostMapping("/api/invite/send")
     public ResponseEntity<?> SendInvitation(@RequestBody EmailRequest emailRequest){
-        //emailService.sendEmail("aaron.falco2@gmail.com", "aaron.falco2@gmail.com", "Subject", "Body");
+        emailService.sendEmail("aaron.falco2@gmail.com", "aaron.falco2@gmail.com", "Invitation Code", "Body");
         return ResponseEntity.ok("Invite Sent");
+    }
+
+    @PostMapping("/api/invite/join")
+    public ResponseEntity<?> JoinGroup(@RequestBody EmailRequest emailRequest){
+
+        return ResponseEntity.ok("Group Joined");
     }
 }
