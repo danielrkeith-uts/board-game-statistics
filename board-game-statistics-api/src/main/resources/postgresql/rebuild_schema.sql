@@ -14,6 +14,6 @@ CREATE TABLE bgs.invitation (
     invite_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     user_email VARCHAR(100),
     group_id INT,
-    invite_code INT DEFAULT  floor((999999 * random()) + 100000)::int,
+    invite_code INT DEFAULT floor(random() * (999999 - 100000 + 1) + 100000)::int,--floor((999999 * random()) + 100000)::int,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
