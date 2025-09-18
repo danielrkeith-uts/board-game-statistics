@@ -1,6 +1,5 @@
 package com.asd.board_game_statistics_api.group;
 
-import com.asd.board_game_statistics_api.account.dto.MeResponse;
 import com.asd.board_game_statistics_api.group.dto.GroupMemberResponse;
 import com.asd.board_game_statistics_api.group.dto.GroupResponse;
 import com.asd.board_game_statistics_api.group.exceptions.EmptyGroupException;
@@ -8,6 +7,7 @@ import com.asd.board_game_statistics_api.group.exceptions.ExistingGroupNameExcep
 import com.asd.board_game_statistics_api.group.exceptions.GroupException;
 import com.asd.board_game_statistics_api.model.Account;
 import com.asd.board_game_statistics_api.model.Group;
+import com.asd.board_game_statistics_api.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +23,17 @@ public class GroupService implements IGroupService {
 
     @Override
     public GroupResponse createGroup(String groupName, int creatorId) throws GroupException {
-        // If group name is already taken
-        if (groupRepository.getByGroupName(groupName) != null) {
-            throw new ExistingGroupNameException();
+        if (!Validator.isValidGroupName(groupName)) {
+            throw new GroupException("Group name is invalid.");
+        }
+
+        String caseInsensitiveGroupName = groupName.toLowerCase();
+
+        // Check if the requested group name exists in the database, irrespective of case
+        for (String groupNameFromDatabase : groupRepository.getAllGroupNames()) {
+            if (groupNameFromDatabase.toLowerCase().equals(caseInsensitiveGroupName)) {
+                throw new ExistingGroupNameException();
+            }
         }
 
         Instant creationTime = Instant.now();

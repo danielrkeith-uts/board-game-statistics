@@ -58,13 +58,12 @@ public class PostgreSqlGroupRepository implements IGroupRepository {
         return jdbcTemplate.query(sql, Group::fromResultSet, groupId);
     }
 
-    public Group getByGroupName(String groupName) {
+    public List<String> getAllGroupNames() {
         String sql = """
-                SELECT * FROM bgs.game_group
-                WHERE game_group.group_name = ?;
+                SELECT group_name FROM bgs.game_group
                 """;
 
-        return jdbcTemplate.query(sql, Group::fromResultSet, groupName);
+        return jdbcTemplate.queryForList(sql, String.class);
     }
 
     @Override
