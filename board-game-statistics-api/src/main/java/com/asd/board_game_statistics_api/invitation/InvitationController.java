@@ -30,7 +30,7 @@ public class InvitationController {
     public ResponseEntity<?> SendInvitation(@RequestBody InvitationRequest invitationRequest){
         invitationService.createInvitation(invitationRequest.email(), invitationRequest.group());
         Invitation invite = invitationService.getInvitationByEmailAndGroup(invitationRequest.email(), invitationRequest.group());
-        emailService.sendEmail(invite.user_email(), "aaron.falco2@gmail.com", "Invitation Code", String.valueOf(invite.invite_code()));
+        emailService.sendEmail(invite.user_email(), "t5337271@gmail.com", "Invitation Code", String.valueOf(invite.invite_code()));
         return ResponseEntity.ok("Invite Sent");
     }
 
@@ -41,6 +41,6 @@ public class InvitationController {
             // Add user to group table (check for implementation)
             return ResponseEntity.ok("Group Joined");
         }
-        return ResponseEntity.ok("Invitation Not Found");
+            return ResponseEntity.ok("Invitation Not Found");
     }
 }

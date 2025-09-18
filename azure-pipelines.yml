@@ -40,6 +40,7 @@ steps:
   env:
     BGS_DB_PASSWORD: $(DB_PASSWORD)
     BGS_ADMIN_PASSWORD: $(ADMIN_PASSWORD)
+    BGS_MAIL_PASSWORD: $(MAIL_PASSWORD)
   inputs:
     mavenPomFile: 'board-game-statistics-api/pom.xml'
     publishJUnitResults: true

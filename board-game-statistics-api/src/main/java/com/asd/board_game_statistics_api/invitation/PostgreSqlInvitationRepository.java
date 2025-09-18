@@ -35,8 +35,9 @@ public class PostgreSqlInvitationRepository implements IInvitationRespository {
 
     @Override
     public boolean checkInvitationExists(String code) {
+        int invite_code = Integer.valueOf(code);
         String sqlStatement = "SELECT COUNT(*) FROM bgs.invitation WHERE invite_code = ?";
-        int count = jdbcTemplate.queryForObject(sqlStatement, Integer.class, code);
+        int count = jdbcTemplate.queryForObject(sqlStatement, Integer.class, invite_code);
         return count > 0;
     }
 

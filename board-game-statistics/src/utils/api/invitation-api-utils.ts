@@ -11,8 +11,8 @@ export const apiInvite = (email: string, group: number): Promise<boolean> =>
         throw new Error(`Error sending invitation: ${response.statusText}`);
     })
 
-export const apiJoinGroup = (invitecode: string): Promise<boolean> =>
-    apiPost('/invite/join', {invitecode}).then(response => {
+export const apiJoinGroup = (invite_code: string): Promise<boolean> =>
+    apiPost('/invite/join', {invite_code}).then(response => {
         if(response.ok){
             return true
         }
