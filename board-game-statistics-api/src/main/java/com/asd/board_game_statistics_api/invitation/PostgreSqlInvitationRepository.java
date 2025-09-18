@@ -14,10 +14,12 @@ public class PostgreSqlInvitationRepository implements IInvitationRespository {
 
     @Override
     public void createInvitation(String user_email, int group_id) {
-        String sqlStatement = "INSERT INTO invitation (user_email, group_id) VALUES (?, ?)";
+        String sqlStatement = "INSERT INTO bgs.invitation (user_email, group_id) VALUES (?, ?)";
         jdbcTemplate.update(sqlStatement, user_email, group_id);
     }
-    public Invitation getInvitation(String user_email, int group_id) {
-        return null;
+    @Override
+    public Invitation getInvitation(int invite_code) {
+        String sqlStatement = "SELECT * FROM bgs.invitation WHERE invite_code = ?";
+        return jdbcTemplate.query(sqlStatement, Invitation::fromResultSet, invite_code);
     }
 }

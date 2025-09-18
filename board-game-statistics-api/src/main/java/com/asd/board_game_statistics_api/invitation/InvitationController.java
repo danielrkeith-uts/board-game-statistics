@@ -1,5 +1,6 @@
 package com.asd.board_game_statistics_api.invitation;
 
+import com.asd.board_game_statistics_api.account.IAccountService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,10 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class InvitationController {
 
     @Autowired
-    EmailService emailService;
+    private EmailService emailService;
+
+    @Autowired
+    private IAccountService accountService;
+    @Autowired
+    private InvitationService invitationService;
 
     @PostMapping("/api/invite/send")
     public ResponseEntity<?> SendInvitation(@RequestBody InvitationRequest invitationRequest){
+        invitationService.createInvitation(invitationRequest.email(), invitationRequest.body());
         emailService.sendEmail("aaron.falco2@gmail.com", "aaron.falco2@gmail.com", "Invitation Code", "Body");
         return ResponseEntity.ok("Invite Sent");
     }
