@@ -1,6 +1,18 @@
-const GroupHomeView = () => {
+import type { Group } from '../../utils/types';
+import { formatDate, getAccountFullName } from '../../utils/util-methods';
+
+interface GroupHomeViewProps {
+	currentGroup: Group;
+}
+
+const GroupHomeView = (props: GroupHomeViewProps) => {
+	const { members } = props.currentGroup;
+
+	// Change later to draw from permissions
+	const ownerEmail = 'matthew@adler.id.au';
+
 	return (
-		<div className='container mt-3'>
+		<div className='container'>
 			<div className='row'>
 				<div className='col-3 border'>
 					<div className='container vstack'>
@@ -10,46 +22,54 @@ const GroupHomeView = () => {
 								href='#'
 								className='list-group-item list-group-item-action'
 							>
-								Game 1
+								Sample game
 							</a>
 							<a
 								href='#'
 								className='list-group-item list-group-item-action'
 							>
-								Game 2
+								Sample game
 							</a>
 							<a
 								href='#'
 								className='list-group-item list-group-item-action'
 							>
-								Game 3
+								Sample game
 							</a>
 						</div>
 					</div>
 				</div>
 				<div className='col border'>
-					<table className='table mt-1'>
-						<thead>
-							<tr>
-								<th scope='col'>Name</th>
-								<th scope='col'>Date joined</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>Mark Otto</td>
-								<td>03/08/2025</td>
-							</tr>
-							<tr>
-								<td>Jacob Thornton</td>
-								<td>05/08/2025</td>
-							</tr>
-							<tr>
-								<td>John Doe</td>
-								<td>03/08/2025</td>
-							</tr>
-						</tbody>
-					</table>
+					<div className='scrollable-table mt-1'>
+						<table id='memberTable' className='table'>
+							<thead className='position-sticky'>
+								<tr>
+									<th scope='col'>Name</th>
+									<th scope='col'>Date joined</th>
+								</tr>
+							</thead>
+							<tbody>
+								{members.map((member) => (
+									<tr key={member.email}>
+										<td>
+											{getAccountFullName(member)}{' '}
+											{member.email === ownerEmail ? (
+												<span className='badge text-bg-secondary ms-2'>
+													Owner{' '}
+													{/* Replace w a yellow crown icon */}
+												</span>
+											) : null}
+										</td>
+										<td>
+											{formatDate(
+												new Date(member.joinTimestamp)
+											)}
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
 				</div>
 				<div className='col-3 border'>
 					<div className='list-group mt-3'>
@@ -58,19 +78,19 @@ const GroupHomeView = () => {
 							href='#'
 							className='list-group-item list-group-item-action'
 						>
-							Last game
+							Sample game
 						</a>
 						<a
 							href='#'
 							className='list-group-item list-group-item-action'
 						>
-							Second last game
+							Sample game
 						</a>
 						<a
 							href='#'
 							className='list-group-item list-group-item-action'
 						>
-							Third last game
+							Sample game
 						</a>
 					</div>
 
@@ -79,15 +99,15 @@ const GroupHomeView = () => {
 					<table className='table'>
 						<tbody>
 							<tr>
-								<td>Wins</td>
+								<td>Sample Wins</td>
 								<td>3</td>
 							</tr>
 							<tr>
-								<td>Losses</td>
+								<td>Sample Losses</td>
 								<td>2</td>
 							</tr>
 							<tr>
-								<td>Points</td>
+								<td>Sample Points</td>
 								<td>-</td>
 							</tr>
 						</tbody>

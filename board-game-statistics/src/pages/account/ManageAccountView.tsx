@@ -9,7 +9,7 @@ import DeleteAccountModal from './DeleteAccountModal';
 import UpdateProfileModal from './UpdateProfileModal';
 
 export default function ManageAccountView() {
-	const account = useContext(AccountContext);
+	const { account } = useContext(AccountContext);
 	const [isEditing, setIsEditing] = useState(false);
 	const [isChangingPassword, setIsChangingPassword] = useState(false);
 	const [updatingProfile, setUpdatingProfile] = useState(false);

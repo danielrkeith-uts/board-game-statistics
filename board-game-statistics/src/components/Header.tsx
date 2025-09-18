@@ -1,19 +1,34 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
+	allowedPagesWhileLoggedOut,
 	GAMES_PAGE_URL,
 	GROUPS_PAGE_URL,
 	HOME_PAGE_URL,
 	LOGIN_PAGE_URL,
 } from '../utils/constants';
 import '../css/custom.css';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AccountContext } from '../context/AccountContext';
 import { apiLogout } from '../utils/api/account-api-utils';
 
 const logout = () => apiLogout().then(() => window.location.replace('/'));
 
 const Header = () => {
-	const account = useContext(AccountContext);
+	const location = useLocation();
+	const navigate = useNavigate();
+	const { account, loading } = useContext(AccountContext);
+
+	useEffect(() => {
+		if (!loading) {
+			// If user is not logged in currently, they should only have access to pages in the allowedPages array
+			if (
+				account === null &&
+				!allowedPagesWhileLoggedOut.includes(location.pathname)
+			) {
+				navigate(LOGIN_PAGE_URL);
+			}
+		}
+	}, [location, account, navigate, loading]);
 
 	return (
 		<nav className='navbar navbar-expand bg-primary-subtle'>

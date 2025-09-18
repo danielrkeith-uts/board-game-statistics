@@ -4,4 +4,15 @@ interface Account {
 	lastName: string;
 }
 
-export type { Account };
+interface GroupMember extends Account {
+	joinTimestamp: string;
+}
+
+interface Group {
+	id: number;
+	groupName: string;
+	creationTime: Date;
+	members: GroupMember[];
+}
+
+export type { Account, GroupMember, Group };

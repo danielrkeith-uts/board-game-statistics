@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { AccountContext } from '../../context/AccountContext';
 
 const HomeView = () => {
-	const account = useContext(AccountContext);
+	const { account } = useContext(AccountContext);
 
 	return (
 		<>
