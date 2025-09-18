@@ -1,6 +1,7 @@
 package com.asd.board_game_statistics_api.invitation;
 
 import com.asd.board_game_statistics_api.account.IAccountService;
+import com.asd.board_game_statistics_api.model.Invitation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,8 +27,9 @@ public class InvitationController {
 
     @PostMapping("/api/invite/send")
     public ResponseEntity<?> SendInvitation(@RequestBody InvitationRequest invitationRequest){
-        invitationService.createInvitation(invitationRequest.email(), invitationRequest.body());
-        emailService.sendEmail("aaron.falco2@gmail.com", "aaron.falco2@gmail.com", "Invitation Code", "Body");
+        invitationService.createInvitation(invitationRequest.email(), invitationRequest.group());
+        Invitation invite = invitationService.getInvitationByEmailAndGroup(invitationRequest.email(), invitationRequest.group());
+        emailService.sendEmail(invite.user_email(), "aaron.falco2@gmail.com", "Invitation Code", String.valueOf(invite.invite_code()));
         return ResponseEntity.ok("Invite Sent");
     }
 

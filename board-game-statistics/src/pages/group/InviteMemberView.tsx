@@ -15,7 +15,7 @@ export default function InviteMemberView() {
 
     const sendInvitation = () => {
 
-        apiInvite(inviteEmail).then((sent) => {
+        apiInvite(inviteEmail, 23).then((sent) => {
             if (sent) {
                 alert(`Invitation sent to ${inviteEmail}`);
 

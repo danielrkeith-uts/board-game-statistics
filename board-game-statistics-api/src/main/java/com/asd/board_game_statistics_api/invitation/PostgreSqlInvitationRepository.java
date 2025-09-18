@@ -18,8 +18,14 @@ public class PostgreSqlInvitationRepository implements IInvitationRespository {
         jdbcTemplate.update(sqlStatement, user_email, group_id);
     }
     @Override
-    public Invitation getInvitation(int invite_code) {
+    public Invitation getInvitationByCode(int invite_code) {
         String sqlStatement = "SELECT * FROM bgs.invitation WHERE invite_code = ?";
         return jdbcTemplate.query(sqlStatement, Invitation::fromResultSet, invite_code);
     }
+    @Override
+    public Invitation getInvitationByEmailAndGroup(String user_email, int group_id) {
+        String sqlStatement = "SELECT * FROM bgs.invitation WHERE user_email = ? AND group_id = ?";
+        return jdbcTemplate.query(sqlStatement, Invitation::fromResultSet, user_email, group_id);
+    }
+
 }
