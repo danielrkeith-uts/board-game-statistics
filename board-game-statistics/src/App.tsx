@@ -2,6 +2,7 @@ import Header from './components/Header';
 import { Routes, Route } from 'react-router-dom';
 import {
 	CREATE_ACCOUNT_PAGE_URL,
+	FORGOT_PASSWORD_PAGE_URL,
 	GAMES_PAGE_URL,
 	GROUPS_PAGE_URL,
 	HOME_PAGE_URL,
@@ -13,6 +14,7 @@ import GroupView from './pages/group/GroupView';
 import { AccountContextProvider } from './context/AccountContext';
 import GamesView from './pages/games/GamesView';
 import LoginView from './pages/login/LoginView';
+import ForgotPasswordView from './pages/login/ForgotPasswordView';
 
 function App() {
 	return (
@@ -26,6 +28,10 @@ function App() {
 					<Route path={GAMES_PAGE_URL} element={<GamesView />} />
 					<Route path={GROUPS_PAGE_URL} element={<GroupView />} />
 					<Route path={LOGIN_PAGE_URL} element={<LoginView />} />
+					<Route
+						path={FORGOT_PASSWORD_PAGE_URL}
+						element={<ForgotPasswordView />}
+					/>
 					<Route path={CREATE_ACCOUNT_PAGE_URL} />
 				</Routes>
 			</div>
