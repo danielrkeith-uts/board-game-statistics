@@ -22,4 +22,14 @@ public class PasswordEncoderTests {
         Assertions.assertTrue(passwordEncoder.matches(rawPassword, encodedPassword));
     }
 
+    @Test
+    void testEncodeAndDoNotMatch() {
+        String rawPasswordA = "password123";
+        String rawPasswordB = "password456";
+
+        String encodedPasswordB = passwordEncoder.encode(rawPasswordB);
+
+        Assertions.assertFalse(passwordEncoder.matches(rawPasswordA, encodedPasswordB));
+    }
+
 }
