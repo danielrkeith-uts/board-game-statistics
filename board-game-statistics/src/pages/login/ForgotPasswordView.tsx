@@ -8,7 +8,7 @@ const ForgotPasswordView = () => {
 		<Container fluid>
 			<h1 className='mb-3 text-center'>Forgot Password</h1>
 			<Form>
-				<Form.Group className='mb-3' controlId='loginForm.email'>
+				<Form.Group className='mb-3' controlId='forgotPassword.email'>
 					<Form.Label>Email address</Form.Label>
 					<Form.Control
 						type='email'
