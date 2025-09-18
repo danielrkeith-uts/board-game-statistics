@@ -53,7 +53,8 @@ This will run the backend on port 8080
 ### Running frontend locally
 1. Navigate to `board-game-statistics`
 2. Run `npm install` *(Only needs to be done once)*
-3. Run `npm dev`
+3. Run `npm prepare` *(Only needs to be done once)*
+4. Run `npm dev`
 
 This will run the frontend on port 3000
 

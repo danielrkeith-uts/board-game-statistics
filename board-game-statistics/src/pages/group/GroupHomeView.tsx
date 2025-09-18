@@ -12,31 +12,40 @@ const GroupHomeView = (props: GroupHomeViewProps) => {
 	const ownerEmail = 'matthew@adler.id.au';
 
 	return (
-		<div className="container">
-			<div className="row">
-				<div className="col-3 border">
-					<div className="container vstack">
-						<div className="list-group mt-3">
+		<div className='container'>
+			<div className='row'>
+				<div className='col-3 border'>
+					<div className='container vstack'>
+						<div className='list-group mt-3'>
 							<h6>Available games</h6>
-							<a href="#" className="list-group-item list-group-item-action">
+							<a
+								href='#'
+								className='list-group-item list-group-item-action'
+							>
 								Sample game
 							</a>
-							<a href="#" className="list-group-item list-group-item-action">
+							<a
+								href='#'
+								className='list-group-item list-group-item-action'
+							>
 								Sample game
 							</a>
-							<a href="#" className="list-group-item list-group-item-action">
+							<a
+								href='#'
+								className='list-group-item list-group-item-action'
+							>
 								Sample game
 							</a>
 						</div>
 					</div>
 				</div>
-				<div className="col border">
-					<div className="scrollable-table mt-1">
-						<table id="memberTable" className="table">
-							<thead className="position-sticky">
+				<div className='col border'>
+					<div className='scrollable-table mt-1'>
+						<table id='memberTable' className='table'>
+							<thead className='position-sticky'>
 								<tr>
-									<th scope="col">Name</th>
-									<th scope="col">Date joined</th>
+									<th scope='col'>Name</th>
+									<th scope='col'>Date joined</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -45,35 +54,49 @@ const GroupHomeView = (props: GroupHomeViewProps) => {
 										<td>
 											{getAccountFullName(member)}{' '}
 											{member.email === ownerEmail ? (
-												<span className="badge text-bg-secondary ms-2">
-													Owner {/* Replace w a yellow crown icon */}
+												<span className='badge text-bg-secondary ms-2'>
+													Owner{' '}
+													{/* Replace w a yellow crown icon */}
 												</span>
 											) : null}
 										</td>
-										<td>{formatDate(new Date(member.joinTimestamp))}</td>
+										<td>
+											{formatDate(
+												new Date(member.joinTimestamp)
+											)}
+										</td>
 									</tr>
 								))}
 							</tbody>
 						</table>
 					</div>
 				</div>
-				<div className="col-3 border">
-					<div className="list-group mt-3">
+				<div className='col-3 border'>
+					<div className='list-group mt-3'>
 						<h6>Game results</h6>
-						<a href="#" className="list-group-item list-group-item-action">
+						<a
+							href='#'
+							className='list-group-item list-group-item-action'
+						>
 							Sample game
 						</a>
-						<a href="#" className="list-group-item list-group-item-action">
+						<a
+							href='#'
+							className='list-group-item list-group-item-action'
+						>
 							Sample game
 						</a>
-						<a href="#" className="list-group-item list-group-item-action">
+						<a
+							href='#'
+							className='list-group-item list-group-item-action'
+						>
 							Sample game
 						</a>
 					</div>
 
 					<hr />
 
-					<table className="table">
+					<table className='table'>
 						<tbody>
 							<tr>
 								<td>Sample Wins</td>

@@ -58,8 +58,10 @@ const GroupView = () => {
 				}
 			})
 			.catch((err: Error) => setError(err.message))
-			.finally(() => setTimeout(() => setIsLoading(false), minPageLoadTime));
-	}, []);
+			.finally(() =>
+				setTimeout(() => setIsLoading(false), minPageLoadTime)
+			);
+	}, [updateGroupState]);
 
 	// Hide alert popups after set delay. If the user closes the alert, cancel the timeout
 	useEffect(() => {
@@ -108,11 +110,13 @@ const GroupView = () => {
 		if (currentGroup !== undefined) {
 			apiLeaveGroup(currentGroup.id)
 				.then(() => {
-					setSuccess(`Left group ${currentGroup.groupName} successfully!`);
+					setSuccess(
+						`Left group ${currentGroup.groupName} successfully!`
+					);
 
 					// Remove group from state
 					const filteredGroups = groups.filter(
-						(group) => group.id != currentGroup.id
+						(group) => group.id !== currentGroup.id
 					);
 
 					updateGroupState(filteredGroups);
@@ -141,8 +145,8 @@ const GroupView = () => {
 			/>
 
 			{isLoading ? (
-				<div className="container centerContainer flex-column">
-					<h5 className="mb-3">Fetching group data</h5>
+				<div className='container centerContainer flex-column'>
+					<h5 className='mb-3'>Fetching group data</h5>
 					<Spinner />
 				</div>
 			) : currentGroup ? (
@@ -154,15 +158,19 @@ const GroupView = () => {
 					handleOpenLeaveGroupModal={handleOpenLeaveGroupModal}
 				/>
 			) : (
-				<div className="container centerContainer flex-column">
+				<div className='container centerContainer flex-column'>
 					<h4>You are currently not a member of any groups.</h4>
 					<CreateGroupButton onClick={handleOpenCreateGroupModal} />
 				</div>
 			)}
 
-			<AlertMessage variant="danger" message={error} setMessage={setError} />
 			<AlertMessage
-				variant="success"
+				variant='danger'
+				message={error}
+				setMessage={setError}
+			/>
+			<AlertMessage
+				variant='success'
 				message={success}
 				setMessage={setSuccess}
 			/>

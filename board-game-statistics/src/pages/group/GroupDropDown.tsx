@@ -10,9 +10,9 @@ interface GroupDropDownProps {
 const GroupDropDown = (props: GroupDropDownProps) => {
 	return (
 		<select
-			className="form-select mt-3"
-			name=""
-			id=""
+			className='form-select mt-3'
+			name=''
+			id=''
 			onChange={props.onChange}
 			value={props.currentGroup.id}
 		>
