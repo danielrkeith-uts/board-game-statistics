@@ -1,6 +1,7 @@
 package com.asd.board_game_statistics_api.invitation;
 
 import com.asd.board_game_statistics_api.account.IAccountService;
+import com.asd.board_game_statistics_api.invitation.dto.JoinGroupRequest;
 import com.asd.board_game_statistics_api.model.Invitation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,8 +35,12 @@ public class InvitationController {
     }
 
     @PostMapping("/api/invite/join")
-    public ResponseEntity<?> JoinGroup(@RequestBody InvitationRequest invitationRequest){
-
-        return ResponseEntity.ok("Group Joined");
+    public ResponseEntity<?> JoinGroup(@RequestBody JoinGroupRequest joinGroupRequest){
+        if(invitationService.checkInvitationExists(joinGroupRequest.invite_code())){
+            invitationService.deleteInvitationByCode(joinGroupRequest.invite_code());
+            // Add user to group table (check for implementation)
+            return ResponseEntity.ok("Group Joined");
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

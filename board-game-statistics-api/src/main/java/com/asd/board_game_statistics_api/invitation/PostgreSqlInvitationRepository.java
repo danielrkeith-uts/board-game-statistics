@@ -3,7 +3,6 @@ package com.asd.board_game_statistics_api.invitation;
 import com.asd.board_game_statistics_api.model.Invitation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,6 +25,19 @@ public class PostgreSqlInvitationRepository implements IInvitationRespository {
     public Invitation getInvitationByEmailAndGroup(String user_email, int group_id) {
         String sqlStatement = "SELECT * FROM bgs.invitation WHERE user_email = ? AND group_id = ?";
         return jdbcTemplate.query(sqlStatement, Invitation::fromResultSet, user_email, group_id);
+    }
+
+    @Override
+    public void deleteInvitationByCode(int invite_code) {
+        String sqlStatement = "DELETE FROM bgs.invitation WHERE invite_code = ?";
+        jdbcTemplate.update(sqlStatement, invite_code);
+    }
+
+    @Override
+    public boolean checkInvitationExists(String code) {
+        String sqlStatement = "SELECT COUNT(*) FROM bgs.invitation WHERE invite_code = ?";
+        int count = jdbcTemplate.queryForObject(sqlStatement, Integer.class, code);
+        return count > 0;
     }
 
 }

@@ -18,8 +18,6 @@ export default function InviteMemberView() {
         apiInvite(inviteEmail, 23).then((sent) => {
             if (sent) {
                 alert(`Invitation sent to ${inviteEmail}`);
-
-                //handleCloseInviteNewMemberModal();
             }
             else {
                 alert('Failed to send invitation. Please try again.')

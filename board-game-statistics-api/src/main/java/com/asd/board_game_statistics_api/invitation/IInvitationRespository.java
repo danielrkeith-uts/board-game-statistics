@@ -6,5 +6,7 @@ public interface IInvitationRespository {
     void createInvitation(String user_email, int group_id);
     Invitation getInvitationByCode(int invite_code);
     Invitation getInvitationByEmailAndGroup(String user_email, int group_id);
+    void deleteInvitationByCode(int invite_code);
+    boolean checkInvitationExists(String code);
 }
 

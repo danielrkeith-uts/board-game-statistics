@@ -25,5 +25,15 @@ public class InvitationService implements IInvitaionService{
         return invitationRespository.getInvitationByCode(Integer.parseInt(code));
     }
 
+    @Override
+    public void deleteInvitationByCode(String code) {
+        invitationRespository.deleteInvitationByCode(Integer.parseInt(code));
+    }
+
+    @Override
+    public boolean checkInvitationExists(String code) {
+        return invitationRespository.checkInvitationExists(code);
+    }
+
 
 }

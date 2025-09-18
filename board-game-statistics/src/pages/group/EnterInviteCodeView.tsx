@@ -1,21 +1,37 @@
-import {useState, type FormEvent} from "react";
+import {useState, type FormEvent, type SetStateAction} from "react";
 import {Button, Modal, ModalBody} from "react-bootstrap";
+import {apiJoinGroup} from "../../utils/api/invitation-api-utils.ts";
 
 export default function EnterInviteCodeView() {
 
     const [showInviteCodeEntryModal, setShowInviteCodeEntryModal] = useState(false);
+    const [inviteCode, setInviteCode] = useState("");
 
     const handleOpenInviteCodeEntryModal = () => setShowInviteCodeEntryModal(true);
     const handleCloseInviteCodeEntryModal = () => {
         setShowInviteCodeEntryModal(false);
     }
 
+    function onInviteCodeUpdate(event: { target: { value: SetStateAction<string>; }; }){
+        setInviteCode(event.target.value);
+    }
+
     const handleInviteCodeEntered= (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        joinGroup();
+    }
 
-        alert('You have been added to your new group.');
-
-        handleCloseInviteCodeEntryModal();
+    const joinGroup = () => {
+        apiJoinGroup(inviteCode).then((joined) => {
+                if(joined){
+                    alert('You have been added to your new group.');
+                    handleCloseInviteCodeEntryModal();
+                }
+                else{
+                    alert('Join group failed. Please try again.');
+                }
+            }
+        );
     }
 
     return(
@@ -34,6 +50,7 @@ export default function EnterInviteCodeView() {
                                 name={"inviteCodeEntry"}
                                 placeholder={""}
                                 required={true}
+                                onChange={onInviteCodeUpdate}
                             />
                             <label htmlFor={"inviteCodeInput"}>Please enter invite code...</label>
                         </div>
