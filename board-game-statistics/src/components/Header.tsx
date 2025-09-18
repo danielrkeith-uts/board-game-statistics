@@ -7,7 +7,6 @@ import {
 	LOGIN_PAGE_URL,
 } from '../utils/constants';
 import '../css/custom.css';
-import './styles.css';
 import { useContext, useEffect } from 'react';
 import { AccountContext } from '../context/AccountContext';
 import { apiLogout } from '../utils/api/account-api-utils';

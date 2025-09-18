@@ -67,7 +67,7 @@ public class GroupService implements IGroupService {
         }
 
         if (groups.isEmpty()) {
-            return null;
+            return new ArrayList<GroupResponse>();
         }
 
         // Map list of Group objects to GroupResponse objects that contain a list of members

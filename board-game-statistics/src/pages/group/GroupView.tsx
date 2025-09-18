@@ -51,7 +51,7 @@ const GroupView = () => {
 
 		apiGetGroupsByAccountId()
 			.then((groups) => {
-				updateGroupState(groups);
+				setGroups(groups ? groups : []);
 
 				if (groups.length > 0) {
 					setCurrentGroup(groups[0]);
@@ -61,7 +61,7 @@ const GroupView = () => {
 			.finally(() =>
 				setTimeout(() => setIsLoading(false), minPageLoadTime)
 			);
-	}, [updateGroupState]);
+	}, []);
 
 	// Hide alert popups after set delay. If the user closes the alert, cancel the timeout
 	useEffect(() => {

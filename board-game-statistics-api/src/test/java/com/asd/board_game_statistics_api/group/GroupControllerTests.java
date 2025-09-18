@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GroupControllerTests extends TestsWithMockedDatabase {
@@ -50,7 +51,7 @@ public class GroupControllerTests extends TestsWithMockedDatabase {
         accountService.createAccount(testEmail, "test#123456", "John", "Doe");
         Account testAccount = accountRepository.get(testEmail);
 
-        Assertions.assertNull(groupService.getGroupsByAccountId(testAccount.id()));
+        Assertions.assertEquals(new ArrayList<GroupResponse>(), groupService.getGroupsByAccountId(testAccount.id()));
     }
 
     @Test

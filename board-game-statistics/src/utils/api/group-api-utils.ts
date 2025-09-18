@@ -7,7 +7,7 @@ export const apiCreateNewGroup = (groupName: string): Promise<Group> =>
 			if (res.ok) {
 				return res.json();
 			}
-			if (res.status == 400) {
+			if (res.status === 400) {
 				return res.text().then((err) => {
 					throw new Error(err);
 				});
@@ -25,7 +25,7 @@ export const apiGetGroupsByAccountId = (): Promise<Group[]> =>
 			if (res.ok) {
 				return res.json();
 			}
-			if (res.status == 400) {
+			if (res.status === 400) {
 				return res.text().then((err) => {
 					throw new Error(err);
 				});
@@ -41,7 +41,7 @@ export const apiLeaveGroup = (groupId: number): Promise<boolean> =>
 		if (res.ok) {
 			return true;
 		}
-		if (res.status == 400) {
+		if (res.status === 400) {
 			return res.text().then((err) => {
 				throw new Error(err);
 			});
