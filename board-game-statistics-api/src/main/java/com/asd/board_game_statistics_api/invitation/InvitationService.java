@@ -32,7 +32,7 @@ public class InvitationService implements IInvitaionService{
 
     @Override
     public boolean checkInvitationExists(String code) {
-        return invitationRespository.checkInvitationExists(code);
+        return invitationRespository.checkInvitationExists(code)    ;
     }
 
 

@@ -41,6 +41,6 @@ public class InvitationController {
             // Add user to group table (check for implementation)
             return ResponseEntity.ok("Group Joined");
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok("Invitation Not Found");
     }
 }
