@@ -17,4 +17,10 @@ public class DbManagementController {
         dbManagementService.rebuildSchema();
     }
 
+    @PostMapping("/rebuild-with-sample-data")
+    public void rebuildSchemaWithSampleData() {
+        dbManagementService.rebuildSchema();
+        dbManagementService.insertSampleData();
+    }
+
 }
