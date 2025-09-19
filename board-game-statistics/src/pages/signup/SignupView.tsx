@@ -10,25 +10,29 @@ const SignupView = () => {
   const [confirm, setConfirm] = useState("");
 
   const [hasError, setHasError] = useState(false);
+  const [errorText, setErrorText] = useState<string | null>(null);
 
   const signup = () => {
     if (password !== confirm) {
       setHasError(true);
+      setErrorText("Passwords do not match.");
       setConfirm("");
       return;
     }
 
-    apiCreateAccount(email, firstName, lastName, password).then((created) => {
-      if (created) {
+    apiCreateAccount(email, firstName, lastName, password).then((result) => {
+      if (result.ok) {
         apiLogin(email, password).then((isLoggedIn) => {
           if (isLoggedIn) {
             window.location.replace("/");
           } else {
             setHasError(true);
+            setErrorText("Login failed after creating the account.");
           }
         });
       } else {
         setHasError(true);
+        setErrorText(result.message || "Couldn’t create account. Check your details and try again.");
         setPassword("");
         setConfirm("");
       }
@@ -38,6 +42,7 @@ const SignupView = () => {
   const handleSubmission = (event: React.FormEvent) => {
     event.preventDefault();
     setHasError(false);
+    setErrorText(null);
     signup();
   };
 
@@ -61,7 +66,7 @@ const SignupView = () => {
         <Form.Group className="mb-3" controlId="signupForm.firstName">
           <Form.Label>First name</Form.Label>
           <Form.Control
-            placeholder="Ray"
+            placeholder="Given name"
             value={firstName}
             onChange={(e) => {
               setFirstName(e.target.value);
@@ -73,7 +78,7 @@ const SignupView = () => {
         <Form.Group className="mb-3" controlId="signupForm.lastName">
           <Form.Label>Last name</Form.Label>
           <Form.Control
-            placeholder="Kinjo"
+            placeholder="Surname"
             value={lastName}
             onChange={(e) => {
               setLastName(e.target.value);
@@ -110,7 +115,7 @@ const SignupView = () => {
 
         {hasError && (
           <p className="text-danger">
-            Couldn’t create account. Check your details and try again.
+            {errorText || "Couldn’t create account. Check your details and try again."}
           </p>
         )}
 
