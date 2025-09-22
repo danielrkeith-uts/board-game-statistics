@@ -32,16 +32,12 @@ public class LoginTests extends TestsWithMockedDatabase {
     @Test
     void testAuthenticationManagerAuthenticatesSuccessfully() {
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(USERNAME, PASSWORD);
-        Assertions.assertDoesNotThrow(() -> {
-            authenticationManager.authenticate(auth);
-        });
+        Assertions.assertDoesNotThrow(() -> authenticationManager.authenticate(auth));
     }
 
     @Test
     void testAuthenticationManagerDeniesAuthentication() {
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(USERNAME, "incorrectPassword");
-        Assertions.assertThrows(AuthenticationException.class, () -> {
-            authenticationManager.authenticate(auth);
-        });
+        Assertions.assertThrows(AuthenticationException.class, () -> authenticationManager.authenticate(auth));
     }
 }
