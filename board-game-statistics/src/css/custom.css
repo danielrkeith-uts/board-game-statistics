@@ -12449,7 +12449,7 @@ fieldset:disabled .btn {
 #memberTable thead tr th {
 	position: sticky;
 	top: 0;
-	z-index: 1;
+	z-index: 15;
 }
 
 /*# sourceMappingURL=custom.css.map */

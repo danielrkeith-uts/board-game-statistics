@@ -1,5 +1,7 @@
+import { Dropdown } from 'react-bootstrap';
 import type { GroupMember } from '../../../utils/types';
 import { formatDate, getAccountFullName } from '../../../utils/util-methods';
+import KebabDropdownToggle from '../../../components/KebabDropdownToggle';
 
 interface MembersSectionProps {
 	members: GroupMember[];
@@ -18,6 +20,7 @@ const MembersSection = (props: MembersSectionProps) => {
 					<tr>
 						<th scope='col'>Name</th>
 						<th scope='col'>Date joined</th>
+						<th scope='col' />
 					</tr>
 				</thead>
 				<tbody>
@@ -34,6 +37,21 @@ const MembersSection = (props: MembersSectionProps) => {
 							</td>
 							<td>
 								{formatDate(new Date(member.joinTimestamp))}
+							</td>
+							<td>
+								<Dropdown align='end'>
+									<Dropdown.Toggle
+										as={KebabDropdownToggle}
+									></Dropdown.Toggle>
+									<Dropdown.Menu>
+										<Dropdown.Item>
+											Edit Permissions
+										</Dropdown.Item>
+										<Dropdown.Item>
+											Remove member
+										</Dropdown.Item>
+									</Dropdown.Menu>
+								</Dropdown>
 							</td>
 						</tr>
 					))}
