@@ -1,131 +1,181 @@
-import { Tabs, Tab, Modal, Button } from 'react-bootstrap'
-import GroupHomeView from './GroupHomeView'
-import GroupDropDown from './GroupDropDown'
-import { useState } from 'react'
-import MembersListView from "./MembersListView.tsx";
+import { useEffect, useRef, useState } from 'react';
+import {
+	apiCreateNewGroup,
+	apiGetGroupsByAccountId,
+	apiLeaveGroup,
+} from '../../utils/api/group-api-utils.ts';
+import type { Group } from '../../utils/types.ts';
+import Spinner from 'react-bootstrap/Spinner';
+import GroupDashboard from './GroupDashboard.tsx';
+import CreateGroupModal from './CreateGroupModal.tsx';
+import LeaveGroupModal from './LeaveGroupModal.tsx';
+import CreateGroupButton from './CreateGroupButton.tsx';
+import AlertMessage from './AlertMessage.tsx';
 
 const GroupView = () => {
-  const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
-  const [showLeaveGroupModal, setShowLeaveGroupModal] = useState(false);
+	// Data state
+	const [groups, setGroups] = useState<Group[]>([]);
+	const [currentGroup, setCurrentGroup] = useState<Group>();
+	// Modal state
+	const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
+	const [showLeaveGroupModal, setShowLeaveGroupModal] = useState(false);
+	// Status state
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [success, setSuccess] = useState<string | null>(null);
+	const [error, setError] = useState<string | null>(null);
 
-  const handleOpenCreateGroupModal = () => setShowCreateGroupModal(true);
-  const handleCloseCreateGroupModal = () => setShowCreateGroupModal(false);
+	const sortGroupsAlphabetically = (groups: Group[]) =>
+		groups.sort((groupA, groupB) =>
+			groupA.groupName.localeCompare(groupB.groupName)
+		);
 
-  const handleOpenLeaveGroupModal = () => setShowLeaveGroupModal(true);
-  const handleCloseLeaveGroupModal = () => setShowLeaveGroupModal(false);
+	const updateGroupState = (groups: Group[]) =>
+		setGroups(sortGroupsAlphabetically(groups));
 
-  const handleCreateGroup = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+	const handleOpenCreateGroupModal = () => setShowCreateGroupModal(true);
+	const handleCloseCreateGroupModal = () => setShowCreateGroupModal(false);
 
-    const formData: FormData = new FormData(e.currentTarget);
-    const groupName: string = formData.get("groupNameInput") as string;
+	const handleOpenLeaveGroupModal = () => setShowLeaveGroupModal(true);
+	const handleCloseLeaveGroupModal = () => setShowLeaveGroupModal(false);
 
-    alert(`New group name: ${groupName}`);
+	const minPageLoadTime: number = 700;
+	const minErrorPopupTime: number = 8000;
+	const minSuccessPopupTime: number = 5000;
 
-    handleCloseCreateGroupModal();
-  }
+	const successTimeout = useRef<number | undefined>(undefined);
+	const errorTimeout = useRef<number | undefined>(undefined);
 
-  const handleLeaveGroup = (e: React.FormEvent) => {
-    e.preventDefault();
+	// On page load, get groups for current user
+	useEffect(() => {
+		setIsLoading(true);
 
-    alert(`Leaving currently selected group`);
+		apiGetGroupsByAccountId()
+			.then((groups) => {
+				setGroups(groups ? groups : []);
 
-    handleCloseLeaveGroupModal();
-  }
+				if (groups.length > 0) {
+					setCurrentGroup(groups[0]);
+				}
+			})
+			.catch((err: Error) => setError(err.message))
+			.finally(() =>
+				setTimeout(() => setIsLoading(false), minPageLoadTime)
+			);
+	}, []);
 
-  return (
-    <>
-    	<div className="container mb-3">
-        <div className="row">
-            <div className="col-3">
-                <GroupDropDown />
-            </div>
-            <div className="col">
-                <div className="container mt-4 px-0 d-flex justify-content-end gap-3">
-                    <button className='btn btn-sm btn-success' onClick={handleOpenCreateGroupModal}>Create new group</button>
-                    <button className='btn btn-sm btn-danger' onClick={handleOpenLeaveGroupModal}>Leave group</button>
-                </div>
-            </div>
-        </div>
-      </div>
+	// Hide alert popups after set delay. If the user closes the alert, cancel the timeout
+	useEffect(() => {
+		if (success) {
+			successTimeout.current = setTimeout(
+				() => setSuccess(null),
+				minSuccessPopupTime
+			);
+		} else {
+			clearTimeout(successTimeout.current);
+		}
+	}, [success]);
 
-      <Modal show={showCreateGroupModal} onHide={handleCloseCreateGroupModal}>
-        <form id="newGroupForm" onSubmit={handleCreateGroup}>
-          <Modal.Header closeButton>
-            <Modal.Title>Create new group</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-              <div className="form-floating">
-                <input
-                  type="text"
-                  className="form-control"
-                  id="groupNameInput"
-                  name="groupNameInput"
-                  placeholder="Group Name"
-                  required
-                />
-                <label htmlFor="groupNameInput">Group name</label>
-              </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseCreateGroupModal}>
-              Cancel
-            </Button>
-            <Button variant="success" type='submit'>
-              Create
-            </Button>
-          </Modal.Footer>
-        </form>
-      </Modal>
+	useEffect(() => {
+		if (error) {
+			errorTimeout.current = setTimeout(
+				() => setError(null),
+				minErrorPopupTime
+			);
+		} else {
+			clearTimeout(errorTimeout.current);
+		}
+	}, [error]);
 
-      <Modal show={showLeaveGroupModal} onHide={handleCloseLeaveGroupModal}>
-        <form id="newGroupForm" onSubmit={handleLeaveGroup}>
-          <Modal.Header closeButton>
-            <Modal.Title>Leave group</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-              Are you sure you want to leave *INSERT GROUP NAME HERE*?
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseLeaveGroupModal}>
-              Cancel
-            </Button>
-            <Button variant="danger" type='submit'>
-              Leave
-            </Button>
-          </Modal.Footer>
-        </form>
-      </Modal>
+	const handleCreateGroup = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 
-      <div className="container">
-        <Tabs
-          defaultActiveKey="home"
-          id="group-view-tabs"
-          className="mb-3"
-        >
-          <Tab eventKey="home" title="Home">
-            <GroupHomeView />
-          </Tab>
-          <Tab eventKey="leaderboard" title="Leaderboard">
-            Leaderboard
-          </Tab>
-          <Tab eventKey="members" title="Members">
-            Members list
-            <br/><MembersListView/>
-          </Tab>
-          <Tab eventKey="games" title="Games">
-            Games
-          </Tab>
-          <Tab eventKey="invite" title="Invite">
-            Invite
-          </Tab>
-          <Tab eventKey="manage" title="Manage">
-            Manage perms and kick users?
-          </Tab>
-        </Tabs>
-      </div>
-    </>
-  )
-}
+		const formData: FormData = new FormData(e.currentTarget);
+		const groupName: string = formData.get('groupNameInput') as string;
 
-export default GroupView
+		apiCreateNewGroup(groupName)
+			.then((group) => {
+				setSuccess(`Created new group ${group.groupName}`);
+
+				updateGroupState([...groups, group]);
+				setCurrentGroup(group);
+			})
+			.catch((err: Error) => setError(err.message));
+
+		handleCloseCreateGroupModal();
+	};
+
+	const handleLeaveGroup = (e: React.FormEvent) => {
+		e.preventDefault();
+
+		if (currentGroup !== undefined) {
+			apiLeaveGroup(currentGroup.id)
+				.then(() => {
+					setSuccess(
+						`Left group ${currentGroup.groupName} successfully!`
+					);
+
+					// Remove group from state
+					const filteredGroups = groups.filter(
+						(group) => group.id !== currentGroup.id
+					);
+
+					updateGroupState(filteredGroups);
+					setCurrentGroup(filteredGroups[0]);
+				})
+				.catch((err: Error) => setError(err.message));
+
+			handleCloseLeaveGroupModal();
+		} else {
+			// Handle error - user is not a member of any groups
+		}
+	};
+
+	return (
+		<>
+			<CreateGroupModal
+				show={showCreateGroupModal}
+				handleClose={handleCloseCreateGroupModal}
+				handleSubmit={handleCreateGroup}
+			/>
+			<LeaveGroupModal
+				show={showLeaveGroupModal}
+				handleClose={handleCloseLeaveGroupModal}
+				handleSubmit={handleLeaveGroup}
+				currentGroup={currentGroup}
+			/>
+
+			{isLoading ? (
+				<div className='container centerContainer flex-column'>
+					<h5 className='mb-3'>Fetching group data</h5>
+					<Spinner />
+				</div>
+			) : currentGroup ? (
+				<GroupDashboard
+					groups={groups}
+					currentGroup={currentGroup}
+					setCurrentGroup={setCurrentGroup}
+					handleOpenCreateGroupModal={handleOpenCreateGroupModal}
+					handleOpenLeaveGroupModal={handleOpenLeaveGroupModal}
+				/>
+			) : (
+				<div className='container centerContainer flex-column'>
+					<h4>You are currently not a member of any groups.</h4>
+					<CreateGroupButton onClick={handleOpenCreateGroupModal} />
+				</div>
+			)}
+
+			<AlertMessage
+				variant='danger'
+				message={error}
+				setMessage={setError}
+			/>
+			<AlertMessage
+				variant='success'
+				message={success}
+				setMessage={setSuccess}
+			/>
+		</>
+	);
+};
+
+export default GroupView;

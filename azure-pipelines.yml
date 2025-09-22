@@ -26,6 +26,20 @@ steps:
   inputs:
     command: 'custom'
     workingDir: 'board-game-statistics'
+    customCommand: 'run prettier'
+  displayName: 'Frontend - Prettier'
+
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: 'board-game-statistics'
+    customCommand: 'run lint'
+  displayName: 'Frontend - Lint'
+
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: 'board-game-statistics'
     customCommand: 'run build'
   displayName: 'Frontend - Build'
 
@@ -40,6 +54,7 @@ steps:
   env:
     BGS_DB_PASSWORD: $(DB_PASSWORD)
     BGS_ADMIN_PASSWORD: $(ADMIN_PASSWORD)
+    BGS_MAIL_PASSWORD: $(MAIL_PASSWORD)
   inputs:
     mavenPomFile: 'board-game-statistics-api/pom.xml'
     publishJUnitResults: true
