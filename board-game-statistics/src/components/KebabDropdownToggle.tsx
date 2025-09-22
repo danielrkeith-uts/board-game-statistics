@@ -11,6 +11,7 @@ const KebabDropdownToggle = React.forwardRef<
 >(({ onClick }, ref) => (
 	// Ensure this component is being used as the toggle, but use the dropdown logic that is passed to it
 	<span
+		className='kebab-dropdown'
 		ref={ref}
 		onClick={(e) => {
 			e.preventDefault();

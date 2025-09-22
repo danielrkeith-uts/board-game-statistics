@@ -39,7 +39,7 @@ const MembersSection = (props: MembersSectionProps) => {
 								{formatDate(new Date(member.joinTimestamp))}
 							</td>
 							<td>
-								<Dropdown align='end'>
+								<Dropdown align='end' className='dropdown'>
 									<Dropdown.Toggle
 										as={KebabDropdownToggle}
 									></Dropdown.Toggle>
