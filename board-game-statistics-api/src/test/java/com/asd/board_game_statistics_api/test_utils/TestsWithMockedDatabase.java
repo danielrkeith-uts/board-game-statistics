@@ -31,15 +31,11 @@ public abstract class TestsWithMockedDatabase {
 
     // Mocked util classes for the dbManagementService
     @MockitoBean
-    PasswordEncoder passwordEncoder;
-    @MockitoBean
     ResourceLoader resourceLoader;
 
     // Fetching beans from application context
     @Autowired
     protected DataSource mockedPostgreSqlDatabase;
-    @Autowired
-    protected PasswordEncoder autowiredPasswordEncoder;
     @Autowired
     protected ResourceReader autowiredResourceReader;
 
@@ -54,11 +50,6 @@ public abstract class TestsWithMockedDatabase {
 
     @BeforeEach
     void rebuild_schema() {
-        // Mock password encryption
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        when(autowiredPasswordEncoder.encode(anyString()))
-                .thenAnswer(invocation -> bCryptPasswordEncoder.encode(invocation.getArgument(0)));
-
         dbManagementService.rebuildSchema();
         // FIXME: The sample data insert can be removed if not everyone wants to use the sample data
         dbManagementService.insertSampleData();
