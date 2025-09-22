@@ -1,9 +1,9 @@
 import { Tabs, Tab } from 'react-bootstrap';
-import GroupHomeView from './GroupHomeView';
-import MembersListView from './MembersListView';
+import GroupHomeView from './home/GroupHomeView';
 import { type ChangeEvent } from 'react';
 import type { Group } from '../../utils/types';
 import GroupManagementHeader from './GroupManagementHeader';
+import InviteMemberView from './InviteMemberView';
 
 interface GroupDashboardProps {
 	groups: Group[];
@@ -24,7 +24,9 @@ const GroupDashboard = (props: GroupDashboardProps) => {
 
 	const handleGroupDropdownChange = (e: ChangeEvent<HTMLSelectElement>) => {
 		setCurrentGroup(
-			props.groups.filter((group) => group.id === Number(e.target.value))[0]
+			props.groups.filter(
+				(group) => group.id === Number(e.target.value)
+			)[0]
 		);
 	};
 
@@ -38,31 +40,23 @@ const GroupDashboard = (props: GroupDashboardProps) => {
 				handleOpenLeaveGroupModal={handleOpenLeaveGroupModal}
 			/>
 
-			<div className="container">
+			<div className='container'>
 				<Tabs
-					defaultActiveKey="home"
-					id="group-view-tabs"
-					className="bg-white justify-content-start mb-3 h-auto"
+					defaultActiveKey='home'
+					id='group-view-tabs'
+					className='bg-white justify-content-start mb-3 h-auto'
 				>
-					<Tab eventKey="home" title="Home" className="pb-n3">
+					<Tab eventKey='home' title='Home' className='pb-n3'>
 						<GroupHomeView currentGroup={currentGroup} />
 					</Tab>
-					<Tab eventKey="leaderboard" title="Leaderboard">
+					<Tab eventKey='leaderboard' title='Leaderboard'>
 						Leaderboard
 					</Tab>
-					<Tab eventKey="members" title="Members">
-						Members list
-						<br />
-						<MembersListView />
-					</Tab>
-					<Tab eventKey="games" title="Games">
+					<Tab eventKey='games' title='Games'>
 						Games
 					</Tab>
-					<Tab eventKey="invite" title="Invite">
-						Invite
-					</Tab>
-					<Tab eventKey="manage" title="Manage">
-						Manage perms and kick users?
+					<Tab eventKey='invite' title='Invite'>
+						<InviteMemberView />
 					</Tab>
 				</Tabs>
 			</div>

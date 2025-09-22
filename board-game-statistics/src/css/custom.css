@@ -12446,9 +12446,17 @@ fieldset:disabled .btn {
 	overflow-y: auto;
 }
 
-#memberTable thead tr th {
+#memberTable .position-sticky {
 	position: sticky;
 	top: 0;
+	z-index: 3;
+}
+
+#memberTable .dropdown-menu {
+	z-index: 2;
+}
+
+#memberTable .dropdown-toggle {
 	z-index: 1;
 }
 
