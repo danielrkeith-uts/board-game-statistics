@@ -120,4 +120,11 @@ public class GroupService implements IGroupService {
             throw new GroupException("Failed to leave group.");
         }
     }
+
+    @Override
+    public void addGroupMember(int groupId, int memberId) {
+        Instant joinTime = Instant.now();
+        String defaultPermissionsString = "00000000";
+        groupMembershipRepository.create(groupId, memberId, defaultPermissionsString, joinTime);
+    }
 }

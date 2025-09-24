@@ -1,7 +1,9 @@
 package com.asd.board_game_statistics_api.invitation;
 
-import com.asd.board_game_statistics_api.account.IAccountService;
+import com.asd.board_game_statistics_api.account.AccountService;
+import com.asd.board_game_statistics_api.group.GroupService;
 import com.asd.board_game_statistics_api.invitation.dto.JoinGroupRequest;
+import com.asd.board_game_statistics_api.model.Account;
 import com.asd.board_game_statistics_api.model.Invitation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,9 +24,11 @@ public class InvitationController {
     private EmailService emailService;
 
     @Autowired
-    private IAccountService accountService;
+    private AccountService accountService;
     @Autowired
     private InvitationService invitationService;
+    @Autowired
+    private GroupService groupService;
 
     @PostMapping("/api/invite/send")
     public ResponseEntity<?> SendInvitation(@RequestBody InvitationRequest invitationRequest){
@@ -37,8 +41,17 @@ public class InvitationController {
     @PostMapping("/api/invite/join")
     public ResponseEntity<?> JoinGroup(@RequestBody JoinGroupRequest joinGroupRequest){
         if(invitationService.checkInvitationExists(joinGroupRequest.invite_code())){
+            //Add user to group table (check for implementation)
+            //  Get invitation
+            Invitation invitation = invitationService.getInvitationByCode(joinGroupRequest.invite_code());
+            //  Get user id
+            int userId = accountService.account(invitation.user_email()).id();
+            //  Get group id
+            int groupId = invitation.group_id();
+            //  Add row to group membership table
+            groupService.addGroupMember(groupId, userId);
+            //  Delete invitation from invitation table
             invitationService.deleteInvitationByCode(joinGroupRequest.invite_code());
-            // Add user to group table (check for implementation)
             return ResponseEntity.ok("Group Joined");
         }
             return ResponseEntity.ok("Invitation Not Found");

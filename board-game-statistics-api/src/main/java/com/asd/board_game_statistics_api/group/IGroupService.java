@@ -10,4 +10,5 @@ public interface IGroupService {
     GroupResponse createGroup(String groupName, int creatorId);
     List<GroupResponse> getGroupsByAccountId(int accountId);
     public void leaveGroup(Account account, int groupId);
+    public void addGroupMember(int groupId, int memberId);
 }
