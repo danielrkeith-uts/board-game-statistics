@@ -1,10 +1,11 @@
 import { Dropdown } from 'react-bootstrap';
-import type { Group } from '../../../utils/types';
+import type { Group, GroupMember } from '../../../utils/types';
 import { formatDate, getAccountFullName } from '../../../utils/util-methods';
 import KebabDropdownToggle from '../../../components/KebabDropdownToggle';
 import { useContext, useEffect, useState } from 'react';
 import { PermissionsContext } from '../../../context/PermissionsContext';
 import { apiGetGroupOwner } from '../../../utils/api/permissions-api-utils';
+import EditPermissionsModal from './EditPermissionsModal';
 
 interface MembersSectionProps {
 	group: Group;
@@ -13,7 +14,17 @@ interface MembersSectionProps {
 const MembersSection = (props: MembersSectionProps) => {
 	const { group } = props;
 
+	const [ownerEmail, setOwnerEmail] = useState('');
+
+	const [editPermissionsName, setEditPermissionsName] = useState('');
+	const [showEditPermissions, setShowEditPermissions] = useState(false);
+
 	const { permissions } = useContext(PermissionsContext);
+
+	useEffect(() => {
+		apiGetGroupOwner(group.id).then((email) => setOwnerEmail(email));
+	}, [group.id]);
+
 	const groupPermissions = permissions?.find(
 		(p) => p.groupId === group.id
 	)?.permissions;
@@ -23,62 +34,84 @@ const MembersSection = (props: MembersSectionProps) => {
 	);
 	const canRemoveMembers = groupPermissions?.includes('MANAGE_MEMBERS');
 
-	const [ownerEmail, setOwnerEmail] = useState('');
-
-	useEffect(() => {
-		apiGetGroupOwner(group.id).then((email) => setOwnerEmail(email));
-	}, [group.id]);
+	const editPermissions = (member: GroupMember) => {
+		setEditPermissionsName(getAccountFullName(member));
+		setShowEditPermissions(true);
+	};
 
 	return (
-		<div className='scrollable-table mt-1'>
-			<table id='memberTable' className='table'>
-				<thead className='position-sticky'>
-					<tr>
-						<th scope='col'>Name</th>
-						<th scope='col'>Date joined</th>
-						<th scope='col' />
-					</tr>
-				</thead>
-				<tbody>
-					{group.members.map((member) => (
-						<tr key={member.email}>
-							<td>
-								{getAccountFullName(member)}{' '}
-								{member.email === ownerEmail ? (
-									<span className='badge text-bg-secondary ms-2'>
-										Owner
-									</span>
-								) : null}
-							</td>
-							<td>
-								{formatDate(new Date(member.joinTimestamp))}
-							</td>
-							<td>
-								{(canEditPermissions || canRemoveMembers) && (
-									<Dropdown align='end' className='dropdown'>
-										<Dropdown.Toggle
-											as={KebabDropdownToggle}
-										></Dropdown.Toggle>
-										<Dropdown.Menu>
-											{canEditPermissions && (
-												<Dropdown.Item>
-													Edit Permissions
-												</Dropdown.Item>
-											)}
-											{canRemoveMembers && (
-												<Dropdown.Item>
-													Remove member
-												</Dropdown.Item>
-											)}
-										</Dropdown.Menu>
-									</Dropdown>
-								)}
-							</td>
+		<>
+			<EditPermissionsModal
+				name={editPermissionsName}
+				show={showEditPermissions}
+				handleClose={() => setShowEditPermissions(false)}
+				handleSubmit={() => {}}
+			/>
+			<div className='scrollable-table mt-1'>
+				<table id='memberTable' className='table'>
+					<thead className='position-sticky'>
+						<tr>
+							<th scope='col'>Name</th>
+							<th scope='col'>Date joined</th>
+							<th scope='col' />
 						</tr>
-					))}
-				</tbody>
-			</table>
-		</div>
+					</thead>
+					<tbody>
+						{group.members.map((member) => (
+							<tr key={member.email}>
+								<td>
+									{getAccountFullName(member)}{' '}
+									{member.email === ownerEmail ? (
+										<span className='badge text-bg-secondary ms-2'>
+											Owner
+										</span>
+									) : null}
+								</td>
+								<td>
+									{formatDate(new Date(member.joinTimestamp))}
+								</td>
+								<td>
+									{(canEditPermissions ||
+										canRemoveMembers) && (
+										<Dropdown
+											align='end'
+											className='dropdown'
+											onSelect={(eventKey) => {
+												switch (eventKey) {
+													case 'editPermissions':
+														editPermissions(member);
+														break;
+													case 'removeMember':
+														break;
+													default:
+														break;
+												}
+											}}
+										>
+											<Dropdown.Toggle
+												as={KebabDropdownToggle}
+											/>
+											<Dropdown.Menu>
+												{canEditPermissions && (
+													<Dropdown.Item eventKey='editPermissions'>
+														Edit Permissions
+													</Dropdown.Item>
+												)}
+												{canRemoveMembers && (
+													<Dropdown.Item eventKey='removeMember'>
+														Remove member
+													</Dropdown.Item>
+												)}
+											</Dropdown.Menu>
+										</Dropdown>
+									)}
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
+		</>
 	);
 };
 
