@@ -4,6 +4,17 @@ interface Account {
 	lastName: string;
 }
 
+interface GroupPermissions {
+	groupId: number;
+	permissions: Permission[];
+}
+
+type Permission =
+	| 'MANAGE_MEMBERS'
+	| 'MANAGE_MEMBER_PERMISSIONS'
+	| 'MANAGE_BOARD_GAMES'
+	| 'MANAGE_GAMES_PLAYED';
+
 interface GroupMember extends Account {
 	joinTimestamp: string;
 }
@@ -15,4 +26,4 @@ interface Group {
 	members: GroupMember[];
 }
 
-export type { Account, GroupMember, Group };
+export type { Account, GroupPermissions, GroupMember, Group };

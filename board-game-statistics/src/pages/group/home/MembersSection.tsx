@@ -1,14 +1,26 @@
 import { Dropdown } from 'react-bootstrap';
-import type { GroupMember } from '../../../utils/types';
+import type { Group } from '../../../utils/types';
 import { formatDate, getAccountFullName } from '../../../utils/util-methods';
 import KebabDropdownToggle from '../../../components/KebabDropdownToggle';
+import { useContext } from 'react';
+import { PermissionsContext } from '../../../context/PermissionsContext';
 
 interface MembersSectionProps {
-	members: GroupMember[];
+	group: Group;
 }
 
 const MembersSection = (props: MembersSectionProps) => {
-	const members = props.members;
+	const { group } = props;
+
+	const { permissions } = useContext(PermissionsContext);
+	const groupPermissions = permissions?.find(
+		(p) => p.groupId === group.id
+	)?.permissions;
+
+	const canEditPermissions = groupPermissions?.includes(
+		'MANAGE_MEMBER_PERMISSIONS'
+	);
+	const canRemoveMembers = groupPermissions?.includes('MANAGE_MEMBERS');
 
 	// Change later to draw from permissions
 	const ownerEmail = 'matthew@adler.id.au';
@@ -24,7 +36,7 @@ const MembersSection = (props: MembersSectionProps) => {
 					</tr>
 				</thead>
 				<tbody>
-					{members.map((member) => (
+					{group.members.map((member) => (
 						<tr key={member.email}>
 							<td>
 								{getAccountFullName(member)}{' '}
@@ -39,19 +51,25 @@ const MembersSection = (props: MembersSectionProps) => {
 								{formatDate(new Date(member.joinTimestamp))}
 							</td>
 							<td>
-								<Dropdown align='end' className='dropdown'>
-									<Dropdown.Toggle
-										as={KebabDropdownToggle}
-									></Dropdown.Toggle>
-									<Dropdown.Menu>
-										<Dropdown.Item>
-											Edit Permissions
-										</Dropdown.Item>
-										<Dropdown.Item>
-											Remove member
-										</Dropdown.Item>
-									</Dropdown.Menu>
-								</Dropdown>
+								{(canEditPermissions || canRemoveMembers) && (
+									<Dropdown align='end' className='dropdown'>
+										<Dropdown.Toggle
+											as={KebabDropdownToggle}
+										></Dropdown.Toggle>
+										<Dropdown.Menu>
+											{canEditPermissions && (
+												<Dropdown.Item>
+													Edit Permissions
+												</Dropdown.Item>
+											)}
+											{canRemoveMembers && (
+												<Dropdown.Item>
+													Remove member
+												</Dropdown.Item>
+											)}
+										</Dropdown.Menu>
+									</Dropdown>
+								)}
 							</td>
 						</tr>
 					))}
