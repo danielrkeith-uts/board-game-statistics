@@ -13,3 +13,11 @@ export const apiGetPermissions = (): Promise<GroupPermissions[]> =>
 			throw new Error(`Error getting permissions: ${res.statusText}`);
 		})
 		.then((data) => data as GroupPermissions[]);
+
+export const apiGetGroupOwner = (groupId: number): Promise<string> =>
+	apiGet(`/permissions/group/${groupId}/owner`).then((res) => {
+		if (res.ok) {
+			return res.text();
+		}
+		throw new Error(`Error getting permissions: ${res.statusText}`);
+	});

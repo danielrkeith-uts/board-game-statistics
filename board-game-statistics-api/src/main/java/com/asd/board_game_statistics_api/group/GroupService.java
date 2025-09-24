@@ -67,7 +67,7 @@ public class GroupService implements IGroupService {
         }
 
         if (groups.isEmpty()) {
-            return new ArrayList<GroupResponse>();
+            return new ArrayList<>();
         }
 
         // Map list of Group objects to GroupResponse objects that contain a list of members
@@ -119,5 +119,16 @@ public class GroupService implements IGroupService {
         if (!groupMembershipRepository.delete(groupId, account.id())) {
             throw new GroupException("Failed to leave group.");
         }
+    }
+
+    @Override
+    public boolean belongsToGroup(int accountId, int groupId) {
+        List<Group> groups = groupRepository.getByAccountId(accountId);
+        for (Group group : groups) {
+            if (group.id() == groupId) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -2,8 +2,9 @@ import { Dropdown } from 'react-bootstrap';
 import type { Group } from '../../../utils/types';
 import { formatDate, getAccountFullName } from '../../../utils/util-methods';
 import KebabDropdownToggle from '../../../components/KebabDropdownToggle';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { PermissionsContext } from '../../../context/PermissionsContext';
+import { apiGetGroupOwner } from '../../../utils/api/permissions-api-utils';
 
 interface MembersSectionProps {
 	group: Group;
@@ -22,8 +23,11 @@ const MembersSection = (props: MembersSectionProps) => {
 	);
 	const canRemoveMembers = groupPermissions?.includes('MANAGE_MEMBERS');
 
-	// Change later to draw from permissions
-	const ownerEmail = 'matthew@adler.id.au';
+	const [ownerEmail, setOwnerEmail] = useState('');
+
+	useEffect(() => {
+		apiGetGroupOwner(group.id).then((email) => setOwnerEmail(email));
+	}, []);
 
 	return (
 		<div className='scrollable-table mt-1'>
@@ -42,8 +46,7 @@ const MembersSection = (props: MembersSectionProps) => {
 								{getAccountFullName(member)}{' '}
 								{member.email === ownerEmail ? (
 									<span className='badge text-bg-secondary ms-2'>
-										Owner{' '}
-										{/* Replace w a yellow crown icon */}
+										Owner
 									</span>
 								) : null}
 							</td>
