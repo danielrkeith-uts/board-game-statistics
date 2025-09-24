@@ -28,14 +28,12 @@ public class AccountServiceTests extends TestsWithMockedDatabase {
 
         accountService.createAccount(email, currentPassword, "Temp", "User");
 
-        Account created = accountRepository.get(email);
-        Mockito.when(passwordEncoder.matches(currentPassword, created.password())).thenReturn(true);
-
         accountService.changePassword(email, currentPassword, newPassword);
 
         Account updated = accountRepository.get(email);
         Assertions.assertNotNull(updated);
-        Assertions.assertNotEquals(currentPassword, updated.password());
+        Assertions.assertTrue(passwordEncoder.matches(newPassword, updated.password()));
+        Assertions.assertFalse(passwordEncoder.matches(currentPassword, updated.password()));
     }
 
     @Test
