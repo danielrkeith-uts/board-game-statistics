@@ -13,25 +13,22 @@ import GroupView from './pages/group/GroupView';
 import { AccountContextProvider } from './context/AccountContext';
 import GamesView from './pages/games/GamesView';
 import LoginView from './pages/login/LoginView';
-import { PermissionsContextProvider } from './context/PermissionsContext';
 
 function App() {
 	return (
 		<AccountContextProvider>
-			<PermissionsContextProvider>
-				<Header />
-				<div className='m-4'>
-					<Routes>
-						{/* PLEASE PLUG IN YOUR PAGE VIEW AS AN ELEMENT INTO YOUR ROUTE */}
-						<Route path={HOME_PAGE_URL} element={<HomeView />} />
-						<Route path={MANAGE_ACCOUNT_PAGE_URL} />
-						<Route path={GAMES_PAGE_URL} element={<GamesView />} />
-						<Route path={GROUPS_PAGE_URL} element={<GroupView />} />
-						<Route path={LOGIN_PAGE_URL} element={<LoginView />} />
-						<Route path={CREATE_ACCOUNT_PAGE_URL} />
-					</Routes>
-				</div>
-			</PermissionsContextProvider>
+			<Header />
+			<div className='m-4'>
+				<Routes>
+					{/* PLEASE PLUG IN YOUR PAGE VIEW AS AN ELEMENT INTO YOUR ROUTE */}
+					<Route path={HOME_PAGE_URL} element={<HomeView />} />
+					<Route path={MANAGE_ACCOUNT_PAGE_URL} />
+					<Route path={GAMES_PAGE_URL} element={<GamesView />} />
+					<Route path={GROUPS_PAGE_URL} element={<GroupView />} />
+					<Route path={LOGIN_PAGE_URL} element={<LoginView />} />
+					<Route path={CREATE_ACCOUNT_PAGE_URL} />
+				</Routes>
+			</div>
 		</AccountContextProvider>
 	);
 }

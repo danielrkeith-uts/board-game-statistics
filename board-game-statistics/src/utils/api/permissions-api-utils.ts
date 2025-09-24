@@ -19,5 +19,8 @@ export const apiGetGroupOwner = (groupId: number): Promise<string> =>
 		if (res.ok) {
 			return res.text();
 		}
+		if (res.status === 404) {
+			return '';
+		}
 		throw new Error(`Error getting permissions: ${res.statusText}`);
 	});

@@ -34,6 +34,10 @@ public class PermissionsController {
         }
 
         Account owner = permissionsService.getGroupOwner(groupId);
+        if (owner == null) {
+            return ResponseEntity.status(404).body("No group owner");
+        }
+
         return ResponseEntity.ok(owner.email());
     }
 }

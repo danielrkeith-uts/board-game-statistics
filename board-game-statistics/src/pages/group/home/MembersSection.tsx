@@ -27,7 +27,7 @@ const MembersSection = (props: MembersSectionProps) => {
 
 	useEffect(() => {
 		apiGetGroupOwner(group.id).then((email) => setOwnerEmail(email));
-	}, []);
+	}, [group.id]);
 
 	return (
 		<div className='scrollable-table mt-1'>
