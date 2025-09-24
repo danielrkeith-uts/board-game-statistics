@@ -1,68 +1,94 @@
-import {useState, type SetStateAction} from "react";
-import {Button, Modal} from "react-bootstrap";
-import {apiInvite} from "../../utils/api/invitation-api-utils.ts";
+import { useState, type SetStateAction } from 'react';
+import { Button, Modal } from 'react-bootstrap';
+import { apiInvite } from '../../utils/api/invitation-api-utils.ts';
+import type { Group } from '../../utils/types.ts';
 
-export default function InviteMemberView() {
-    const [showInviteNewMemberModal, setShowInviteNewMemberModel] = useState(false);
-    const [inviteEmail, setInviteEmail] = useState('');
-    //const [inviteError, setInviteError] = useState(null);
+interface InviteMemberViewProps {
+	group: Group;
+}
 
-    const handleOpenInviteNewMemberModal = () => setShowInviteNewMemberModel(true);
-    const handleCloseInviteNewMemberModal = () => {
-        setInviteEmail('');
-        setShowInviteNewMemberModel(false);
-    }
+export default function InviteMemberView(props: InviteMemberViewProps) {
+	const [showInviteNewMemberModal, setShowInviteNewMemberModel] =
+		useState(false);
+	const [inviteEmail, setInviteEmail] = useState('');
+	const groupId = props.group.id;
 
-    const sendInvitation = () => {
+	const handleOpenInviteNewMemberModal = () =>
+		setShowInviteNewMemberModel(true);
+	const handleCloseInviteNewMemberModal = () => {
+		setInviteEmail('');
+		setShowInviteNewMemberModel(false);
+	};
 
-        apiInvite(inviteEmail, 23).then((sent) => {
-            if (sent) {
-                alert(`Invitation sent to ${inviteEmail}`);
-            }
-            else {
-                alert('Failed to send invitation. Please try again.')
-            }
-        });
-    }
+	const sendInvitation = () => {
+		apiInvite(inviteEmail, groupId).then((sent) => {
+			if (sent) {
+				alert(`Invitation sent to ${inviteEmail}`);
+			} else {
+				alert('Failed to send invitation. Please try again.');
+			}
+		});
+	};
 
-    const handleInviteSent =  (event: React.FormEvent) => {
-        event.preventDefault();
-        sendInvitation();
-    }
+	const handleInviteSent = (event: React.FormEvent) => {
+		event.preventDefault();
+		sendInvitation();
+	};
 
-    function onInviteNewMemberEmailInputValueChange(event: { target: { value: SetStateAction<string>; }; }){
-        setInviteEmail(event.target.value);
-    }
+	function onInviteNewMemberEmailInputValueChange(event: {
+		target: { value: SetStateAction<string> };
+	}) {
+		setInviteEmail(event.target.value);
+	}
 
-    return(
-        <>
-            <Button className={"btn btn-sm btn-success"} onClick={handleOpenInviteNewMemberModal}>Invite New Member</Button>
-            <Modal show={showInviteNewMemberModal} onHide={handleCloseInviteNewMemberModal}>
-                <form id={"inviteNewMemberForm"} onSubmit={handleInviteSent}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Invite New Group Member</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div className={"form-floating"}>
-                            <input
-                                type={"email"}
-                                value={inviteEmail}
-                                onChange={onInviteNewMemberEmailInputValueChange}
-                                className={"form-control"}
-                                id={"inviteEmailInput"}
-                                name={"inviteEmailInput"}
-                                placeholder={"Enter Email..."}
-                                required={true}
-                            />
-                            <label htmlFor={"inviteEmailInput"}>Invite Email</label>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant={"secondary"} onClick={handleCloseInviteNewMemberModal}>Cancel</Button>
-                        <Button variant={"success"} type={"submit"}>Send</Button>
-                    </Modal.Footer>
-                </form>
-            </Modal>
-        </>
-    )
+	return (
+		<>
+			<Button
+				className={'btn btn-sm btn-success'}
+				onClick={handleOpenInviteNewMemberModal}
+			>
+				Invite New Member
+			</Button>
+			<Modal
+				show={showInviteNewMemberModal}
+				onHide={handleCloseInviteNewMemberModal}
+			>
+				<form id={'inviteNewMemberForm'} onSubmit={handleInviteSent}>
+					<Modal.Header closeButton>
+						<Modal.Title>Invite New Group Member</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<div className={'form-floating'}>
+							<input
+								type={'email'}
+								value={inviteEmail}
+								onChange={
+									onInviteNewMemberEmailInputValueChange
+								}
+								className={'form-control'}
+								id={'inviteEmailInput'}
+								name={'inviteEmailInput'}
+								placeholder={'Enter Email...'}
+								required={true}
+							/>
+							<label htmlFor={'inviteEmailInput'}>
+								Invite Email
+							</label>
+						</div>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button
+							variant={'secondary'}
+							onClick={handleCloseInviteNewMemberModal}
+						>
+							Cancel
+						</Button>
+						<Button variant={'success'} type={'submit'}>
+							Send
+						</Button>
+					</Modal.Footer>
+				</form>
+			</Modal>
+		</>
+	);
 }
