@@ -4,7 +4,7 @@ import java.util.EnumSet;
 
 public class EnumSetUtils {
 
-    public static <E extends Enum<E>> EnumSet<E> fromBitmask(Class<E> enumClass, long mask) {
+    public static <E extends Enum<E>> EnumSet<E> fromBitmask(Class<E> enumClass, int mask) {
         EnumSet<E> set = EnumSet.noneOf(enumClass);
         for (E e : enumClass.getEnumConstants()) {
             if ((mask & bitValueOf(e)) != 0) {
@@ -14,15 +14,15 @@ public class EnumSetUtils {
         return set;
     }
 
-    public static <E extends Enum<E>> long toBitmask(EnumSet<E> set) {
-        long mask = 0;
+    public static <E extends Enum<E>> int toBitmask(EnumSet<E> set) {
+        int mask = 0;
         for (E e : set) {
             mask |= bitValueOf(e);
         }
         return mask;
     }
 
-    private static <E extends Enum<E>> long bitValueOf(Enum<E> e) {
-        return 1L << e.ordinal();
+    private static <E extends Enum<E>> int bitValueOf(Enum<E> e) {
+        return 1 << e.ordinal();
     }
 }
