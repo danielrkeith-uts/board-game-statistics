@@ -1,9 +1,23 @@
 import { Button, Form, Modal } from 'react-bootstrap';
-import { PermissionNames } from '../../../utils/constants';
 import { useEffect, useState } from 'react';
 import type { GroupMember, Permission } from '../../../utils/types';
 import { getAccountFullName } from '../../../utils/util-methods';
 import { apiGetPermissionOfGroupMember } from '../../../utils/api/permissions-api-utils';
+
+interface PermissionName {
+	permission: Permission;
+	name: string;
+}
+
+const PermissionNames: PermissionName[] = [
+	{ permission: 'MANAGE_MEMBERS', name: 'Manage members' },
+	{
+		permission: 'MANAGE_MEMBER_PERMISSIONS',
+		name: 'Manage member permissions',
+	},
+	{ permission: 'MANAGE_BOARD_GAMES', name: 'Manage board games' },
+	{ permission: 'MANAGE_GAMES_PLAYED', name: 'Manage games played' },
+];
 
 interface EditPermissionsModalProps {
 	member: GroupMember;
