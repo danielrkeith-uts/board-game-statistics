@@ -1,12 +1,8 @@
 interface Account {
+	id: number;
 	email: string;
 	firstName: string;
 	lastName: string;
-}
-
-interface GroupPermissions {
-	groupId: number;
-	permissions: Permission[];
 }
 
 type Permission =
@@ -15,6 +11,11 @@ type Permission =
 	| 'MANAGE_MEMBER_PERMISSIONS'
 	| 'MANAGE_BOARD_GAMES'
 	| 'MANAGE_GAMES_PLAYED';
+
+interface GroupPermissions {
+	groupId: number;
+	permissions: Permission[];
+}
 
 interface GroupMember extends Account {
 	joinTimestamp: string;
@@ -27,4 +28,4 @@ interface Group {
 	members: GroupMember[];
 }
 
-export type { Account, GroupPermissions, GroupMember, Group };
+export type { Account, Permission, GroupPermissions, GroupMember, Group };

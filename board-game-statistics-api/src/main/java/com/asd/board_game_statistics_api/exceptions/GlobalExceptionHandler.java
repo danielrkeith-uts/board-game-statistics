@@ -1,4 +1,4 @@
-package com.asd.board_game_statistics_api.config;
+package com.asd.board_game_statistics_api.exceptions;
 
 import com.asd.board_game_statistics_api.account.exceptions.CreateAccountException;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,7 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(CreateAccountException.class)
+    @ExceptionHandler(HttpBadRequestException.class)
     public ResponseEntity<?> handleCreateAccountException(CreateAccountException ex) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

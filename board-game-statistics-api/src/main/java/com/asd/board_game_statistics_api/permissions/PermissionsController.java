@@ -40,4 +40,17 @@ public class PermissionsController {
 
         return ResponseEntity.ok(owner.email());
     }
+
+    @GetMapping("/group/{groupId}/member/{memberId}")
+    public ResponseEntity<?> getGroupMemberPermissions(
+            @AuthenticationPrincipal Account account,
+            @PathVariable int groupId,
+            @PathVariable int memberId
+    ) {
+        if (!groupService.belongsToGroup(account.id(), groupId)) {
+            return ResponseEntity.status(401).body("Logged in user does not belong to group");
+        }
+
+        return ResponseEntity.ok(permissionsService.getPermissions(memberId, groupId));
+    }
 }

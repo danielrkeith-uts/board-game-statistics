@@ -1,4 +1,4 @@
-import type { GroupPermissions } from '../types';
+import type { GroupPermissions, Permission } from '../types';
 import { apiGet } from './api-utils';
 
 export const apiGetPermissions = (): Promise<GroupPermissions[]> =>
@@ -14,6 +14,21 @@ export const apiGetPermissions = (): Promise<GroupPermissions[]> =>
 		})
 		.then((data) => data as GroupPermissions[]);
 
+export const apiGetPermissionOfGroupMember = (
+	memberId: number,
+	groupId: number
+): Promise<Set<Permission>> =>
+	apiGet(`/permissions/group/${groupId}/member/${memberId}`)
+		.then((res) => {
+			if (res.ok) {
+				return res.json();
+			}
+			throw new Error(
+				`Error getting group member permissions: ${res.statusText}`
+			);
+		})
+		.then((data) => new Set<Permission>(data));
+
 export const apiGetGroupOwner = (groupId: number): Promise<string> =>
 	apiGet(`/permissions/group/${groupId}/owner`).then((res) => {
 		if (res.ok) {
@@ -22,5 +37,5 @@ export const apiGetGroupOwner = (groupId: number): Promise<string> =>
 		if (res.status === 404) {
 			return '';
 		}
-		throw new Error(`Error getting permissions: ${res.statusText}`);
+		throw new Error(`Error getting group owner: ${res.statusText}`);
 	});

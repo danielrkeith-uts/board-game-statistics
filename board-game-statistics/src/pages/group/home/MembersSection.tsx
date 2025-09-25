@@ -1,5 +1,5 @@
 import { Dropdown } from 'react-bootstrap';
-import type { Group, GroupMember } from '../../../utils/types';
+import { type Group, type GroupMember } from '../../../utils/types';
 import { formatDate, getAccountFullName } from '../../../utils/util-methods';
 import KebabDropdownToggle from '../../../components/KebabDropdownToggle';
 import { useContext, useEffect, useState } from 'react';
@@ -16,7 +16,8 @@ const MembersSection = (props: MembersSectionProps) => {
 
 	const [ownerEmail, setOwnerEmail] = useState('');
 
-	const [editPermissionsName, setEditPermissionsName] = useState('');
+	const [editPermissionsModalMember, setEditPermissionsModalMember] =
+		useState<GroupMember>(group.members[0]);
 	const [showEditPermissions, setShowEditPermissions] = useState(false);
 
 	const { permissions } = useContext(PermissionsContext);
@@ -35,14 +36,15 @@ const MembersSection = (props: MembersSectionProps) => {
 	const canRemoveMembers = groupPermissions?.includes('MANAGE_MEMBERS');
 
 	const editPermissions = (member: GroupMember) => {
-		setEditPermissionsName(getAccountFullName(member));
+		setEditPermissionsModalMember(member);
 		setShowEditPermissions(true);
 	};
 
 	return (
 		<>
 			<EditPermissionsModal
-				name={editPermissionsName}
+				member={editPermissionsModalMember}
+				groupId={group.id}
 				show={showEditPermissions}
 				handleClose={() => setShowEditPermissions(false)}
 				handleSubmit={() => {}}

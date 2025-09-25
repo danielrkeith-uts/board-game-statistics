@@ -24,7 +24,7 @@ public class PostgreSqlGroupMembershipRepository implements IGroupMembershipRepo
     @Override
     public List<GroupMemberResponse> getGroupMembers(int groupId) {
         String sql = """
-                SELECT ac.email, ac.first_name, ac.last_name, gm.join_timestamp FROM bgs.game_group AS gg
+                SELECT ac.id, ac.email, ac.first_name, ac.last_name, gm.join_timestamp FROM bgs.game_group AS gg
                 INNER JOIN bgs.group_membership AS gm ON gg.id = gm.group_id
                 INNER JOIN bgs.account AS ac ON gm.account_id = ac.id
                 WHERE gg.id = ?;
