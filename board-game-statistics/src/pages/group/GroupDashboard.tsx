@@ -1,10 +1,9 @@
 import { Tabs, Tab } from 'react-bootstrap';
-import GroupHomeView from './GroupHomeView';
-import MembersListView from './MembersListView';
+import GroupHomeView from './home/GroupHomeView';
 import { type ChangeEvent } from 'react';
 import type { Group } from '../../utils/types';
 import GroupManagementHeader from './GroupManagementHeader';
-import InviteMemberView from './InviteMemberView.tsx';
+import InviteMemberView from './InviteMemberView';
 
 interface GroupDashboardProps {
 	groups: Group[];
@@ -53,19 +52,11 @@ const GroupDashboard = (props: GroupDashboardProps) => {
 					<Tab eventKey='leaderboard' title='Leaderboard'>
 						Leaderboard
 					</Tab>
-					<Tab eventKey='members' title='Members'>
-						Members list
-						<br />
-						<MembersListView />
-					</Tab>
 					<Tab eventKey='games' title='Games'>
 						Games
 					</Tab>
 					<Tab eventKey='invite' title='Invite'>
 						<InviteMemberView group={currentGroup} />
-					</Tab>
-					<Tab eventKey='manage' title='Manage'>
-						Manage perms and kick users?
 					</Tab>
 				</Tabs>
 			</div>
