@@ -2,7 +2,7 @@ import type { ChangeEvent } from 'react';
 import type { Group } from '../../utils/types';
 import GroupDropDown from './GroupDropDown';
 import CreateGroupButton from './CreateGroupButton';
-import InviteMemberView from './InviteMemberView.tsx';
+import EnterInviteCodeView from './EnterInviteCodeView.tsx';
 
 interface GroupManagementHeaderProps {
 	groups: Group[];
@@ -31,7 +31,7 @@ const GroupManagementHeader = (props: GroupManagementHeaderProps) => {
 						onChange={handleGroupDropdownChange}
 					/>
 					<br />
-					<InviteMemberView group={currentGroup} />
+					<EnterInviteCodeView />
 				</div>
 				<div className='col'>
 					<div className='container mt-4 px-0 d-flex justify-content-end gap-3'>

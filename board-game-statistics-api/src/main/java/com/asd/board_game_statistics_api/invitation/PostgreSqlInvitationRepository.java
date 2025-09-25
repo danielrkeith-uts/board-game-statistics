@@ -17,9 +17,9 @@ public class PostgreSqlInvitationRepository implements IInvitationRespository {
         jdbcTemplate.update(sqlStatement, user_email, group_id);
     }
     @Override
-    public Invitation getInvitationByCode(int invite_code) {
-        String sqlStatement = "SELECT * FROM bgs.invitation WHERE invite_code = ?";
-        return jdbcTemplate.query(sqlStatement, Invitation::fromResultSet, invite_code);
+    public Invitation getInvitationByCode(int inviteCode) {
+        String sqlStatement = "SELECT * FROM bgs.invitation WHERE inviteCode = ?";
+        return jdbcTemplate.query(sqlStatement, Invitation::fromResultSet, inviteCode);
     }
     @Override
     public Invitation getInvitationByEmailAndGroup(String user_email, int group_id) {
@@ -28,16 +28,16 @@ public class PostgreSqlInvitationRepository implements IInvitationRespository {
     }
 
     @Override
-    public void deleteInvitationByCode(int invite_code) {
-        String sqlStatement = "DELETE FROM bgs.invitation WHERE invite_code = ?";
-        jdbcTemplate.update(sqlStatement, invite_code);
+    public void deleteInvitationByCode(int inviteCode) {
+        String sqlStatement = "DELETE FROM bgs.invitation WHERE inviteCode = ?";
+        jdbcTemplate.update(sqlStatement, inviteCode);
     }
 
     @Override
     public boolean checkInvitationExists(String code) {
-        int invite_code = Integer.valueOf(code);
-        String sqlStatement = "SELECT COUNT(*) FROM bgs.invitation WHERE invite_code = ?";
-        int count = jdbcTemplate.queryForObject(sqlStatement, Integer.class, invite_code);
+        int inviteCode = Integer.valueOf(code);
+        String sqlStatement = "SELECT COUNT(*) FROM bgs.invitation WHERE inviteCode = ?";
+        int count = jdbcTemplate.queryForObject(sqlStatement, Integer.class, inviteCode);
         return count > 0;
     }
 

@@ -39,21 +39,22 @@ public class InvitationController {
     }
 
     @PostMapping("/api/invite/join")
-    public ResponseEntity<?> JoinGroup(@RequestBody JoinGroupRequest joinGroupRequest){
-        if(invitationService.checkInvitationExists(joinGroupRequest.invite_code())){
+    public ResponseEntity<?> JoinGroup(@RequestBody JoinGroupRequest joinGroupRequest) {
+        if(invitationService.checkInvitationExists(joinGroupRequest.inviteCode())){
             //Add user to group table (check for implementation)
             //  Get invitation
-            Invitation invitation = invitationService.getInvitationByCode(joinGroupRequest.invite_code());
+            Invitation invitation = invitationService.getInvitationByCode(joinGroupRequest.inviteCode());
             //  Get user id
-            int userId = accountService.account(invitation.user_email()).id();
+            Account account = accountService.account(invitation.user_email());
+            int userId = account.id();
             //  Get group id
             int groupId = invitation.group_id();
             //  Add row to group membership table
             groupService.addGroupMember(groupId, userId);
             //  Delete invitation from invitation table
-            invitationService.deleteInvitationByCode(joinGroupRequest.invite_code());
+            invitationService.deleteInvitationByCode(joinGroupRequest.inviteCode());
             return ResponseEntity.ok("Group Joined");
         }
-            return ResponseEntity.ok("Invitation Not Found");
+        return ResponseEntity.ok("Invitation Not Found");
     }
 }

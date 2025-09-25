@@ -11,7 +11,7 @@ export default function InviteMemberView(props: InviteMemberViewProps) {
 	const [showInviteNewMemberModal, setShowInviteNewMemberModel] =
 		useState(false);
 	const [inviteEmail, setInviteEmail] = useState('');
-	const groupId = props.group.id;
+	// const groupId = props.group.id;
 
 	const handleOpenInviteNewMemberModal = () =>
 		setShowInviteNewMemberModel(true);
@@ -21,7 +21,7 @@ export default function InviteMemberView(props: InviteMemberViewProps) {
 	};
 
 	const sendInvitation = () => {
-		apiInvite(inviteEmail, groupId).then((sent) => {
+		apiInvite(inviteEmail, props.group.id).then((sent) => {
 			if (sent) {
 				alert(`Invitation sent to ${inviteEmail}`);
 			} else {

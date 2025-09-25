@@ -1,4 +1,4 @@
 package com.asd.board_game_statistics_api.invitation.dto;
 
-public record JoinGroupRequest(String invite_code) {
+public record JoinGroupRequest(String inviteCode) {
 }

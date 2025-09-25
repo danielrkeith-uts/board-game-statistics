@@ -12,7 +12,7 @@ public record Invitation (int invite_id, String user_email, int group_id, int in
                 rs.getInt("invite_id"),
                 rs.getString("user_email"),
                 rs.getInt("group_id"),
-                rs.getInt("invite_code"),
+                rs.getInt("inviteCode"),
                 rs.getTimestamp("timestamp")
         );
     }

@@ -1,11 +1,5 @@
-import InviteMemberView from './InviteMemberView.tsx';
-
 const MembersListView = () => {
-	return (
-		<>
-			<InviteMemberView />
-		</>
-	);
+	return <></>;
 };
 
 export default MembersListView;
