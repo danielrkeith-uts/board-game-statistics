@@ -100,3 +100,30 @@ VALUES (1, 100, NOW() - INTERVAL '1 day', 'single', NULL, 'Sample single winner 
 
 INSERT INTO bgs.game_record_player (record_id, account_id, team_number, is_winner)
 SELECT id, 1, NULL, TRUE FROM bgs.game_record ORDER BY id DESC LIMIT 1;
+
+INSERT INTO bgs.game_record (group_id, game_id, played_at, win_condition, num_teams, notes)
+VALUES (1, 200, NOW() - INTERVAL '12 hours', 'team', 2, 'Blue vs Red');
+
+WITH last AS (SELECT id FROM bgs.game_record ORDER BY id DESC LIMIT 1)
+INSERT INTO bgs.game_record_player (record_id, account_id, team_number, is_winner)
+SELECT id, 1, 1, FALSE FROM last UNION ALL
+SELECT id, 2, 1, FALSE FROM last UNION ALL
+SELECT id, 5, 2, TRUE  FROM last UNION ALL
+SELECT id, 7, 2, TRUE  FROM last;
+
+INSERT INTO bgs.game_record (group_id, game_id, played_at, win_condition, num_teams, notes)
+VALUES (1, 101, NOW() - INTERVAL '2 hours', 'single', NULL, 'Quick round');
+
+INSERT INTO bgs.game_record_player (record_id, account_id, team_number, is_winner)
+SELECT id, 2, NULL, TRUE FROM bgs.game_record ORDER BY id DESC LIMIT 1;
+
+INSERT INTO bgs.game_record (group_id, game_id, played_at, win_condition, num_teams, notes)
+VALUES (1, 300, NOW() - INTERVAL '6 hours', 'team', 3, 'Three-team showdown');
+
+WITH last3 AS (SELECT id FROM bgs.game_record ORDER BY id DESC LIMIT 1)
+INSERT INTO bgs.game_record_player (record_id, account_id, team_number, is_winner)
+SELECT id, 1, 1, FALSE FROM last3 UNION ALL
+SELECT id, 2, 1, FALSE FROM last3 UNION ALL
+SELECT id, 5, 2, TRUE  FROM last3 UNION ALL
+SELECT id, 7, 2, TRUE  FROM last3 UNION ALL
+SELECT id, 9, 3, FALSE FROM last3;
