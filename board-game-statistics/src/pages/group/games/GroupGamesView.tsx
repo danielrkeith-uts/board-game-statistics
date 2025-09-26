@@ -7,7 +7,7 @@ import { apiGetGroupGames } from '../../../utils/api/games-api-utils';
 import Spinner from 'react-bootstrap/Spinner';
 import EditRecordedGameModal, {
 	type GameRecordDto,
-} from './editrecordedgamemodal';
+} from './EditRecordedGameModal';
 
 interface GroupGamesViewProps {
 	group: Group;
