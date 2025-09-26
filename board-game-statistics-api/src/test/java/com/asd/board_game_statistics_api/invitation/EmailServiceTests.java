@@ -12,12 +12,8 @@ public class EmailServiceTests extends TestsWithMockedDatabase {
 
     @Test
     public void emailServiceTests() {
-        try {
+        Assertions.assertDoesNotThrow(() -> {
             emailService.sendEmail("test@example.com", "t5337271@gmail.com", "Test Send Email", "Test test");
-            Assertions.assertTrue(true);
-        }
-        catch (Exception e) {
-            Assertions.fail();
-        }
+        });
     }
 }

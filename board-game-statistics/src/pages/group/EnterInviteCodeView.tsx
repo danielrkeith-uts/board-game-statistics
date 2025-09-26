@@ -10,6 +10,7 @@ export default function EnterInviteCodeView() {
 	const handleOpenInviteCodeEntryModal = () =>
 		setShowInviteCodeEntryModal(true);
 	const handleCloseInviteCodeEntryModal = () => {
+		setInviteCode('');
 		setShowInviteCodeEntryModal(false);
 	};
 
@@ -55,7 +56,6 @@ export default function EnterInviteCodeView() {
 						<Modal.Title>Group Invite Code</Modal.Title>
 					</Modal.Header>
 					<ModalBody>
-						inviteCode={inviteCode}
 						<div className={'form-floating'}>
 							<input
 								className={'form-control'}

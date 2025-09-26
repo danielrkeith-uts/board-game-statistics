@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 public class InvitationController {
 
     @Autowired
@@ -55,6 +54,6 @@ public class InvitationController {
             invitationService.deleteInvitationByCode(joinGroupRequest.inviteCode());
             return ResponseEntity.ok("Group Joined");
         }
-        return ResponseEntity.ok("Invitation Not Found");
+        return ResponseEntity.status(401).body("Invitation Not Found");
     }
 }
