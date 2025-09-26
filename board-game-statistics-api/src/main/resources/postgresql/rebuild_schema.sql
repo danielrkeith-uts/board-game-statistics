@@ -15,7 +15,7 @@ CREATE TABLE bgs.invitation
     invite_id   INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     user_email  VARCHAR(100),
     group_id    INT,
-    inviteCode INT       DEFAULT floor(random() * (999999 - 100000 + 1) + 100000)::int UNIQUE,
+    inviteCode  INT       DEFAULT floor(random() * (999999 - 100000 + 1) + 100000)::int UNIQUE,
     timestamp   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -29,7 +29,7 @@ CREATE TABLE bgs.group_membership (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     group_id INT NOT NULL,
     account_id INT NOT NULL,
-    permissions_string VARCHAR(8),
+    permissions_mask INT,
     join_timestamp TIMESTAMP NOT NULL,
     FOREIGN KEY (group_id) REFERENCES bgs.game_group(id),
     FOREIGN KEY (account_id) REFERENCES bgs.account(id)

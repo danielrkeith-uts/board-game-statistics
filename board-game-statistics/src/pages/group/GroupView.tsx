@@ -11,6 +11,7 @@ import CreateGroupModal from './CreateGroupModal.tsx';
 import LeaveGroupModal from './LeaveGroupModal.tsx';
 import CreateGroupButton from './CreateGroupButton.tsx';
 import AlertMessage from './AlertMessage.tsx';
+import { PermissionsContextProvider } from '../../context/PermissionsContext.tsx';
 
 const GroupView = () => {
 	// Data state
@@ -131,7 +132,7 @@ const GroupView = () => {
 	};
 
 	return (
-		<>
+		<PermissionsContextProvider>
 			<CreateGroupModal
 				show={showCreateGroupModal}
 				handleClose={handleCloseCreateGroupModal}
@@ -174,7 +175,7 @@ const GroupView = () => {
 				message={success}
 				setMessage={setSuccess}
 			/>
-		</>
+		</PermissionsContextProvider>
 	);
 };
 

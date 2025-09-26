@@ -8,6 +8,7 @@ Environment variables can be set in multiple ways; pick one of the below.
 These environment variables must be set to a password of your choice:
 - BGS_DB_PASSWORD (The password for the bgs_admin_local account)
 - BGS_ADMIN_PASSWORD (A password of your choosing)
+- BGS_MAIL_PASSWORD (See pinned messages in discord for password)
 
 **Write these passwords down somewhere**
 

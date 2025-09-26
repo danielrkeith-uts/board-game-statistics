@@ -9,4 +9,5 @@ public interface IInvitaionService {
     void deleteInvitationByCode(String code);
     boolean checkInvitationExistsByCode(String code);
     boolean checkInvitationExistsByEmailAndGroup(String email, String group_id);
+    boolean joinGroup(String inviteCodes);
 }
