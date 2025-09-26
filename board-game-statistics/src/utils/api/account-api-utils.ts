@@ -72,3 +72,31 @@ export const apiDeleteAccount = (): Promise<boolean> =>
 		}
 		throw new Error(`Error deleting account: ${res.statusText}`);
 	});
+
+export const apiCreateAccount = (
+	email: string,
+	firstName: string,
+	lastName: string,
+	password: string
+): Promise<{ ok: boolean; message?: string }> =>
+	apiPost('/account/create', { email, firstName, lastName, password }).then(
+		async (res) => {
+			if (res.ok) return { ok: true };
+
+			if (res.status === 400) {
+				try {
+					const data = await res.json();
+					return {
+						ok: false,
+						message: data?.message || data?.error || res.statusText,
+					};
+				} catch {
+					return { ok: false, message: res.statusText };
+				}
+			}
+
+			throw new Error(
+				`Error creating account: ${res.status} ${res.statusText}`
+			);
+		}
+	);

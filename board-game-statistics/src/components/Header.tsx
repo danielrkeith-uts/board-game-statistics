@@ -5,6 +5,7 @@ import {
 	GROUPS_PAGE_URL,
 	HOME_PAGE_URL,
 	LOGIN_PAGE_URL,
+	CREATE_ACCOUNT_PAGE_URL,
 } from '../utils/constants';
 import '../css/custom.css';
 import { useContext, useEffect } from 'react';
@@ -20,7 +21,6 @@ const Header = () => {
 
 	useEffect(() => {
 		if (!loading) {
-			// If user is not logged in currently, they should only have access to pages in the allowedPages array
 			if (
 				account === null &&
 				!allowedPagesWhileLoggedOut.includes(location.pathname)
@@ -34,6 +34,7 @@ const Header = () => {
 		<nav className='navbar navbar-expand bg-primary-subtle'>
 			<div className='container'>
 				<span className='navbar-brand'>Logo</span>
+
 				<div className='collapse navbar-collapse' id='navbarNav'>
 					<ul className='navbar-nav'>
 						<li className='nav-item'>
@@ -41,8 +42,6 @@ const Header = () => {
 								Home
 							</Link>
 						</li>
-						{/* Manage account should be dynamic based on if user is logged in */}
-						{/* <li className='nav-item'><Link className='nav-link btn-primary' to={MANAGE_ACCOUNT_PAGE_URL}>Manage Account</Link></li> */}
 						<li className='nav-item'>
 							<Link className='nav-link' to={GAMES_PAGE_URL}>
 								Games
@@ -55,18 +54,31 @@ const Header = () => {
 						</li>
 					</ul>
 				</div>
+
 				<ul className='navbar-nav'>
-					<li className='nav-item'>
-						{account ? (
+					{account ? (
+						<li className='nav-item'>
 							<Link className='nav-link' to='#' onClick={logout}>
 								Logout
 							</Link>
-						) : (
-							<Link className='nav-link' to={LOGIN_PAGE_URL}>
-								Login
-							</Link>
-						)}
-					</li>
+						</li>
+					) : (
+						<>
+							<li className='nav-item'>
+								<Link className='nav-link' to={LOGIN_PAGE_URL}>
+									Login
+								</Link>
+							</li>
+							<li className='nav-item'>
+								<Link
+									className='nav-link'
+									to={CREATE_ACCOUNT_PAGE_URL}
+								>
+									Create account
+								</Link>
+							</li>
+						</>
+					)}
 				</ul>
 			</div>
 		</nav>
