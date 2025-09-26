@@ -1,11 +1,29 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import type { Group } from '../../../utils/types';
 import RecordGameModal from './RecordGameModal.tsx';
 import AlertMessage from '../AlertMessage';
+import { apiGetGroupGames } from '../../../utils/api/games-api-utils';
+import Spinner from 'react-bootstrap/Spinner';
 
 interface GroupGamesViewProps {
 	group: Group;
+}
+
+type WinCondition = 'single' | 'team';
+
+interface GameRecordDto {
+	recordId: number;
+	groupId: number;
+	gameId: number;
+	dateIso?: string;
+	winCondition: WinCondition;
+	numTeams?: number;
+	notes?: string;
+	playerIds?: number[];
+	teamAssignments?: number[];
+	winner?: string;
+	played_at?: string; // fallback for seed/demo
 }
 
 const GroupGamesView = (props: GroupGamesViewProps) => {
@@ -13,9 +31,32 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 	const [showRecordModal, setShowRecordModal] = useState(false);
 	const [success, setSuccess] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
+	const [records, setRecords] = useState<GameRecordDto[]>([]);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const handleOpenRecordModal = () => setShowRecordModal(true);
 	const handleCloseRecordModal = () => setShowRecordModal(false);
+
+	const fetchRecords = async () => {
+		setLoading(true);
+		try {
+			const data = await apiGetGroupGames(group.id);
+			setRecords(Array.isArray(data) ? (data as GameRecordDto[]) : []);
+		} catch (e: unknown) {
+			const message =
+				e instanceof Error
+					? e.message
+					: 'Failed to load recorded games';
+			setError(message);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		fetchRecords();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [group.id]);
 
 	return (
 		<div className='container vstack gap-3'>
@@ -30,11 +71,48 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 				Use the button to record a game played in {group.groupName}.
 			</div>
 
+			<div className='mt-2'>
+				<h6 className='mb-2'>Recorded games</h6>
+				{loading ? (
+					<div className='d-flex align-items-center gap-2'>
+						<Spinner size='sm' /> Loading…
+					</div>
+				) : records.length === 0 ? (
+					<div className='text-muted'>No games recorded yet.</div>
+				) : (
+					<ul className='list-group'>
+						{records.map((r) => (
+							<li
+								key={r.recordId}
+								className='list-group-item d-flex justify-content-between'
+							>
+								<span>
+									Game #{r.gameId} •{' '}
+									{new Date(
+										r.dateIso || r.played_at || Date.now()
+									).toLocaleString()}{' '}
+									• {r.winCondition}
+								</span>
+								{r.winCondition === 'single' && r.winner && (
+									<span>Winner: {r.winner}</span>
+								)}
+								{r.winCondition === 'team' && r.winner && (
+									<span>Winning team: Team {r.winner}</span>
+								)}
+							</li>
+						))}
+					</ul>
+				)}
+			</div>
+
 			<RecordGameModal
 				show={showRecordModal}
 				handleClose={handleCloseRecordModal}
 				group={group}
-				onSuccess={(msg) => setSuccess(msg)}
+				onSuccess={(msg) => {
+					setSuccess(msg);
+					fetchRecords();
+				}}
 				onError={(msg) => setError(msg)}
 			/>
 
