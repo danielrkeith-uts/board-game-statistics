@@ -10,6 +10,15 @@ CREATE TABLE bgs.account (
     last_name VARCHAR(100)
 );
 
+CREATE TABLE bgs.invitation
+(
+    invite_id   INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    user_email  VARCHAR(100),
+    group_id    INT,
+    inviteCode  INT       DEFAULT floor(random() * (999999 - 100000 + 1) + 100000)::int UNIQUE,
+    timestamp   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE bgs.game_group (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     group_name VARCHAR(100) UNIQUE NOT NULL,

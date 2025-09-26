@@ -1,34 +1,44 @@
 import { useState, type SetStateAction } from 'react';
 import { Button, Modal } from 'react-bootstrap';
+import { apiInvite } from '../../utils/api/invitation-api-utils.ts';
+import type { Group } from '../../utils/types.ts';
 
-export default function InviteMemberView() {
+interface InviteMemberViewProps {
+	group: Group;
+}
+
+export default function InviteMemberView(props: InviteMemberViewProps) {
 	const [showInviteNewMemberModal, setShowInviteNewMemberModel] =
 		useState(false);
-	const [inviteNewMemberEmailInputValue, setInviteNewMemberEmailInputValue] =
-		useState('');
+	const [inviteEmail, setInviteEmail] = useState('');
+	// const groupId = props.group.id;
 
 	const handleOpenInviteNewMemberModal = () =>
 		setShowInviteNewMemberModel(true);
 	const handleCloseInviteNewMemberModal = () => {
-		setInviteNewMemberEmailInputValue('');
+		setInviteEmail('');
 		setShowInviteNewMemberModel(false);
 	};
 
-	const handleInviteSent = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
+	const sendInvitation = () => {
+		apiInvite(inviteEmail, props.group.id).then((sent) => {
+			if (sent) {
+				alert(`Invitation sent to ${inviteEmail}`);
+			} else {
+				alert('Failed to send invitation. Please try again.');
+			}
+		});
+	};
 
-		const formData: FormData = new FormData(e.currentTarget);
-		const inviteEmail: string = formData.get('inviteEmailInput') as string;
-
-		alert(`Invitation sent to ${inviteEmail}`);
-
-		handleCloseInviteNewMemberModal();
+	const handleInviteSent = (event: React.FormEvent) => {
+		event.preventDefault();
+		sendInvitation();
 	};
 
 	function onInviteNewMemberEmailInputValueChange(event: {
 		target: { value: SetStateAction<string> };
 	}) {
-		setInviteNewMemberEmailInputValue(event.target.value);
+		setInviteEmail(event.target.value);
 	}
 
 	return (
@@ -37,7 +47,7 @@ export default function InviteMemberView() {
 				className={'btn btn-sm btn-success'}
 				onClick={handleOpenInviteNewMemberModal}
 			>
-				+
+				Invite New Member
 			</Button>
 			<Modal
 				show={showInviteNewMemberModal}
@@ -51,7 +61,7 @@ export default function InviteMemberView() {
 						<div className={'form-floating'}>
 							<input
 								type={'email'}
-								value={inviteNewMemberEmailInputValue}
+								value={inviteEmail}
 								onChange={
 									onInviteNewMemberEmailInputValueChange
 								}

@@ -134,4 +134,11 @@ public class GroupService implements IGroupService {
         }
         return false;
     }
+
+    @Override
+    public void addGroupMember(int accountId, int groupId) {
+        EnumSet<Permission> permissions = EnumSet.noneOf(Permission.class);
+        groupMembershipRepository.create(groupId, accountId, permissions, Instant.now());
+    }
+
 }

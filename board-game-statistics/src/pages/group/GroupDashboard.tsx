@@ -56,7 +56,7 @@ const GroupDashboard = (props: GroupDashboardProps) => {
 						Games
 					</Tab>
 					<Tab eventKey='invite' title='Invite'>
-						<InviteMemberView />
+						<InviteMemberView group={currentGroup} />
 					</Tab>
 				</Tabs>
 			</div>
