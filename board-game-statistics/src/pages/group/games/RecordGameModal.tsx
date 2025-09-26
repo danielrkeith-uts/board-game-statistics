@@ -3,6 +3,10 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import type { Group } from '../../../utils/types';
+import {
+	apiRecordGame,
+	type RecordGamePayload,
+} from '../../../utils/api/games-api-utils';
 
 type WinCondition = 'single' | 'team';
 
@@ -10,10 +14,12 @@ interface RecordGameModalProps {
 	show: boolean;
 	handleClose: () => void;
 	group: Group;
+	onSuccess?: (message: string) => void;
+	onError?: (message: string) => void;
 }
 
 const RecordGameModal = (props: RecordGameModalProps) => {
-	const { show, handleClose } = props;
+	const { show, handleClose, group, onSuccess, onError } = props;
 
 	// Step management
 	const [step, setStep] = useState<number>(1);
@@ -65,16 +71,17 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		setSingleWinnerId((prev) => (prev === id ? '' : prev));
 	};
 
-	// Placeholder data; will be wired later
+	// Placeholder games list; TODO: replace with owned games API
 	const placeholderGames = [
-		{ id: '1', name: 'Sample game 1' },
-		{ id: '2', name: 'Sample game 2' },
+		{ id: String(1), name: 'Sample game 1' },
+		{ id: String(2), name: 'Sample game 2' },
 	];
-	const placeholderPlayers = [
-		{ id: 'u1', name: 'Alice' },
-		{ id: 'u2', name: 'Bob' },
-		{ id: 'u3', name: 'Charlie' },
-	];
+
+	// Use members from group as selectable players
+	const groupPlayers = group.members.map((m) => ({
+		id: String(m.id),
+		name: `${m.firstName} ${m.lastName}`.trim(),
+	}));
 
 	const renderGameStep = () => (
 		<Form>
@@ -101,7 +108,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 				<Form.Group>
 					<Form.Label>Select players</Form.Label>
 					<div className='d-flex flex-column'>
-						{placeholderPlayers.map((p) => (
+						{groupPlayers.map((p) => (
 							<div
 								key={p.id}
 								className='d-flex align-items-center gap-2 mb-1'
@@ -138,7 +145,9 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 														<option
 															key={t}
 															value={t}
-														>{`Team ${t}`}</option>
+														>
+															{`Team ${t}`}
+														</option>
 													))
 												: [
 														<option
@@ -170,9 +179,8 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 									inline
 									type='radio'
 									label={
-										placeholderPlayers.find(
-											(p) => p.id === pid
-										)?.name || pid
+										groupPlayers.find((p) => p.id === pid)
+											?.name || pid
 									}
 									name='singleWinner'
 									id={`singleWinner-${pid}`}
@@ -264,6 +272,42 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		}
 	};
 
+	const handleSave = async () => {
+		try {
+			const playerIds = selectedPlayerIds.map(
+				(pid) => Number(pid.replace(/\D/g, '')) || 0
+			);
+			const teamAssignments =
+				winCondition === 'team'
+					? selectedPlayerIds.map((pid) =>
+							Number(playerIdToTeam[pid] || '1')
+						)
+					: undefined;
+			const payload: RecordGamePayload = {
+				groupId: group.id,
+				gameId: Number(selectedGameId || 0),
+				winCondition,
+				numTeams:
+					winCondition === 'team'
+						? numTeams === ''
+							? undefined
+							: Number(numTeams)
+						: undefined,
+				playerIds,
+				teamAssignments,
+				winner: winCondition === 'single' ? singleWinnerId : teamWinner,
+				notes,
+			};
+			await apiRecordGame(payload);
+			if (onSuccess) {onSuccess('Game recorded successfully');}
+			resetAndClose();
+		} catch (e: unknown) {
+			const message =
+				e instanceof Error ? e.message : 'Failed to record game';
+			if (onError) {onError(message);}
+		}
+	};
+
 	return (
 		<Modal show={show} onHide={resetAndClose} size='lg'>
 			<Modal.Header closeButton>
@@ -284,7 +328,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 						Next
 					</Button>
 				) : (
-					<Button variant='success' onClick={resetAndClose}>
+					<Button variant='success' onClick={handleSave}>
 						Save
 					</Button>
 				)}

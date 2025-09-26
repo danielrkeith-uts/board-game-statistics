@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import type { Group } from '../../../utils/types';
 import RecordGameModal from './RecordGameModal.tsx';
+import AlertMessage from '../AlertMessage';
 
 interface GroupGamesViewProps {
 	group: Group;
@@ -10,6 +11,8 @@ interface GroupGamesViewProps {
 const GroupGamesView = (props: GroupGamesViewProps) => {
 	const { group } = props;
 	const [showRecordModal, setShowRecordModal] = useState(false);
+	const [success, setSuccess] = useState<string | null>(null);
+	const [error, setError] = useState<string | null>(null);
 
 	const handleOpenRecordModal = () => setShowRecordModal(true);
 	const handleCloseRecordModal = () => setShowRecordModal(false);
@@ -31,6 +34,19 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 				show={showRecordModal}
 				handleClose={handleCloseRecordModal}
 				group={group}
+				onSuccess={(msg) => setSuccess(msg)}
+				onError={(msg) => setError(msg)}
+			/>
+
+			<AlertMessage
+				variant='success'
+				message={success}
+				setMessage={setSuccess}
+			/>
+			<AlertMessage
+				variant='danger'
+				message={error}
+				setMessage={setError}
 			/>
 		</div>
 	);
