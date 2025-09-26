@@ -81,26 +81,34 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 					<div className='text-muted'>No games recorded yet.</div>
 				) : (
 					<ul className='list-group'>
-						{records.map((r) => (
-							<li
-								key={r.recordId}
-								className='list-group-item d-flex justify-content-between'
-							>
-								<span>
-									Game #{r.gameId} •{' '}
-									{new Date(
-										r.dateIso || r.played_at || Date.now()
-									).toLocaleString()}{' '}
-									• {r.winCondition}
-								</span>
-								{r.winCondition === 'single' && r.winner && (
-									<span>Winner: {r.winner}</span>
-								)}
-								{r.winCondition === 'team' && r.winner && (
-									<span>Winning team: Team {r.winner}</span>
-								)}
-							</li>
-						))}
+						{records.map((r) => {
+							const displayDate = new Date(
+								r.dateIso || r.played_at || Date.now()
+							).toLocaleDateString();
+							const gameName = `Game #${r.gameId}`; // TODO: replace with real name
+							const winnerText =
+								r.winCondition === 'single'
+									? r.winner
+										? `Winner: ${r.winner}`
+										: ''
+									: r.winner
+										? `Winning team: Team ${r.winner}`
+										: '';
+							return (
+								<li
+									key={r.recordId}
+									className='list-group-item d-flex justify-content-between align-items-center'
+								>
+									<span>
+										{gameName}
+										{winnerText ? ` • ${winnerText}` : ''}
+									</span>
+									<span className='text-muted'>
+										{displayDate}
+									</span>
+								</li>
+							);
+						})}
 					</ul>
 				)}
 			</div>
