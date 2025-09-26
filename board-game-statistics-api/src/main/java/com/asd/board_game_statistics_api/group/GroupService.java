@@ -7,12 +7,14 @@ import com.asd.board_game_statistics_api.group.exceptions.ExistingGroupNameExcep
 import com.asd.board_game_statistics_api.group.exceptions.GroupException;
 import com.asd.board_game_statistics_api.model.Account;
 import com.asd.board_game_statistics_api.model.Group;
+import com.asd.board_game_statistics_api.model.Permission;
 import com.asd.board_game_statistics_api.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,11 +39,12 @@ public class GroupService implements IGroupService {
         }
 
         Instant creationTime = Instant.now();
-        // TODO Replace this to integrate with the permissions feature
-        String defaultPermissionsString = "00000000";
+
+        // Give no permissions by default
+        EnumSet<Permission> permissions = EnumSet.noneOf(Permission.class);
 
         int groupId = groupRepository.create(groupName, creationTime);
-        groupMembershipRepository.create(groupId, creatorId, defaultPermissionsString, creationTime);
+        groupMembershipRepository.create(groupId, creatorId, permissions, creationTime);
 
         return getGroupByGroupId(groupId);
     }
@@ -67,7 +70,7 @@ public class GroupService implements IGroupService {
         }
 
         if (groups.isEmpty()) {
-            return new ArrayList<GroupResponse>();
+            return new ArrayList<>();
         }
 
         // Map list of Group objects to GroupResponse objects that contain a list of members
@@ -119,5 +122,16 @@ public class GroupService implements IGroupService {
         if (!groupMembershipRepository.delete(groupId, account.id())) {
             throw new GroupException("Failed to leave group.");
         }
+    }
+
+    @Override
+    public boolean belongsToGroup(int accountId, int groupId) {
+        List<Group> groups = groupRepository.getByAccountId(accountId);
+        for (Group group : groups) {
+            if (group.id() == groupId) {
+                return true;
+            }
+        }
+        return false;
     }
 }

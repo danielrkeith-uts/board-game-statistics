@@ -8,7 +8,7 @@ interface GroupHomeViewProps {
 }
 
 const GroupHomeView = (props: GroupHomeViewProps) => {
-	const { members } = props.currentGroup;
+	const { currentGroup } = props;
 
 	return (
 		<div className='container'>
@@ -17,7 +17,7 @@ const GroupHomeView = (props: GroupHomeViewProps) => {
 					<GamesSection />
 				</div>
 				<div className='col border'>
-					<MembersSection members={members} />
+					<MembersSection group={currentGroup} />
 				</div>
 				<div className='col-3 border'>
 					<GameResultsSection />
