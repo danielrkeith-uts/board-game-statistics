@@ -20,7 +20,7 @@ const GroupHomeView = (props: GroupHomeViewProps) => {
 					<MembersSection group={currentGroup} />
 				</div>
 				<div className='col-3 border'>
-					<GameResultsSection />
+					<GameResultsSection group={currentGroup} />
 				</div>
 			</div>
 		</div>

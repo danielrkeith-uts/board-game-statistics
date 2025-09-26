@@ -1,17 +1,66 @@
-const GameResultsSection = () => {
+import { useEffect, useState } from 'react';
+import { apiGetGroupGames } from '../../../utils/api/games-api-utils';
+import type { Group } from '../../../utils/types';
+import EditRecordedGameModal, {
+	type GameRecordDto,
+} from '../games/editrecordedgamemodal';
+
+interface Props {
+	group: Group;
+}
+
+const GameResultsSection = (props: Props) => {
+	const { group } = props;
+	const [recent, setRecent] = useState<GameRecordDto[]>([]);
+	const [selected, setSelected] = useState<GameRecordDto | null>(null);
+
+	useEffect(() => {
+		apiGetGroupGames(group.id)
+			.then((data) => {
+				const arr = Array.isArray(data) ? data : [];
+				arr.sort(
+					(a, b) =>
+						new Date(b.dateIso || b.played_at || 0).getTime() -
+						new Date(a.dateIso || a.played_at || 0).getTime()
+				);
+				setRecent(arr.slice(0, 3));
+			})
+			.catch(() => setRecent([]));
+	}, [group.id]);
+
 	return (
 		<>
 			<div className='list-group mt-3'>
 				<h6>Game results</h6>
-				<a href='#' className='list-group-item list-group-item-action'>
-					Sample game
-				</a>
-				<a href='#' className='list-group-item list-group-item-action'>
-					Sample game
-				</a>
-				<a href='#' className='list-group-item list-group-item-action'>
-					Sample game
-				</a>
+				{recent.length === 0 ? (
+					<a
+						href='#'
+						className='list-group-item list-group-item-action'
+					>
+						No recent games
+					</a>
+				) : (
+					<>
+						{recent.map((r) => (
+							<a
+								key={r.recordId}
+								href='#'
+								className='list-group-item list-group-item-action d-flex justify-content-between'
+								onClick={(e) => {
+									e.preventDefault();
+									setSelected(r);
+								}}
+							>
+								<span>{`Game #${r.gameId}`}</span>
+								<span className='text-muted'>
+									{new Date(
+										r.dateIso || r.played_at || Date.now()
+									).toLocaleDateString()}
+								</span>
+							</a>
+						))}
+					</>
+				)}
 			</div>
 
 			<hr />
@@ -32,6 +81,31 @@ const GameResultsSection = () => {
 					</tr>
 				</tbody>
 			</table>
+
+			<EditRecordedGameModal
+				record={selected}
+				group={group}
+				onClose={() => setSelected(null)}
+				onDeleted={() => {
+					setSelected(null);
+					// Refresh recent list after delete
+					apiGetGroupGames(group.id)
+						.then((data) => {
+							const arr = Array.isArray(data) ? data : [];
+							arr.sort(
+								(a, b) =>
+									new Date(
+										b.dateIso || b.played_at || 0
+									).getTime() -
+									new Date(
+										a.dateIso || a.played_at || 0
+									).getTime()
+							);
+							setRecent(arr.slice(0, 3));
+						})
+						.catch(() => {});
+				}}
+			/>
 		</>
 	);
 };
