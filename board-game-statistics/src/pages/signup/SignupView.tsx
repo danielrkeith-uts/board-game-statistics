@@ -7,16 +7,16 @@ const SignupView = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
 
   const [hasError, setHasError] = useState(false);
   const [errorText, setErrorText] = useState<string | null>(null);
 
   const signup = () => {
-    if (password !== confirm) {
+    if (password !== passwordConfirmation) {
       setHasError(true);
       setErrorText("Passwords do not match.");
-      setConfirm("");
+      setPasswordConfirmation("");
       return;
     }
 
@@ -32,9 +32,11 @@ const SignupView = () => {
         });
       } else {
         setHasError(true);
-        setErrorText(result.message || "Couldn’t create account. Check your details and try again.");
+        setErrorText(
+          result.message || "Couldn’t create account. Check your details and try again."
+        );
         setPassword("");
-        setConfirm("");
+        setPasswordConfirmation("");
       }
     });
   };
@@ -100,14 +102,14 @@ const SignupView = () => {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="signupForm.confirm">
+        <Form.Group className="mb-3" controlId="signupForm.passwordConfirmation">
           <Form.Label>Confirm password</Form.Label>
           <Form.Control
             type="password"
             placeholder="Re-enter password"
-            value={confirm}
+            value={passwordConfirmation}
             onChange={(e) => {
-              setConfirm(e.target.value);
+              setPasswordConfirmation(e.target.value);
               setHasError(false);
             }}
           />

@@ -1,30 +1,55 @@
-import { createContext, useEffect, useState, type ReactNode } from "react";
-import { apiGetLoggedInAccount } from "../utils/api/account-api-utils";
-import type { Account } from "../utils/types";
-
+import { createContext, useEffect, useState, type ReactNode } from 'react';
+import { apiGetLoggedInAccount } from '../utils/api/account-api-utils';
+import type { Account } from '../utils/types';
 
 interface AccountContextProviderProps {
-    children: ReactNode
+	children: ReactNode;
 }
 
-const AccountContext = createContext<Account | null>(null);
+interface AccountContextType {
+	account: Account | null;
+	loading: boolean;
+	error: string | null;
+}
+
+const AccountContext = createContext<AccountContextType>({
+	account: null,
+	loading: true,
+	error: null,
+});
 
 const AccountContextProvider = ({ children }: AccountContextProviderProps) => {
-    const [account, setAccount] = useState<Account | null>(null);
+	const [account, setAccount] = useState<Account | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        apiGetLoggedInAccount()
-            .then(result => {
-                setAccount(result);
-            })
-            .catch(err => console.error(err));
-    }, []);
+	useEffect(() => {
+		setLoading(true);
 
-    return (
-        <AccountContext.Provider value={account}>
-            {children}
-        </AccountContext.Provider>
-    )
-}
+		apiGetLoggedInAccount()
+			.then((result) => {
+				setAccount(result);
+				setError(null);
+			})
+			.catch((err) => {
+				console.error(err);
+				setError('Failed to load account');
+				setAccount(null);
+			})
+			.finally(() => setLoading(false));
+	}, []);
 
-export { AccountContext, AccountContextProvider }
+	const contextValue: AccountContextType = {
+		account,
+		loading,
+		error,
+	};
+
+	return (
+		<AccountContext.Provider value={contextValue}>
+			{children}
+		</AccountContext.Provider>
+	);
+};
+
+export { AccountContext, AccountContextProvider };

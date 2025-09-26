@@ -8,4 +8,12 @@ public interface IAccountRepository {
 
     Account get(String email);
 
+    Account get(int id);
+    
+    void update(String email, String firstName, String lastName, String newEmail);
+    
+    void updatePassword(String email, String newPassword);
+    
+    void delete(String email);
+
 }
