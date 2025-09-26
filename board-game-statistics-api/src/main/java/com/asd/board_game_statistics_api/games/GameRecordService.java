@@ -43,6 +43,12 @@ public class GameRecordService {
         }
     }
 
+    public void deleteRecord(Account account, int recordId) {
+        synchronized (records) {
+            records.removeIf(r -> r.recordId() == recordId);
+        }
+    }
+
     private void validateRequest(GameRecordRequest request) {
         if (request.groupId() <= 0) throw new IllegalArgumentException("groupId required");
         if (request.gameId() <= 0) throw new IllegalArgumentException("gameId required");

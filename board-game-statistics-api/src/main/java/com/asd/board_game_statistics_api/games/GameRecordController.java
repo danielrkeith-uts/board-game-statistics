@@ -33,6 +33,15 @@ public class GameRecordController {
         List<GameRecordResponse> records = gameRecordService.getRecordsForGroup(account, groupId);
         return ResponseEntity.ok(records);
     }
+
+    @DeleteMapping("/record/{recordId}")
+    public ResponseEntity<?> deleteRecord(
+            @AuthenticationPrincipal Account account,
+            @PathVariable int recordId
+    ) {
+        gameRecordService.deleteRecord(account, recordId);
+        return ResponseEntity.ok("Deleted");
+    }
 }
 
 

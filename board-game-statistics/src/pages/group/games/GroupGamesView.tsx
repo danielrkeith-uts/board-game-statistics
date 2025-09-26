@@ -5,25 +5,12 @@ import RecordGameModal from './RecordGameModal.tsx';
 import AlertMessage from '../AlertMessage';
 import { apiGetGroupGames } from '../../../utils/api/games-api-utils';
 import Spinner from 'react-bootstrap/Spinner';
+import EditRecordedGameModal, {
+	type GameRecordDto,
+} from './editrecordedgamemodal';
 
 interface GroupGamesViewProps {
 	group: Group;
-}
-
-type WinCondition = 'single' | 'team';
-
-interface GameRecordDto {
-	recordId: number;
-	groupId: number;
-	gameId: number;
-	dateIso?: string;
-	winCondition: WinCondition;
-	numTeams?: number;
-	notes?: string;
-	playerIds?: number[];
-	teamAssignments?: number[];
-	winner?: string;
-	played_at?: string; // fallback for seed/demo
 }
 
 const GroupGamesView = (props: GroupGamesViewProps) => {
@@ -33,6 +20,7 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 	const [error, setError] = useState<string | null>(null);
 	const [records, setRecords] = useState<GameRecordDto[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
+	const [selected, setSelected] = useState<GameRecordDto | null>(null);
 
 	const handleOpenRecordModal = () => setShowRecordModal(true);
 	const handleCloseRecordModal = () => setShowRecordModal(false);
@@ -89,7 +77,16 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 							const winnerText =
 								r.winCondition === 'single'
 									? r.winner
-										? `Winner: ${r.winner}`
+										? `Winner: ${(() => {
+												const m = group.members.find(
+													(m) =>
+														String(m.id) ===
+														String(r.winner)
+												);
+												return m
+													? `${m.firstName} ${m.lastName}`
+													: r.winner;
+											})()}`
 										: ''
 									: r.winner
 										? `Winning team: Team ${r.winner}`
@@ -98,6 +95,8 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 								<li
 									key={r.recordId}
 									className='list-group-item d-flex justify-content-between align-items-center'
+									role='button'
+									onClick={() => setSelected(r)}
 								>
 									<span>
 										{gameName}
@@ -133,6 +132,13 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 				variant='danger'
 				message={error}
 				setMessage={setError}
+			/>
+
+			<EditRecordedGameModal
+				record={selected}
+				group={group}
+				onClose={() => setSelected(null)}
+				onDeleted={() => fetchRecords()}
 			/>
 		</div>
 	);
