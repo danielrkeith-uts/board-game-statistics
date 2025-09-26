@@ -43,8 +43,8 @@ public class PostgreSqlInvitationRepository implements IInvitationRespository {
 
     @Override
     public boolean checkInvitationExistsByEmailAndGroup(String email, String group_id) {
-        String sqlStatement = "SELECT COUNT(*) FROM bgs.invitation WHERE user_email = ? AND group_id = ?";
-        int count = jdbcTemplate.queryForObject(sqlStatement, Integer.class, email, group_id);
+        String sqlStatement = "SELECT COUNT(*) FROM bgs.invitation WHERE user_email = ?";
+        int count = jdbcTemplate.queryForObject(sqlStatement, Integer.class, email);
         return count > 0;
     }
 }
