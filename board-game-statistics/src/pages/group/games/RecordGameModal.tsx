@@ -71,7 +71,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		setSingleWinnerId((prev) => (prev === id ? '' : prev));
 	};
 
-	// Placeholder games list; TODO: replace with owned games API
+	// Placeholder games list; TODO: replace with owned games
 	const placeholderGames = [
 		{ id: String(1), name: 'Sample game 1' },
 		{ id: String(2), name: 'Sample game 2' },
@@ -169,6 +169,35 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 						))}
 					</div>
 				</Form.Group>
+				{winCondition === 'team' &&
+					(numTeams === '' || Number(numTeams) < 2) && (
+						<div className='text-danger small mt-1'>
+							Enter number of teams (2 or more).
+						</div>
+					)}
+				{winCondition === 'team' &&
+					Number(numTeams) >= 2 &&
+					selectedPlayerIds.length > 0 &&
+					selectedPlayerIds.some((pid) => !playerIdToTeam[pid]) && (
+						<div className='text-danger small mt-1'>
+							Assign a team to all selected players.
+						</div>
+					)}
+				{winCondition === 'team' &&
+					Number(numTeams) >= 2 &&
+					(() => {
+						const totals = new Array(Number(numTeams)).fill(0);
+						selectedPlayerIds.forEach((pid) => {
+							const t = Number(playerIdToTeam[pid] || '0');
+							if (t >= 1 && t <= Number(numTeams))
+								{totals[t - 1]++;}
+						});
+						return totals.some((c) => c === 0);
+					})() && (
+						<div className='text-danger small mt-1'>
+							Each team must have at least one player.
+						</div>
+					)}
 				{winCondition === 'single' && selectedPlayerIds.length > 0 && (
 					<Form.Group className='mt-2'>
 						<Form.Label>Winning player</Form.Label>
@@ -214,6 +243,20 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 						</div>
 					</Form.Group>
 				)}
+				{winCondition === 'single' &&
+					selectedPlayerIds.length > 0 &&
+					singleWinnerId === '' && (
+						<div className='text-danger small mt-1'>
+							Select a winning player.
+						</div>
+					)}
+				{winCondition === 'team' &&
+					selectedPlayerIds.length > 0 &&
+					teamWinner === '' && (
+						<div className='text-danger small mt-1'>
+							Select a winning team.
+						</div>
+					)}
 				<Form.Group className='mt-3'>
 					<Form.Label>Notes (optional)</Form.Label>
 					<Form.Control
@@ -254,6 +297,11 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 							setNumTeams(v === '' ? '' : Math.max(2, Number(v)));
 						}}
 					/>
+					{(numTeams === '' || Number(numTeams) < 2) && (
+						<Form.Text className='text-danger'>
+							Please enter at least 2 teams.
+						</Form.Text>
+					)}
 				</Form.Group>
 			)}
 		</Form>
@@ -271,6 +319,31 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 				return null;
 		}
 	};
+
+	const numTeamsValid =
+		winCondition !== 'team' || (numTeams !== '' && Number(numTeams) >= 2);
+	const allPlayersHaveTeam =
+		winCondition !== 'team' ||
+		(selectedPlayerIds.length > 0 &&
+			selectedPlayerIds.every((pid) => {
+				const t = Number(playerIdToTeam[pid] || '0');
+				return (
+					t >= 1 && (numTeams === '' ? true : t <= Number(numTeams))
+				);
+			}));
+	const allTeamsNonEmpty =
+		winCondition !== 'team' ||
+		(() => {
+			if (!numTeamsValid) {return false;}
+			const totals = new Array(Number(numTeams)).fill(0);
+			selectedPlayerIds.forEach((pid) => {
+				const t = Number(playerIdToTeam[pid] || '0');
+				if (t >= 1 && t <= Number(numTeams)) {totals[t - 1]++;}
+			});
+			return totals.every((c) => c > 0);
+		})();
+	const winnerSelected =
+		winCondition === 'single' ? singleWinnerId !== '' : teamWinner !== '';
 
 	const handleSave = async () => {
 		try {
@@ -299,12 +372,16 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 				notes,
 			};
 			await apiRecordGame(payload);
-			if (onSuccess) {onSuccess('Game recorded successfully');}
+			if (onSuccess) {
+				onSuccess('Game recorded successfully');
+			}
 			resetAndClose();
 		} catch (e: unknown) {
 			const message =
 				e instanceof Error ? e.message : 'Failed to record game';
-			if (onError) {onError(message);}
+			if (onError) {
+				onError(message);
+			}
 		}
 	};
 
@@ -324,11 +401,29 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 					</Button>
 				)}
 				{step < 3 ? (
-					<Button variant='primary' onClick={handleNext}>
+					<Button
+						variant='primary'
+						onClick={handleNext}
+						disabled={
+							step === 2 &&
+							winCondition === 'team' &&
+							!numTeamsValid
+						}
+					>
 						Next
 					</Button>
 				) : (
-					<Button variant='success' onClick={handleSave}>
+					<Button
+						variant='success'
+						onClick={handleSave}
+						disabled={
+							(winCondition === 'team' &&
+								(!numTeamsValid ||
+									!allPlayersHaveTeam ||
+									!allTeamsNonEmpty)) ||
+							!winnerSelected
+						}
+					>
 						Save
 					</Button>
 				)}
