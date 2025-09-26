@@ -1,12 +1,15 @@
 package com.asd.board_game_statistics_api.group;
 
 import com.asd.board_game_statistics_api.group.dto.GroupMemberResponse;
+import com.asd.board_game_statistics_api.model.Permission;
+import com.asd.board_game_statistics_api.util.EnumSetUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.EnumSet;
 import java.util.List;
 
 @Repository
@@ -15,10 +18,10 @@ public class PostgreSqlGroupMembershipRepository implements IGroupMembershipRepo
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public void create(int groupId, int accountId, String permissionsString, Instant joinTimestamp) {
+    public void create(int groupId, int accountId, EnumSet<Permission> permissions, Instant joinTimestamp) {
         String sql = "INSERT INTO bgs.group_membership (group_id, account_id, permissions_mask, join_timestamp) VALUES (?, ?, ?, ?);";
 
-        jdbcTemplate.update(sql, groupId, accountId, permissionsString, Timestamp.from(joinTimestamp));
+        jdbcTemplate.update(sql, groupId, accountId, EnumSetUtils.toBitmask(permissions), Timestamp.from(joinTimestamp));
     }
 
     @Override
