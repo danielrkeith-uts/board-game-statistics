@@ -31,9 +31,12 @@ public class InvitationService implements IInvitaionService{
     }
 
     @Override
-    public boolean checkInvitationExists(String code) {
-        return invitationRespository.checkInvitationExists(code);
+    public boolean checkInvitationExistsByCode(String code) {
+        return invitationRespository.checkInvitationExistsByCode(code);
     }
 
-
+    @Override
+    public boolean checkInvitationExistsByEmailAndGroup(String email, String group_id) {
+        return invitationRespository.checkInvitationExistsByEmailAndGroup(email, group_id);
+    }
 }

@@ -7,5 +7,6 @@ public interface IInvitaionService {
     Invitation getInvitationByEmailAndGroup(String email, String group_id);
     Invitation getInvitationByCode(String code);
     void deleteInvitationByCode(String code);
-    boolean checkInvitationExists(String code);
+    boolean checkInvitationExistsByCode(String code);
+    boolean checkInvitationExistsByEmailAndGroup(String email, String group_id);
 }

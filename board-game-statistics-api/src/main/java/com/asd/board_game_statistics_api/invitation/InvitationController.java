@@ -40,7 +40,7 @@ public class InvitationController {
 
     @PostMapping("/api/invite/join")
     public ResponseEntity<?> JoinGroup(@RequestBody JoinGroupRequest joinGroupRequest) {
-        if(invitationService.checkInvitationExists(joinGroupRequest.inviteCode())){
+        if(invitationService.checkInvitationExistsByCode(joinGroupRequest.inviteCode())){
             //Add user to group table (check for implementation)
             //  Get invitation
             Invitation invitation = invitationService.getInvitationByCode(joinGroupRequest.inviteCode());

@@ -34,11 +34,17 @@ public class PostgreSqlInvitationRepository implements IInvitationRespository {
     }
 
     @Override
-    public boolean checkInvitationExists(String code) {
+    public boolean checkInvitationExistsByCode(String code) {
         int inviteCode = Integer.valueOf(code);
         String sqlStatement = "SELECT COUNT(*) FROM bgs.invitation WHERE inviteCode = ?";
         int count = jdbcTemplate.queryForObject(sqlStatement, Integer.class, inviteCode);
         return count > 0;
     }
 
+    @Override
+    public boolean checkInvitationExistsByEmailAndGroup(String email, String group_id) {
+        String sqlStatement = "SELECT COUNT(*) FROM bgs.invitation WHERE user_email = ? AND group_id = ?";
+        int count = jdbcTemplate.queryForObject(sqlStatement, Integer.class, email, group_id);
+        return count > 0;
+    }
 }
