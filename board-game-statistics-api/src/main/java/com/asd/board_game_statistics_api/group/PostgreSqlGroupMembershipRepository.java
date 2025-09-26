@@ -16,7 +16,7 @@ public class PostgreSqlGroupMembershipRepository implements IGroupMembershipRepo
 
     @Override
     public void create(int groupId, int accountId, String permissionsString, Instant joinTimestamp) {
-        String sql = "INSERT INTO bgs.group_membership (group_id, account_id, permissions_string, join_timestamp) VALUES (?, ?, ?, ?);";
+        String sql = "INSERT INTO bgs.group_membership (group_id, account_id, permissions_mask, join_timestamp) VALUES (?, ?, ?, ?);";
 
         jdbcTemplate.update(sql, groupId, accountId, permissionsString, Timestamp.from(joinTimestamp));
     }

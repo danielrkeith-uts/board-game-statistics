@@ -47,7 +47,6 @@ const MembersSection = (props: MembersSectionProps) => {
 				groupId={group.id}
 				show={showEditPermissions}
 				handleClose={() => setShowEditPermissions(false)}
-				handleSubmit={() => {}}
 			/>
 			<div className='scrollable-table mt-1'>
 				<table id='memberTable' className='table'>

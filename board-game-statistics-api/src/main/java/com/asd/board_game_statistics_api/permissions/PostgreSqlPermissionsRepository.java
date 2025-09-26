@@ -43,4 +43,13 @@ public class PostgreSqlPermissionsRepository implements IPermissionsRepository {
         return jdbcTemplate.query(sql, AccountPermissions::fromRow, groupId);
     }
 
+    @Override
+    public void setPermissions(int accountId, int groupId, EnumSet<Permission> permissions) {
+        String sql = "UPDATE bgs.group_membership SET permissions_mask = ? WHERE account_id = ? AND group_id = ?;";
+
+        int mask = EnumSetUtils.toBitmask(permissions);
+
+        jdbcTemplate.update(sql, mask, accountId, groupId);
+    }
+
 }

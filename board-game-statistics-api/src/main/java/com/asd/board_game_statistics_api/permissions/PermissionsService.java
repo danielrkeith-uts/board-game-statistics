@@ -48,4 +48,13 @@ public class PermissionsService implements IPermissionsService {
 
         return permissionsRepository.getPermissionsForGroup(accountId, groupId);
     }
+
+    @Override
+    public void setPermissions(int accountId, int groupId, EnumSet<Permission> permissions) throws MemberDoesNotBelongToGroupException {
+        if (!groupService.belongsToGroup(accountId, groupId)) {
+            throw new MemberDoesNotBelongToGroupException();
+        }
+
+        permissionsRepository.setPermissions(accountId, groupId, permissions);
+    }
 }

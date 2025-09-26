@@ -2,7 +2,10 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import type { GroupMember, Permission } from '../../../utils/types';
 import { getAccountFullName } from '../../../utils/util-methods';
-import { apiGetPermissionOfGroupMember } from '../../../utils/api/permissions-api-utils';
+import {
+	apiGetPermissionOfGroupMember,
+	apiSetGroupMemberPermissions,
+} from '../../../utils/api/permissions-api-utils';
 
 interface PermissionName {
 	permission: Permission;
@@ -24,7 +27,6 @@ interface EditPermissionsModalProps {
 	groupId: number;
 	show: boolean;
 	handleClose: () => void;
-	handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
 const EditPermissionsModal = ({
@@ -32,7 +34,6 @@ const EditPermissionsModal = ({
 	groupId,
 	show,
 	handleClose,
-	handleSubmit,
 }: EditPermissionsModalProps) => {
 	const [permissions, setPermissions] = useState<Set<Permission>>(
 		new Set<Permission>()
@@ -54,6 +55,14 @@ const EditPermissionsModal = ({
 			}
 			return nextSet;
 		});
+
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+
+		apiSetGroupMemberPermissions(member.id, groupId, permissions).finally(
+			() => handleClose()
+		);
+	};
 
 	return (
 		<Modal show={show} onHide={handleClose}>
@@ -78,15 +87,15 @@ const EditPermissionsModal = ({
 						))}
 					</div>
 				</Modal.Body>
+				<Modal.Footer>
+					<Button variant='secondary' onClick={handleClose}>
+						Cancel
+					</Button>
+					<Button variant='success' type='submit'>
+						Submit
+					</Button>
+				</Modal.Footer>
 			</form>
-			<Modal.Footer>
-				<Button variant='secondary' onClick={handleClose}>
-					Cancel
-				</Button>
-				<Button variant='success' type='submit'>
-					Create
-				</Button>
-			</Modal.Footer>
 		</Modal>
 	);
 };

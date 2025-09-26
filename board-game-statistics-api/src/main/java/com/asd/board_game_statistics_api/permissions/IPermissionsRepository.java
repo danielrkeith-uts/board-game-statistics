@@ -14,4 +14,6 @@ public interface IPermissionsRepository {
     List<GroupPermissions> getAllGroupPermissions(int accountId);
 
     List<AccountPermissions> getAllAccountPermissions(int groupId);
+
+    void setPermissions(int accountId, int groupId, EnumSet<Permission> permissions);
 }

@@ -3,14 +3,14 @@ package com.asd.board_game_statistics_api.permissions;
 import com.asd.board_game_statistics_api.group.IGroupService;
 import com.asd.board_game_statistics_api.model.Account;
 import com.asd.board_game_statistics_api.model.GroupPermissions;
+import com.asd.board_game_statistics_api.model.Permission;
+import com.asd.board_game_statistics_api.permissions.dto.SetPermissionsRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.EnumSet;
 import java.util.List;
 
 @RestController
@@ -52,5 +52,24 @@ public class PermissionsController {
         }
 
         return ResponseEntity.ok(permissionsService.getPermissions(memberId, groupId));
+    }
+
+    @PutMapping("/group/{groupId}/member/{memberId}")
+    public ResponseEntity<?> setGroupMemberPermissions(
+            @AuthenticationPrincipal Account account,
+            @PathVariable int groupId,
+            @PathVariable int memberId,
+            @RequestBody SetPermissionsRequest request
+            ) {
+        if (!groupService.belongsToGroup(account.id(), groupId)) {
+            return ResponseEntity.status(401).body("Logged in user does not belong to group");
+        }
+
+        if (!permissionsService.getPermissions(account.id(), groupId).contains(Permission.MANAGE_MEMBER_PERMISSIONS)) {
+            return ResponseEntity.status(401).body("Logged in user does not have permission for this action");
+        }
+
+        permissionsService.setPermissions(memberId, groupId, EnumSet.copyOf(request.permissions()));
+        return ResponseEntity.ok("Successfully set permissions");
     }
 }

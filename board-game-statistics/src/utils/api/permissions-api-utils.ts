@@ -1,5 +1,5 @@
 import type { GroupPermissions, Permission } from '../types';
-import { apiGet } from './api-utils';
+import { apiGet, apiPut } from './api-utils';
 
 export const apiGetPermissions = (): Promise<GroupPermissions[]> =>
 	apiGet('/permissions')
@@ -38,4 +38,18 @@ export const apiGetGroupOwner = (groupId: number): Promise<string> =>
 			return '';
 		}
 		throw new Error(`Error getting group owner: ${res.statusText}`);
+	});
+
+export const apiSetGroupMemberPermissions = (
+	memberId: number,
+	groupId: number,
+	permissions: Set<Permission>
+): Promise<boolean> =>
+	apiPut(`/permissions/group/${groupId}/member/${memberId}`, {
+		permissions: [...permissions],
+	}).then((res) => {
+		if (res.ok) {
+			return true;
+		}
+		throw new Error(`Error setting permissions: ${res.statusText}`);
 	});

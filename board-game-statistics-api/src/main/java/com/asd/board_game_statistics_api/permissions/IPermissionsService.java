@@ -15,4 +15,6 @@ public interface IPermissionsService {
     Account getGroupOwner(int groupId);
 
     EnumSet<Permission> getPermissions(int accountId, int groupId) throws MemberDoesNotBelongToGroupException;
+
+    void setPermissions(int accountId, int groupId, EnumSet<Permission> permissions) throws MemberDoesNotBelongToGroupException;
 }
