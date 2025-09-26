@@ -93,3 +93,10 @@ INSERT INTO bgs.group_membership (group_id, account_id, permissions_mask, join_t
 (6, 18, 0, NOW() - INTERVAL '2 days'),
 (6, 19, 0, NOW() - INTERVAL '6 hours'),
 (6, 20, 0, NOW() - INTERVAL '3 hours');
+
+-- Sample game records
+INSERT INTO bgs.game_record (group_id, game_id, played_at, win_condition, num_teams, notes)
+VALUES (1, 100, NOW() - INTERVAL '1 day', 'single', NULL, 'Sample single winner match');
+
+INSERT INTO bgs.game_record_player (record_id, account_id, team_number, is_winner)
+SELECT id, 1, NULL, TRUE FROM bgs.game_record ORDER BY id DESC LIMIT 1;
