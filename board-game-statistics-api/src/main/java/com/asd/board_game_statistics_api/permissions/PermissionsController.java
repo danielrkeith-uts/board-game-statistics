@@ -69,7 +69,12 @@ public class PermissionsController {
             return ResponseEntity.status(401).body("Logged in user does not have permission for this action");
         }
 
-        permissionsService.setPermissions(memberId, groupId, EnumSet.copyOf(request.permissions()));
+        // Cast permissions array to EnumSet
+        EnumSet<Permission> permissions = request.permissions().isEmpty()
+                ? EnumSet.noneOf(Permission.class)
+                : EnumSet.copyOf(request.permissions());
+
+        permissionsService.setPermissions(memberId, groupId, permissions);
         return ResponseEntity.ok("Successfully set permissions");
     }
 }
