@@ -3,11 +3,11 @@ import { apiDelete, apiGet, apiPost } from './api-utils';
 export interface RecordGamePayload {
 	groupId: number;
 	gameId: number;
-	winCondition: 'single' | 'team';
-	numTeams?: number;
+	datePlayed: string; // ISO date string
 	playerIds: number[];
-	teamAssignments?: number[];
-	winner?: string;
+	points: number[];
+	playerTeams: string[];
+	hasWon: boolean[];
 	notes?: string;
 }
 

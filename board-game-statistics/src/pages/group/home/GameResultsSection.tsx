@@ -20,8 +20,8 @@ const GameResultsSection = (props: Props) => {
 				const arr = Array.isArray(data) ? data : [];
 				arr.sort(
 					(a, b) =>
-						new Date(b.dateIso || b.played_at || 0).getTime() -
-						new Date(a.dateIso || a.played_at || 0).getTime()
+						new Date(b.datePlayed).getTime() -
+						new Date(a.datePlayed).getTime()
 				);
 				setRecent(arr.slice(0, 3));
 			})
@@ -43,7 +43,7 @@ const GameResultsSection = (props: Props) => {
 					<>
 						{recent.map((r) => (
 							<a
-								key={r.recordId}
+								key={r.playedGameId}
 								href='#'
 								className='list-group-item list-group-item-action d-flex justify-content-between'
 								onClick={(e) => {
@@ -54,7 +54,7 @@ const GameResultsSection = (props: Props) => {
 								<span>{`Game #${r.gameId}`}</span>
 								<span className='text-muted'>
 									{new Date(
-										r.dateIso || r.played_at || Date.now()
+										r.datePlayed
 									).toLocaleDateString()}
 								</span>
 							</a>
@@ -94,12 +94,8 @@ const GameResultsSection = (props: Props) => {
 							const arr = Array.isArray(data) ? data : [];
 							arr.sort(
 								(a, b) =>
-									new Date(
-										b.dateIso || b.played_at || 0
-									).getTime() -
-									new Date(
-										a.dateIso || a.played_at || 0
-									).getTime()
+									new Date(b.datePlayed).getTime() -
+									new Date(a.datePlayed).getTime()
 							);
 							setRecent(arr.slice(0, 3));
 						})

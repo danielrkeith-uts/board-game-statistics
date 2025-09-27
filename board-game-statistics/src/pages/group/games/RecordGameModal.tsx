@@ -31,9 +31,11 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	const [playerIdToTeam, setPlayerIdToTeam] = useState<
 		Record<string, string>
 	>({});
+	const [playerPoints, setPlayerPoints] = useState<Record<string, number>>(
+		{}
+	);
 	const [singleWinnerId, setSingleWinnerId] = useState<string>('');
 	const [teamWinner, setTeamWinner] = useState<string>('');
-	const [notes, setNotes] = useState<string>('');
 
 	const handleNext = () => setStep((s) => Math.min(s + 1, 3));
 	const handleBack = () => setStep((s) => Math.max(s - 1, 1));
@@ -45,9 +47,9 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		setWinCondition('single');
 		setNumTeams('');
 		setPlayerIdToTeam({});
+		setPlayerPoints({});
 		setSingleWinnerId('');
 		setTeamWinner('');
-		setNotes('');
 		handleClose();
 	};
 
@@ -165,6 +167,22 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 													]}
 										</Form.Select>
 									)}
+								{selectedPlayerIds.includes(p.id) && (
+									<Form.Control
+										type='number'
+										size='sm'
+										className='w-auto ms-2'
+										placeholder='Points'
+										value={playerPoints[p.id] || ''}
+										onChange={(e) =>
+											setPlayerPoints((prev) => ({
+												...prev,
+												[p.id]:
+													Number(e.target.value) || 0,
+											}))
+										}
+									/>
+								)}
 							</div>
 						))}
 					</div>
@@ -189,8 +207,9 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 						const totals = new Array(Number(numTeams)).fill(0);
 						selectedPlayerIds.forEach((pid) => {
 							const t = Number(playerIdToTeam[pid] || '0');
-							if (t >= 1 && t <= Number(numTeams))
-								{totals[t - 1]++;}
+							if (t >= 1 && t <= Number(numTeams)) {
+								totals[t - 1]++;
+							}
 						});
 						return totals.some((c) => c === 0);
 					})() && (
@@ -257,15 +276,6 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 							Select a winning team.
 						</div>
 					)}
-				<Form.Group className='mt-3'>
-					<Form.Label>Notes (optional)</Form.Label>
-					<Form.Control
-						as='textarea'
-						rows={3}
-						value={notes}
-						onChange={(e) => setNotes(e.target.value)}
-					/>
-				</Form.Group>
 			</Form>
 		</div>
 	);
@@ -334,11 +344,15 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	const allTeamsNonEmpty =
 		winCondition !== 'team' ||
 		(() => {
-			if (!numTeamsValid) {return false;}
+			if (!numTeamsValid) {
+				return false;
+			}
 			const totals = new Array(Number(numTeams)).fill(0);
 			selectedPlayerIds.forEach((pid) => {
 				const t = Number(playerIdToTeam[pid] || '0');
-				if (t >= 1 && t <= Number(numTeams)) {totals[t - 1]++;}
+				if (t >= 1 && t <= Number(numTeams)) {
+					totals[t - 1]++;
+				}
 			});
 			return totals.every((c) => c > 0);
 		})();
@@ -350,26 +364,31 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			const playerIds = selectedPlayerIds.map(
 				(pid) => Number(pid.replace(/\D/g, '')) || 0
 			);
-			const teamAssignments =
-				winCondition === 'team'
-					? selectedPlayerIds.map((pid) =>
-							Number(playerIdToTeam[pid] || '1')
-						)
-					: undefined;
+			const points = selectedPlayerIds.map(
+				(pid) => playerPoints[pid] || 0
+			);
+			const playerTeams = selectedPlayerIds.map((pid) => {
+				if (winCondition === 'team') {
+					return `Team ${playerIdToTeam[pid] || '1'}`;
+				}
+				return 'Solo';
+			});
+			const hasWon = selectedPlayerIds.map((pid) => {
+				if (winCondition === 'single') {
+					return String(pid) === singleWinnerId;
+				} else {
+					return String(playerIdToTeam[pid] || '1') === teamWinner;
+				}
+			});
+
 			const payload: RecordGamePayload = {
 				groupId: group.id,
 				gameId: Number(selectedGameId || 0),
-				winCondition,
-				numTeams:
-					winCondition === 'team'
-						? numTeams === ''
-							? undefined
-							: Number(numTeams)
-						: undefined,
+				datePlayed: new Date().toISOString().split('T')[0],
 				playerIds,
-				teamAssignments,
-				winner: winCondition === 'single' ? singleWinnerId : teamWinner,
-				notes,
+				points,
+				playerTeams,
+				hasWon,
 			};
 			await apiRecordGame(payload);
 			if (onSuccess) {

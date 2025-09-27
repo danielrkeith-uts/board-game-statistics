@@ -71,29 +71,30 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 					<ul className='list-group'>
 						{records.map((r) => {
 							const displayDate = new Date(
-								r.dateIso || r.played_at || Date.now()
+								r.datePlayed
 							).toLocaleDateString();
 							const gameName = `Game #${r.gameId}`; // TODO: replace with real name
+
+							// Find winners
+							const winners = r.playerIds
+								.filter((_, index) => r.hasWon[index])
+								.map((playerId) => {
+									const member = group.members.find(
+										(m) => m.id === playerId
+									);
+									return member
+										? `${member.firstName} ${member.lastName}`
+										: `Player ${playerId}`;
+								});
+
 							const winnerText =
-								r.winCondition === 'single'
-									? r.winner
-										? `Winner: ${(() => {
-												const m = group.members.find(
-													(m) =>
-														String(m.id) ===
-														String(r.winner)
-												);
-												return m
-													? `${m.firstName} ${m.lastName}`
-													: r.winner;
-											})()}`
-										: ''
-									: r.winner
-										? `Winning team: Team ${r.winner}`
-										: '';
+								winners.length > 0
+									? `Winners: ${winners.join(', ')}`
+									: '';
+
 							return (
 								<li
-									key={r.recordId}
+									key={r.playedGameId}
 									className='list-group-item d-flex justify-content-between align-items-center'
 									role='button'
 									onClick={() => setSelected(r)}

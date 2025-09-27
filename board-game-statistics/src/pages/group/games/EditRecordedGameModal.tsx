@@ -5,20 +5,15 @@ import { apiDeleteGameRecord } from '../../../utils/api/games-api-utils';
 import type { Group } from '../../../utils/types';
 import AlertMessage from '../AlertMessage';
 
-type WinCondition = 'single' | 'team';
-
 export interface GameRecordDto {
-	recordId: number;
+	playedGameId: number;
 	groupId: number;
 	gameId: number;
-	dateIso?: string;
-	winCondition: WinCondition;
-	numTeams?: number;
-	notes?: string;
-	playerIds?: number[];
-	teamAssignments?: number[];
-	winner?: string;
-	played_at?: string;
+	datePlayed: string;
+	playerIds: number[];
+	points: number[];
+	playerTeams: string[];
+	hasWon: boolean[];
 }
 
 interface EditRecordedGameModalProps {
@@ -34,10 +29,14 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 	const [success, setSuccess] = useState<string | null>(null);
 
 	const handleDelete = async () => {
-		if (!record) {return;}
+		if (!record) {
+			return;
+		}
 		try {
-			await apiDeleteGameRecord(record.recordId);
-			if (onDeleted) {onDeleted(record.recordId);}
+			await apiDeleteGameRecord(record.playedGameId);
+			if (onDeleted) {
+				onDeleted(record.playedGameId);
+			}
 			setSuccess('Game deleted successfully');
 			onClose();
 		} catch (e) {
@@ -58,70 +57,36 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 					{record && (
 						<div className='vstack gap-2'>
 							<div>
-								<strong>Date & time: </strong>
+								<strong>Date: </strong>
 								{new Date(
-									record.dateIso ||
-										record.played_at ||
-										Date.now()
-								).toLocaleString()}
+									record.datePlayed
+								).toLocaleDateString()}
 							</div>
-							{record.winCondition === 'single' &&
-								record.winner && (
-									<div>
-										<strong>Winner: </strong>
-										{(() => {
-											const m = group.members.find(
-												(gm) =>
-													String(gm.id) ===
-													String(record.winner)
-											);
-											return m
-												? `${m.firstName} ${m.lastName}`
-												: record.winner;
-										})()}
-									</div>
-								)}
-							{record.winCondition === 'team' &&
-								record.winner && (
-									<div>
-										<strong>Winning team: </strong>
-										Team {record.winner}
-									</div>
-								)}
 							<div>
 								<strong>Players:</strong>
 								<ul className='mb-0'>
-									{(record.playerIds || []).map((pid) => {
-										const m = group.members.find(
-											(gm) => gm.id === pid
+									{record.playerIds.map((playerId, index) => {
+										const member = group.members.find(
+											(m) => m.id === playerId
 										);
+										const playerName = member
+											? `${member.firstName} ${member.lastName}`
+											: `Player ${playerId}`;
+										const points =
+											record.points[index] || 0;
+										const team =
+											record.playerTeams[index] ||
+											'No team';
+										const isWinner = record.hasWon[index];
 										return (
-											<li key={pid}>
-												{m
-													? `${m.firstName} ${m.lastName}`
-													: `Player #${pid}`}
-												{record.winCondition ===
-													'team' &&
-												record.teamAssignments &&
-												record.teamAssignments
-													.length ===
-													(record.playerIds || [])
-														.length
-													? ` (Team ${record.teamAssignments[(record.playerIds || []).indexOf(pid)]})`
-													: ''}
+											<li key={playerId}>
+												{playerName} - {points} points (
+												{team}) {isWinner ? '🏆' : ''}
 											</li>
 										);
 									})}
 								</ul>
 							</div>
-							{record.notes && (
-								<div>
-									<strong>Notes:</strong>
-									<div className='text-muted'>
-										{record.notes}
-									</div>
-								</div>
-							)}
 						</div>
 					)}
 				</Modal.Body>

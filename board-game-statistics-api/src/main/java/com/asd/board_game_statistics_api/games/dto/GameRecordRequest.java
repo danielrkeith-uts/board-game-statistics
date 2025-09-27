@@ -9,8 +9,7 @@ public record GameRecordRequest(
         List<Integer> playerIds,
         List<Integer> points,
         List<String> playerTeams, 
-        List<Boolean> hasWon, 
-        String notes
+        List<Boolean> hasWon
 ) {}
 
 
