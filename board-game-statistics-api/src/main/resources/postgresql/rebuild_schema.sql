@@ -35,20 +35,18 @@ CREATE TABLE bgs.group_membership (
     FOREIGN KEY (account_id) REFERENCES bgs.account(id)
 );
 
-CREATE TABLE bgs.game_record (
-    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    group_id INT NOT NULL REFERENCES bgs.game_group(id) ON DELETE CASCADE,
-    game_id INT NOT NULL,
-    played_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    win_condition VARCHAR(16) NOT NULL CHECK (win_condition IN ('single','team')),
-    num_teams INT NULL CHECK (num_teams IS NULL OR num_teams >= 2),
-    notes TEXT
+CREATE TABLE bgs.playedGame (
+    playedGameId INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    gameId INT NOT NULL,
+    groupId INT NOT NULL REFERENCES bgs.game_group(id) ON DELETE CASCADE,
+    datePlayed DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
-CREATE TABLE bgs.game_record_player (
-    record_id INT NOT NULL REFERENCES bgs.game_record(id) ON DELETE CASCADE,
-    account_id INT NOT NULL REFERENCES bgs.account(id) ON DELETE CASCADE,
-    team_number INT NULL,
-    is_winner BOOLEAN NOT NULL DEFAULT FALSE,
-    PRIMARY KEY (record_id, account_id)
+CREATE TABLE bgs.playerResult (
+    playerResultId INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    playedGameId INT NOT NULL REFERENCES bgs.playedGame(playedGameId) ON DELETE CASCADE,
+    accountId INT NOT NULL REFERENCES bgs.account(id) ON DELETE CASCADE,
+    points INT,
+    playerTeam VARCHAR(100),
+    hasWon BOOLEAN NOT NULL DEFAULT FALSE
 );

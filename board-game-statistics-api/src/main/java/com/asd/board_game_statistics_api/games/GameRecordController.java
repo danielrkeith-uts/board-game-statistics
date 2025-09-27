@@ -34,12 +34,12 @@ public class GameRecordController {
         return ResponseEntity.ok(records);
     }
 
-    @DeleteMapping("/record/{recordId}")
+    @DeleteMapping("/record/{playedGameId}")
     public ResponseEntity<?> deleteRecord(
             @AuthenticationPrincipal Account account,
-            @PathVariable int recordId
+            @PathVariable int playedGameId
     ) {
-        gameRecordService.deleteRecord(account, recordId);
+        gameRecordService.deleteRecord(account, playedGameId);
         return ResponseEntity.ok("Deleted");
     }
 }
