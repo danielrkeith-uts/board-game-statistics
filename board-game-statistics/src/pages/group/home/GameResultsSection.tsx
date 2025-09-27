@@ -16,14 +16,16 @@ const GameResultsSection = (props: Props) => {
 
 	useEffect(() => {
 		apiGetGroupGames(group.id)
-			.then((data) => {
-				const arr = Array.isArray(data) ? data : [];
-				arr.sort(
-					(a, b) =>
-						new Date(b.datePlayed).getTime() -
-						new Date(a.datePlayed).getTime()
+			.then((gameRecords) => {
+				const gameRecordsArray = Array.isArray(gameRecords)
+					? gameRecords
+					: [];
+				gameRecordsArray.sort(
+					(firstGame, secondGame) =>
+						new Date(secondGame.datePlayed).getTime() -
+						new Date(firstGame.datePlayed).getTime()
 				);
-				setRecent(arr.slice(0, 3));
+				setRecent(gameRecordsArray.slice(0, 3));
 			})
 			.catch(() => setRecent([]));
 	}, [group.id]);
@@ -88,16 +90,17 @@ const GameResultsSection = (props: Props) => {
 				onClose={() => setSelected(null)}
 				onDeleted={() => {
 					setSelected(null);
-					// Refresh recent list after delete
 					apiGetGroupGames(group.id)
-						.then((data) => {
-							const arr = Array.isArray(data) ? data : [];
-							arr.sort(
-								(a, b) =>
-									new Date(b.datePlayed).getTime() -
-									new Date(a.datePlayed).getTime()
+						.then((gameRecords) => {
+							const gameRecordsArray = Array.isArray(gameRecords)
+								? gameRecords
+								: [];
+							gameRecordsArray.sort(
+								(firstGame, secondGame) =>
+									new Date(secondGame.datePlayed).getTime() -
+									new Date(firstGame.datePlayed).getTime()
 							);
-							setRecent(arr.slice(0, 3));
+							setRecent(gameRecordsArray.slice(0, 3));
 						})
 						.catch(() => {});
 				}}
