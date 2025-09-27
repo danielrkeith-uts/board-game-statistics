@@ -1,6 +1,6 @@
 import Form from 'react-bootstrap/Form';
 
-type WinCondition = 'single' | 'team';
+type WinCondition = 'single' | 'team' | 'coop';
 
 interface WinConditionStepProps {
 	winCondition: WinCondition;
@@ -25,6 +25,7 @@ const WinConditionStep = (props: WinConditionStepProps) => {
 				>
 					<option value='single'>Single winner</option>
 					<option value='team'>Team-based</option>
+					<option value='coop'>Cooperative</option>
 				</Form.Select>
 			</Form.Group>
 			{winCondition === 'team' && (

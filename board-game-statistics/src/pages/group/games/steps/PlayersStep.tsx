@@ -1,6 +1,6 @@
 import Form from 'react-bootstrap/Form';
 
-type WinCondition = 'single' | 'team';
+type WinCondition = 'single' | 'team' | 'coop';
 
 interface Player {
 	id: string;
@@ -21,6 +21,8 @@ interface PlayersStepProps {
 	onSingleWinnerChange: (playerId: string) => void;
 	teamWinner: string;
 	onTeamWinnerChange: (team: string) => void;
+	coopWinner: boolean | undefined;
+	onCoopWinnerChange: (won: boolean) => void;
 }
 
 const PlayersStep = (props: PlayersStepProps) => {
@@ -38,6 +40,8 @@ const PlayersStep = (props: PlayersStepProps) => {
 		onSingleWinnerChange,
 		teamWinner,
 		onTeamWinnerChange,
+		coopWinner,
+		onCoopWinnerChange,
 	} = props;
 
 	return (
@@ -197,6 +201,31 @@ const PlayersStep = (props: PlayersStepProps) => {
 						</div>
 					</Form.Group>
 				)}
+				{winCondition === 'coop' && selectedPlayerIds.length > 0 && (
+					<Form.Group className='mt-2'>
+						<Form.Label>Game outcome</Form.Label>
+						<div>
+							<Form.Check
+								inline
+								type='radio'
+								label='Win'
+								name='coopWinner'
+								id='coopWinner-true'
+								checked={coopWinner === true}
+								onChange={() => onCoopWinnerChange(true)}
+							/>
+							<Form.Check
+								inline
+								type='radio'
+								label='Lose'
+								name='coopWinner'
+								id='coopWinner-false'
+								checked={coopWinner === false}
+								onChange={() => onCoopWinnerChange(false)}
+							/>
+						</div>
+					</Form.Group>
+				)}
 				{winCondition === 'single' &&
 					selectedPlayerIds.length > 0 &&
 					singleWinnerId === '' && (
@@ -209,6 +238,13 @@ const PlayersStep = (props: PlayersStepProps) => {
 					teamWinner === '' && (
 						<div className='text-danger small mt-1'>
 							Select a winning team.
+						</div>
+					)}
+				{winCondition === 'coop' &&
+					selectedPlayerIds.length > 0 &&
+					coopWinner === undefined && (
+						<div className='text-danger small mt-1'>
+							Select whether the team won or lost.
 						</div>
 					)}
 			</Form>

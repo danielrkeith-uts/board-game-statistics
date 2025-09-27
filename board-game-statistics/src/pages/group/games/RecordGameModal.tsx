@@ -10,7 +10,7 @@ import GameSelectionStep from './steps/GameSelectionStep';
 import WinConditionStep from './steps/WinConditionStep';
 import PlayersStep from './steps/PlayersStep';
 
-type WinCondition = 'single' | 'team';
+type WinCondition = 'single' | 'team' | 'coop';
 
 interface RecordGameModalProps {
 	show: boolean;
@@ -38,6 +38,9 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	);
 	const [singleWinnerId, setSingleWinnerId] = useState<string>('');
 	const [teamWinner, setTeamWinner] = useState<string>('');
+	const [coopWinner, setCoopWinner] = useState<boolean | undefined>(
+		undefined
+	);
 
 	const handleNext = () => setStep((s) => Math.min(s + 1, 3));
 	const handleBack = () => setStep((s) => Math.max(s - 1, 1));
@@ -67,6 +70,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		setPlayerPoints({});
 		setSingleWinnerId('');
 		setTeamWinner('');
+		setCoopWinner(undefined);
 		handleClose();
 	};
 
@@ -125,6 +129,8 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			onSingleWinnerChange={setSingleWinnerId}
 			teamWinner={teamWinner}
 			onTeamWinnerChange={setTeamWinner}
+			coopWinner={coopWinner}
+			onCoopWinnerChange={setCoopWinner}
 		/>
 	);
 
@@ -177,7 +183,11 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			return totals.every((c) => c > 0);
 		})();
 	const winnerSelected =
-		winCondition === 'single' ? singleWinnerId !== '' : teamWinner !== '';
+		winCondition === 'single'
+			? singleWinnerId !== ''
+			: winCondition === 'team'
+				? teamWinner !== ''
+				: coopWinner !== undefined;
 
 	const handleSave = async () => {
 		try {
@@ -190,14 +200,19 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			const playerTeams = selectedPlayerIds.map((pid) => {
 				if (winCondition === 'team') {
 					return `Team ${playerIdToTeam[pid] || '1'}`;
+				} else if (winCondition === 'coop') {
+					return 'Cooperative';
 				}
 				return 'Solo';
 			});
 			const hasWon = selectedPlayerIds.map((pid) => {
 				if (winCondition === 'single') {
 					return String(pid) === singleWinnerId;
-				} else {
+				} else if (winCondition === 'team') {
 					return String(playerIdToTeam[pid] || '1') === teamWinner;
+				} else {
+					// coop: all players have the same win status
+					return coopWinner === true;
 				}
 			});
 
