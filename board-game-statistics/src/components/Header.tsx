@@ -5,6 +5,7 @@ import {
 	GROUPS_PAGE_URL,
 	HOME_PAGE_URL,
 	LOGIN_PAGE_URL,
+	MANAGE_ACCOUNT_PAGE_URL,
 } from '../utils/constants';
 import '../css/custom.css';
 import { useContext, useEffect } from 'react';
@@ -41,8 +42,16 @@ const Header = () => {
 								Home
 							</Link>
 						</li>
-						{/* Manage account should be dynamic based on if user is logged in */}
-						{/* <li className='nav-item'><Link className='nav-link btn-primary' to={MANAGE_ACCOUNT_PAGE_URL}>Manage Account</Link></li> */}
+						{account && (
+							<li className='nav-item'>
+								<Link
+									className='nav-link'
+									to={MANAGE_ACCOUNT_PAGE_URL}
+								>
+									Account
+								</Link>
+							</li>
+						)}
 						<li className='nav-item'>
 							<Link className='nav-link' to={GAMES_PAGE_URL}>
 								Games
