@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class GameRecordServiceTests extends TestsWithMockedDatabase {
 
@@ -28,8 +27,7 @@ public class GameRecordServiceTests extends TestsWithMockedDatabase {
                 List.of(1, 2, 5), // playerIds
                 List.of(150, 120, 180), // points
                 List.of("Solo", "Solo", "Solo"), // playerTeams
-                List.of(true, false, false), // hasWon
-                "unit test single" // notes
+                List.of(true, false, false) // hasWon
         );
 
         GameRecordResponse created = gameRecordService.recordGame(dummyAccount, req);
@@ -45,7 +43,7 @@ public class GameRecordServiceTests extends TestsWithMockedDatabase {
     @Test
     void createTeamMatch() {
         GameRecordRequest bad = new GameRecordRequest(
-                1, 100, "2024-01-15", List.of(1, 2), List.of(150, 120), List.of("Blue Team", "Red Team"), List.of(true, false), null
+                1, 100, "2024-01-15", List.of(1, 2), List.of(150, 120), List.of("Blue Team", "Red Team"), List.of(true, false)
         );
         // This should work now since we don't have team validation in the new structure
         GameRecordResponse created = gameRecordService.recordGame(dummyAccount, bad);
@@ -57,7 +55,7 @@ public class GameRecordServiceTests extends TestsWithMockedDatabase {
     void DeleteRecord() {
         // create
         GameRecordRequest req = new GameRecordRequest(
-                1, 777, "2024-01-15", List.of(1, 2), List.of(150, 120), List.of("Solo", "Solo"), List.of(true, false), "to delete"
+                1, 777, "2024-01-15", List.of(1, 2), List.of(150, 120), List.of("Solo", "Solo"), List.of(true, false)
         );
         GameRecordResponse created = gameRecordService.recordGame(dummyAccount, req);
 

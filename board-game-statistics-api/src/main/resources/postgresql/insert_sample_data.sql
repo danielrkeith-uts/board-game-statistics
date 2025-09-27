@@ -106,10 +106,10 @@ VALUES (200, 1, CURRENT_DATE - INTERVAL '12 hours');
 
 WITH last AS (SELECT playedGameId FROM bgs.playedGame ORDER BY playedGameId DESC LIMIT 1)
 INSERT INTO bgs.playerResult (playedGameId, accountId, points, playerTeam, hasWon)
-SELECT playedGameId, 1, 120, 'Blue Team', FALSE FROM last UNION ALL
-SELECT playedGameId, 2, 110, 'Blue Team', FALSE FROM last UNION ALL
-SELECT playedGameId, 5, 180, 'Red Team', TRUE  FROM last UNION ALL
-SELECT playedGameId, 7, 175, 'Red Team', TRUE  FROM last;
+SELECT playedGameId, 1, 120, 'Team 1', FALSE FROM last UNION ALL
+SELECT playedGameId, 2, 110, 'Team 1', FALSE FROM last UNION ALL
+SELECT playedGameId, 5, 180, 'Team 2', TRUE  FROM last UNION ALL
+SELECT playedGameId, 7, 175, 'Team 2', TRUE  FROM last;
 
 INSERT INTO bgs.playedGame (gameId, groupId, datePlayed)
 VALUES (101, 1, CURRENT_DATE - INTERVAL '2 hours');
@@ -122,8 +122,8 @@ VALUES (300, 1, CURRENT_DATE - INTERVAL '6 hours');
 
 WITH last3 AS (SELECT playedGameId FROM bgs.playedGame ORDER BY playedGameId DESC LIMIT 1)
 INSERT INTO bgs.playerResult (playedGameId, accountId, points, playerTeam, hasWon)
-SELECT playedGameId, 1, 90, 'Team Alpha', FALSE FROM last3 UNION ALL
-SELECT playedGameId, 2, 85, 'Team Alpha', FALSE FROM last3 UNION ALL
-SELECT playedGameId, 5, 160, 'Team Beta', TRUE  FROM last3 UNION ALL
-SELECT playedGameId, 7, 155, 'Team Beta', TRUE  FROM last3 UNION ALL
-SELECT playedGameId, 9, 100, 'Team Gamma', FALSE FROM last3;
+SELECT playedGameId, 1, 90, 'Team 1', FALSE FROM last3 UNION ALL
+SELECT playedGameId, 2, 85, 'Team 1', FALSE FROM last3 UNION ALL
+SELECT playedGameId, 5, 160, 'Team 2', TRUE  FROM last3 UNION ALL
+SELECT playedGameId, 7, 155, 'Team 2', TRUE  FROM last3 UNION ALL
+SELECT playedGameId, 9, 100, 'Team 3', FALSE FROM last3;
