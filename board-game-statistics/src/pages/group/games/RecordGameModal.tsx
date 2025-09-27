@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import type { Group } from '../../../utils/types';
 import {
 	apiRecordGame,
 	type RecordGamePayload,
 } from '../../../utils/api/games-api-utils';
+import GameSelectionStep from './steps/GameSelectionStep';
+import WinConditionStep from './steps/WinConditionStep';
+import PlayersStep from './steps/PlayersStep';
 
 type WinCondition = 'single' | 'team';
 
@@ -39,6 +41,21 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 
 	const handleNext = () => setStep((s) => Math.min(s + 1, 3));
 	const handleBack = () => setStep((s) => Math.max(s - 1, 1));
+
+	// Handler functions for PlayersStep
+	const handlePlayerTeamChange = (playerId: string, team: string) => {
+		setPlayerIdToTeam((prev) => ({
+			...prev,
+			[playerId]: team,
+		}));
+	};
+
+	const handlePlayerPointsChange = (playerId: string, points: number) => {
+		setPlayerPoints((prev) => ({
+			...prev,
+			[playerId]: points,
+		}));
+	};
 
 	const resetAndClose = () => {
 		setStep(1);
@@ -86,235 +103,38 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	}));
 
 	const renderGameStep = () => (
-		<Form>
-			<Form.Group className='mb-3'>
-				<Form.Label>Select game</Form.Label>
-				<Form.Select
-					value={selectedGameId}
-					onChange={(e) => setSelectedGameId(e.target.value)}
-				>
-					<option value=''>Choose…</option>
-					{placeholderGames.map((g) => (
-						<option key={g.id} value={g.id}>
-							{g.name}
-						</option>
-					))}
-				</Form.Select>
-			</Form.Group>
-		</Form>
+		<GameSelectionStep
+			selectedGameId={selectedGameId}
+			onGameChange={setSelectedGameId}
+			games={placeholderGames}
+		/>
 	);
 
 	const renderPlayersStep = () => (
-		<div className='vstack gap-2'>
-			<Form>
-				<Form.Group>
-					<Form.Label>Select players</Form.Label>
-					<div className='d-flex flex-column'>
-						{groupPlayers.map((p) => (
-							<div
-								key={p.id}
-								className='d-flex align-items-center gap-2 mb-1'
-							>
-								<Form.Check
-									type='checkbox'
-									label={p.name}
-									checked={selectedPlayerIds.includes(p.id)}
-									onChange={() => togglePlayer(p.id)}
-								/>
-								{winCondition === 'team' &&
-									selectedPlayerIds.includes(p.id) && (
-										<Form.Select
-											aria-label='Select team'
-											size='sm'
-											className='w-auto'
-											value={playerIdToTeam[p.id] ?? '1'}
-											onChange={(e) =>
-												setPlayerIdToTeam((prev) => ({
-													...prev,
-													[p.id]: e.target.value,
-												}))
-											}
-										>
-											{(numTeams || 0) >= 2
-												? Array.from(
-														{
-															length: Number(
-																numTeams
-															),
-														},
-														(_, i) => `${i + 1}`
-													).map((t) => (
-														<option
-															key={t}
-															value={t}
-														>
-															{`Team ${t}`}
-														</option>
-													))
-												: [
-														<option
-															key='1'
-															value='1'
-														>
-															Team 1
-														</option>,
-														<option
-															key='2'
-															value='2'
-														>
-															Team 2
-														</option>,
-													]}
-										</Form.Select>
-									)}
-								{selectedPlayerIds.includes(p.id) && (
-									<Form.Control
-										type='number'
-										size='sm'
-										className='w-auto ms-2'
-										placeholder='Points'
-										value={playerPoints[p.id] || ''}
-										onChange={(e) =>
-											setPlayerPoints((prev) => ({
-												...prev,
-												[p.id]:
-													Number(e.target.value) || 0,
-											}))
-										}
-									/>
-								)}
-							</div>
-						))}
-					</div>
-				</Form.Group>
-				{winCondition === 'team' &&
-					(numTeams === '' || Number(numTeams) < 2) && (
-						<div className='text-danger small mt-1'>
-							Enter number of teams (2 or more).
-						</div>
-					)}
-				{winCondition === 'team' &&
-					Number(numTeams) >= 2 &&
-					selectedPlayerIds.length > 0 &&
-					selectedPlayerIds.some((pid) => !playerIdToTeam[pid]) && (
-						<div className='text-danger small mt-1'>
-							Assign a team to all selected players.
-						</div>
-					)}
-				{winCondition === 'team' &&
-					Number(numTeams) >= 2 &&
-					(() => {
-						const totals = new Array(Number(numTeams)).fill(0);
-						selectedPlayerIds.forEach((pid) => {
-							const t = Number(playerIdToTeam[pid] || '0');
-							if (t >= 1 && t <= Number(numTeams)) {
-								totals[t - 1]++;
-							}
-						});
-						return totals.some((c) => c === 0);
-					})() && (
-						<div className='text-danger small mt-1'>
-							Each team must have at least one player.
-						</div>
-					)}
-				{winCondition === 'single' && selectedPlayerIds.length > 0 && (
-					<Form.Group className='mt-2'>
-						<Form.Label>Winning player</Form.Label>
-						<div>
-							{selectedPlayerIds.map((pid) => (
-								<Form.Check
-									key={`singleWinner-${pid}`}
-									inline
-									type='radio'
-									label={
-										groupPlayers.find((p) => p.id === pid)
-											?.name || pid
-									}
-									name='singleWinner'
-									id={`singleWinner-${pid}`}
-									checked={singleWinnerId === pid}
-									onChange={() => setSingleWinnerId(pid)}
-								/>
-							))}
-						</div>
-					</Form.Group>
-				)}
-				{winCondition === 'team' && selectedPlayerIds.length > 0 && (
-					<Form.Group className='mt-2'>
-						<Form.Label>Winning team</Form.Label>
-						<div>
-							{(numTeams || 0) >= 2 &&
-								Array.from(
-									{ length: Number(numTeams) },
-									(_, i) => `${i + 1}`
-								).map((t) => (
-									<Form.Check
-										key={`teamWinner-${t}`}
-										inline
-										type='radio'
-										label={`Team ${t}`}
-										name='teamWinner'
-										id={`teamWinner-${t}`}
-										checked={teamWinner === t}
-										onChange={() => setTeamWinner(t)}
-									/>
-								))}
-						</div>
-					</Form.Group>
-				)}
-				{winCondition === 'single' &&
-					selectedPlayerIds.length > 0 &&
-					singleWinnerId === '' && (
-						<div className='text-danger small mt-1'>
-							Select a winning player.
-						</div>
-					)}
-				{winCondition === 'team' &&
-					selectedPlayerIds.length > 0 &&
-					teamWinner === '' && (
-						<div className='text-danger small mt-1'>
-							Select a winning team.
-						</div>
-					)}
-			</Form>
-		</div>
+		<PlayersStep
+			groupPlayers={groupPlayers}
+			selectedPlayerIds={selectedPlayerIds}
+			onTogglePlayer={togglePlayer}
+			winCondition={winCondition}
+			numTeams={numTeams}
+			playerIdToTeam={playerIdToTeam}
+			onPlayerTeamChange={handlePlayerTeamChange}
+			playerPoints={playerPoints}
+			onPlayerPointsChange={handlePlayerPointsChange}
+			singleWinnerId={singleWinnerId}
+			onSingleWinnerChange={setSingleWinnerId}
+			teamWinner={teamWinner}
+			onTeamWinnerChange={setTeamWinner}
+		/>
 	);
 
 	const renderWinConditionStep = () => (
-		<Form>
-			<Form.Group className='mb-3'>
-				<Form.Label>Win condition</Form.Label>
-				<Form.Select
-					value={winCondition}
-					onChange={(e) =>
-						setWinCondition(e.target.value as WinCondition)
-					}
-				>
-					<option value='single'>Single winner</option>
-					<option value='team'>Team-based</option>
-				</Form.Select>
-			</Form.Group>
-			{winCondition === 'team' && (
-				<Form.Group className='mb-3'>
-					<Form.Label>Number of teams</Form.Label>
-					<Form.Control
-						type='number'
-						min={2}
-						placeholder='e.g. 2'
-						value={numTeams}
-						onChange={(e) => {
-							const v = e.target.value;
-							setNumTeams(v === '' ? '' : Math.max(2, Number(v)));
-						}}
-					/>
-					{(numTeams === '' || Number(numTeams) < 2) && (
-						<Form.Text className='text-danger'>
-							Please enter at least 2 teams.
-						</Form.Text>
-					)}
-				</Form.Group>
-			)}
-		</Form>
+		<WinConditionStep
+			winCondition={winCondition}
+			onWinConditionChange={setWinCondition}
+			numTeams={numTeams}
+			onNumTeamsChange={setNumTeams}
+		/>
 	);
 
 	const renderStepContent = () => {
