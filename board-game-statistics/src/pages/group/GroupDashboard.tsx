@@ -4,6 +4,7 @@ import { type ChangeEvent } from 'react';
 import type { Group } from '../../utils/types';
 import GroupManagementHeader from './GroupManagementHeader';
 import InviteMemberView from './InviteMemberView';
+import GroupGamesView from './games/GroupGamesView';
 
 interface GroupDashboardProps {
 	groups: Group[];
@@ -53,7 +54,7 @@ const GroupDashboard = (props: GroupDashboardProps) => {
 						Leaderboard
 					</Tab>
 					<Tab eventKey='games' title='Games'>
-						Games
+						<GroupGamesView group={currentGroup} />
 					</Tab>
 					<Tab eventKey='invite' title='Invite'>
 						<InviteMemberView group={currentGroup} />

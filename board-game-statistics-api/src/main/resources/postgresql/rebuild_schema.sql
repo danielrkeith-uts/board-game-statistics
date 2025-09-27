@@ -34,3 +34,19 @@ CREATE TABLE bgs.group_membership (
     FOREIGN KEY (group_id) REFERENCES bgs.game_group(id),
     FOREIGN KEY (account_id) REFERENCES bgs.account(id)
 );
+
+CREATE TABLE bgs.playedGame (
+    playedGameId INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    gameId INT NOT NULL,
+    groupId INT NOT NULL REFERENCES bgs.game_group(id) ON DELETE CASCADE,
+    datePlayed DATE NOT NULL DEFAULT CURRENT_DATE
+);
+
+CREATE TABLE bgs.playerResult (
+    playerResultId INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    playedGameId INT NOT NULL REFERENCES bgs.playedGame(playedGameId) ON DELETE CASCADE,
+    accountId INT NOT NULL REFERENCES bgs.account(id) ON DELETE CASCADE,
+    points INT,
+    playerTeam VARCHAR(100),
+    hasWon BOOLEAN NOT NULL DEFAULT FALSE
+);
