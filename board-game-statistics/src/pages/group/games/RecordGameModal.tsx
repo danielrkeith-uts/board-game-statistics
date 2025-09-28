@@ -80,13 +80,13 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 
 		// If enabling player in team mode, default to Team 1
 		setPlayerIdToTeam((prev) => {
-			const next = { ...prev };
+			const newMap = { ...prev };
 			if (selectedPlayerIds.includes(id)) {
-				delete next[id];
+				delete newMap[id];
 			} else if (winCondition === 'team') {
-				next[id] = next[id] ?? '1';
+				newMap[id] = newMap[id] ?? '1';
 			}
-			return next;
+			return newMap;
 		});
 
 		// Clear winner when deselecting
