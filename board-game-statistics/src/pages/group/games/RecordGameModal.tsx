@@ -28,7 +28,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	const [selectedGameId, setSelectedGameId] = useState<string>('');
 	const [selectedPlayerIds, setSelectedPlayerIds] = useState<number[]>([]);
 	const [winCondition, setWinCondition] = useState<WinCondition>('single');
-	const [numTeams, setNumTeams] = useState<number | null>(null);
+	const [numTeams, setNumTeams] = useState<number | null>(2);
 	const [playerIdToTeam, setPlayerIdToTeam] = useState<
 		Record<number, string>
 	>({});
@@ -64,7 +64,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		setSelectedGameId('');
 		setSelectedPlayerIds([]);
 		setWinCondition('single');
-		setNumTeams(null);
+		setNumTeams(2);
 		setPlayerIdToTeam({});
 		setPlayerPoints({});
 		setSingleWinnerId(null);

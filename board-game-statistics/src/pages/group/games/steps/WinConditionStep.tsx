@@ -35,7 +35,7 @@ const WinConditionStep = (props: WinConditionStepProps) => {
 						type='number'
 						min={2}
 						placeholder='e.g. 2'
-						value={numTeams ?? ''}
+						value={numTeams ?? 2}
 						onChange={(e) => {
 							const v = e.target.value;
 							onNumTeamsChange(
