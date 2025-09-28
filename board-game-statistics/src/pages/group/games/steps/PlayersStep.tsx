@@ -4,16 +4,16 @@ import type { WinCondition, Player } from '../../../../utils/types';
 
 interface PlayersStepProps {
 	groupPlayers: Player[];
-	selectedPlayerIds: string[];
-	onTogglePlayer: (playerId: string) => void;
+	selectedPlayerIds: number[];
+	onTogglePlayer: (playerId: number) => void;
 	winCondition: WinCondition;
 	numTeams: number | '';
-	playerIdToTeam: Record<string, string>;
-	onPlayerTeamChange: (playerId: string, team: string) => void;
-	playerPoints: Record<string, number>;
-	onPlayerPointsChange: (playerId: string, points: number) => void;
-	singleWinnerId: string;
-	onSingleWinnerChange: (playerId: string) => void;
+	playerIdToTeam: Record<number, string>;
+	onPlayerTeamChange: (playerId: number, team: string) => void;
+	playerPoints: Record<number, number>;
+	onPlayerPointsChange: (playerId: number, points: number) => void;
+	singleWinnerId: number | null;
+	onSingleWinnerChange: (playerId: number) => void;
 	teamWinner: string;
 	onTeamWinnerChange: (team: string) => void;
 	coopWinner: boolean | undefined;
@@ -58,7 +58,9 @@ const PlayersStep = (props: PlayersStepProps) => {
 							}))}
 						onChange={(selectedOptions) => {
 							const newSelectedIds = selectedOptions
-								? selectedOptions.map((option) => option.value)
+								? selectedOptions.map(
+										(option) => option.value as number
+									)
 								: [];
 
 							const addedPlayers = newSelectedIds.filter(
@@ -202,7 +204,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 									type='radio'
 									label={
 										groupPlayers.find((p) => p.id === pid)
-											?.name || pid
+											?.name || `Player ${pid}`
 									}
 									name='singleWinner'
 									id={`singleWinner-${pid}`}
@@ -263,7 +265,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 				)}
 				{winCondition === 'single' &&
 					selectedPlayerIds.length > 0 &&
-					singleWinnerId === '' && (
+					singleWinnerId === null && (
 						<div className='text-danger small mt-1'>
 							Select a winning player.
 						</div>

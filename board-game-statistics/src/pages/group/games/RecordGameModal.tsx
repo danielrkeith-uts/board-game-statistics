@@ -26,16 +26,16 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	const [step, setStep] = useState<number>(1);
 
 	const [selectedGameId, setSelectedGameId] = useState<string>('');
-	const [selectedPlayerIds, setSelectedPlayerIds] = useState<string[]>([]);
+	const [selectedPlayerIds, setSelectedPlayerIds] = useState<number[]>([]);
 	const [winCondition, setWinCondition] = useState<WinCondition>('single');
 	const [numTeams, setNumTeams] = useState<number | ''>('');
 	const [playerIdToTeam, setPlayerIdToTeam] = useState<
-		Record<string, string>
+		Record<number, string>
 	>({});
-	const [playerPoints, setPlayerPoints] = useState<Record<string, number>>(
+	const [playerPoints, setPlayerPoints] = useState<Record<number, number>>(
 		{}
 	);
-	const [singleWinnerId, setSingleWinnerId] = useState<string>('');
+	const [singleWinnerId, setSingleWinnerId] = useState<number | null>(null);
 	const [teamWinner, setTeamWinner] = useState<string>('');
 	const [coopWinner, setCoopWinner] = useState<boolean | undefined>(
 		undefined
@@ -45,14 +45,14 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	const handleBack = () => setStep((s) => Math.max(s - 1, 1));
 
 	// Handler functions for PlayersStep
-	const handlePlayerTeamChange = (playerId: string, team: string) => {
+	const handlePlayerTeamChange = (playerId: number, team: string) => {
 		setPlayerIdToTeam((prev) => ({
 			...prev,
 			[playerId]: team,
 		}));
 	};
 
-	const handlePlayerPointsChange = (playerId: string, points: number) => {
+	const handlePlayerPointsChange = (playerId: number, points: number) => {
 		setPlayerPoints((prev) => ({
 			...prev,
 			[playerId]: points,
@@ -67,13 +67,13 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		setNumTeams('');
 		setPlayerIdToTeam({});
 		setPlayerPoints({});
-		setSingleWinnerId('');
+		setSingleWinnerId(null);
 		setTeamWinner('');
 		setCoopWinner(undefined);
 		handleClose();
 	};
 
-	const togglePlayer = (id: string) => {
+	const togglePlayer = (id: number) => {
 		setSelectedPlayerIds((prev) =>
 			prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
 		);
@@ -90,7 +90,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		});
 
 		// Clear winner when deselecting
-		setSingleWinnerId((prev) => (prev === id ? '' : prev));
+		setSingleWinnerId((prev) => (prev === id ? null : prev));
 	};
 
 	// Placeholder games list; TODO: replace with owned games
@@ -101,7 +101,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 
 	// Use members from group as selectable players
 	const groupPlayers = group.members.map((m) => ({
-		id: String(m.id),
+		id: m.id,
 		name: `${m.firstName} ${m.lastName}`.trim(),
 	}));
 
@@ -183,16 +183,14 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		})();
 	const isWinnerSelected =
 		winCondition === 'single'
-			? singleWinnerId !== ''
+			? singleWinnerId !== null
 			: winCondition === 'team'
 				? teamWinner !== ''
 				: coopWinner !== undefined;
 
 	const handleSave = async () => {
 		try {
-			const playerIds = selectedPlayerIds.map(
-				(pid) => Number(pid.replace(/\D/g, '')) || 0
-			);
+			const playerIds = selectedPlayerIds;
 			const points = selectedPlayerIds.map(
 				(pid) => playerPoints[pid] || 0
 			);
@@ -206,7 +204,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			});
 			const hasWon = selectedPlayerIds.map((pid) => {
 				if (winCondition === 'single') {
-					return String(pid) === singleWinnerId;
+					return pid === singleWinnerId;
 				} else if (winCondition === 'team') {
 					return String(playerIdToTeam[pid] || '1') === teamWinner;
 				} else {

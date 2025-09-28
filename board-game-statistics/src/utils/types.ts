@@ -52,7 +52,7 @@ interface GameRecordDto {
 type WinCondition = 'single' | 'team' | 'coop';
 
 interface Player {
-	id: string;
+	id: number;
 	name: string;
 }
 
