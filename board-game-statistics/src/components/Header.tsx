@@ -6,7 +6,6 @@ import {
 	HOME_PAGE_URL,
 	LOGIN_PAGE_URL,
 	MANAGE_ACCOUNT_PAGE_URL,
-	CREATE_ACCOUNT_PAGE_URL,
 } from '../utils/constants';
 import '../css/custom.css';
 import { useContext, useEffect } from 'react';
@@ -22,6 +21,7 @@ const Header = () => {
 
 	useEffect(() => {
 		if (!loading) {
+			// If user is not logged in currently, they should only have access to pages in the allowedPages array
 			if (
 				account === null &&
 				!allowedPagesWhileLoggedOut.includes(location.pathname)
@@ -65,29 +65,17 @@ const Header = () => {
 					</ul>
 				</div>
 				<ul className='navbar-nav'>
-					{account ? (
-						<li className='nav-item'>
+					<li className='nav-item'>
+						{account ? (
 							<Link className='nav-link' to='#' onClick={logout}>
 								Logout
 							</Link>
-						</li>
-					) : (
-						<>
-							<li className='nav-item'>
-								<Link
-									className='nav-link'
-									to={CREATE_ACCOUNT_PAGE_URL}
-								>
-									Create account
-								</Link>
-							</li>
-							<li className='nav-item'>
-								<Link className='nav-link' to={LOGIN_PAGE_URL}>
-									Login
-								</Link>
-							</li>
-						</>
-					)}
+						) : (
+							<Link className='nav-link' to={LOGIN_PAGE_URL}>
+								Login
+							</Link>
+						)}
+					</li>
 				</ul>
 			</div>
 		</nav>
