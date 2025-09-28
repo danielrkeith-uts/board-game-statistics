@@ -14,7 +14,7 @@ const GameResultsSection = (props: Props) => {
 	const [recent, setRecent] = useState<GameRecordDto[]>([]);
 	const [selected, setSelected] = useState<GameRecordDto | null>(null);
 
-	useEffect(() => {
+	const fetchAndSetRecentGames = () => {
 		apiGetGroupGames(group.id)
 			.then((gameRecords) => {
 				const gameRecordsArray = Array.isArray(gameRecords)
@@ -28,6 +28,10 @@ const GameResultsSection = (props: Props) => {
 				setRecent(gameRecordsArray.slice(0, 3));
 			})
 			.catch(() => setRecent([]));
+	};
+
+	useEffect(() => {
+		fetchAndSetRecentGames();
 	}, [group.id]);
 
 	return (
@@ -90,19 +94,7 @@ const GameResultsSection = (props: Props) => {
 				onClose={() => setSelected(null)}
 				onDeleted={() => {
 					setSelected(null);
-					apiGetGroupGames(group.id)
-						.then((gameRecords) => {
-							const gameRecordsArray = Array.isArray(gameRecords)
-								? gameRecords
-								: [];
-							gameRecordsArray.sort(
-								(firstGame, secondGame) =>
-									new Date(secondGame.datePlayed).getTime() -
-									new Date(firstGame.datePlayed).getTime()
-							);
-							setRecent(gameRecordsArray.slice(0, 3));
-						})
-						.catch(() => {});
+					fetchAndSetRecentGames();
 				}}
 			/>
 		</>
