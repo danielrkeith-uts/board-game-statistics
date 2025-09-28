@@ -9,7 +9,7 @@ public record GameRecordResponse(
         String datePlayed,
         List<Integer> playerIds,
         List<Integer> points,
-        List<String> playerTeams,
+        List<Integer> playerTeams,
         List<Boolean> hasWon
 ) {}
 

@@ -34,7 +34,7 @@ interface RecordGamePayload {
 	datePlayed: string; // ISO date string
 	playerIds: number[];
 	points: number[];
-	playerTeams: string[];
+	playerTeams: (number | null)[];
 	hasWon: boolean[];
 }
 
@@ -45,7 +45,7 @@ interface GameRecordDto {
 	datePlayed: string;
 	playerIds: number[];
 	points: number[];
-	playerTeams: string[];
+	playerTeams: (number | null)[];
 	hasWon: boolean[];
 }
 

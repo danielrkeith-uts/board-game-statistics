@@ -21,10 +21,10 @@ public class PostgreSqlGameRecordRepository implements IGameRecordRepository {
     @Override
     public GameRecordResponse createGameRecord(GameRecordRequest request) {
         // Insert playedGame
-        String insertPlayedGame = "INSERT INTO bgs.playedGame (gameId, groupId, datePlayed) VALUES (?, ?, ?) RETURNING playedGameId, datePlayed";
+        String insertPlayedGame = "INSERT INTO bgs.played_game (game_id, group_id, date_played) VALUES (?, ?, ?) RETURNING played_game_id, date_played";
         var playedGame = jdbcTemplate.queryForObject(insertPlayedGame, (rs, rowNum) -> new Object[]{
-            rs.getInt("playedGameId"), 
-            rs.getDate("datePlayed").toLocalDate()
+            rs.getInt("played_game_id"), 
+            rs.getDate("date_played").toLocalDate()
         }, request.gameId(), request.groupId(), LocalDate.parse(request.datePlayed()));
 
         int playedGameId = (int) playedGame[0];
@@ -34,11 +34,11 @@ public class PostgreSqlGameRecordRepository implements IGameRecordRepository {
         for (int i = 0; i < request.playerIds().size(); i++) {
             Integer accountId = request.playerIds().get(i);
             Integer points = request.points().get(i);
-            String playerTeam = request.playerTeams().get(i);
+            Integer playerTeam = request.playerTeams().get(i);
             Boolean hasWon = request.hasWon().get(i);
 
             jdbcTemplate.update(
-                "INSERT INTO bgs.playerResult (playedGameId, accountId, points, playerTeam, hasWon) VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO bgs.player_result (played_game_id, account_id, points, player_team, has_won) VALUES (?, ?, ?, ?, ?)",
                 playedGameId, accountId, points, playerTeam, hasWon
             );
         }
@@ -57,30 +57,33 @@ public class PostgreSqlGameRecordRepository implements IGameRecordRepository {
 
     @Override
     public List<GameRecordResponse> getGameRecordsByGroup(int groupId) {
-        String sql = "SELECT playedGameId, gameId, groupId, datePlayed FROM bgs.playedGame WHERE groupId = ? ORDER BY datePlayed DESC";
+        String sql = "SELECT played_game_id, game_id, group_id, date_played FROM bgs.played_game WHERE group_id = ? ORDER BY date_played DESC";
         return jdbcTemplate.query(sql, (rs, rowNum) -> mapPlayedGame(rs), groupId);
     }
 
     @Override
     public void deleteGameRecord(int playedGameId) {
-        jdbcTemplate.update("DELETE FROM bgs.playedGame WHERE playedGameId = ?", playedGameId);
+        jdbcTemplate.update("DELETE FROM bgs.played_game WHERE played_game_id = ?", playedGameId);
     }
 
     private GameRecordResponse mapPlayedGame(ResultSet rs) throws SQLException {
-        int playedGameId = rs.getInt("playedGameId");
-        int gameId = rs.getInt("gameId");
-        int groupId = rs.getInt("groupId");
-        String datePlayed = rs.getDate("datePlayed").toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
+        int playedGameId = rs.getInt("played_game_id");
+        int gameId = rs.getInt("game_id");
+        int groupId = rs.getInt("group_id");
+        String datePlayed = rs.getDate("date_played").toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
 
         // Fetch player results for this played game
-        String playerResultsSql = "SELECT accountId, points, playerTeam, hasWon FROM bgs.playerResult WHERE playedGameId = ? ORDER BY accountId";
-        List<Integer> playerIds = jdbcTemplate.query(playerResultsSql, (r, i) -> r.getInt("accountId"), playedGameId);
+        String playerResultsSql = "SELECT account_id, points, player_team, has_won FROM bgs.player_result WHERE played_game_id = ? ORDER BY account_id";
+        List<Integer> playerIds = jdbcTemplate.query(playerResultsSql, (r, i) -> r.getInt("account_id"), playedGameId);
         List<Integer> points = jdbcTemplate.query(playerResultsSql, (r, i) -> {
             Object p = r.getObject("points");
             return p == null ? null : ((Number) p).intValue();
         }, playedGameId);
-        List<String> playerTeams = jdbcTemplate.query(playerResultsSql, (r, i) -> r.getString("playerTeam"), playedGameId);
-        List<Boolean> hasWon = jdbcTemplate.query(playerResultsSql, (r, i) -> r.getBoolean("hasWon"), playedGameId);
+        List<Integer> playerTeams = jdbcTemplate.query(playerResultsSql, (r, i) -> {
+            Object team = r.getObject("player_team");
+            return team == null ? null : ((Number) team).intValue();
+        }, playedGameId);
+        List<Boolean> hasWon = jdbcTemplate.query(playerResultsSql, (r, i) -> r.getBoolean("has_won"), playedGameId);
 
         return new GameRecordResponse(
             playedGameId,

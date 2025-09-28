@@ -63,9 +63,9 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 											: `Player ${playerId}`;
 										const points =
 											record.points[index] || 0;
-										const team =
-											record.playerTeams[index] ||
-											'No team';
+										const team = record.playerTeams[index]
+											? `Team ${record.playerTeams[index]}`
+											: 'Solo/Co-op';
 										const isWinner = record.hasWon[index];
 										return (
 											<li key={playerId}>

@@ -199,11 +199,10 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			);
 			const playerTeams = selectedPlayerIds.map((pid) => {
 				if (winCondition === 'team') {
-					return `Team ${playerIdToTeam[pid] || '1'}`;
-				} else if (winCondition === 'coop') {
-					return 'Cooperative';
+					return Number(playerIdToTeam[pid] || '1');
+				} else {
+					return null; // Solo or cooperative games
 				}
-				return 'Solo';
 			});
 			const hasWon = selectedPlayerIds.map((pid) => {
 				if (winCondition === 'single') {
