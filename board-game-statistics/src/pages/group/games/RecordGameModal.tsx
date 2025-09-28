@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import type { Group } from '../../../utils/types';
-import {
-	apiRecordGame,
-	type RecordGamePayload,
-} from '../../../utils/api/games-api-utils';
+import type { Group, RecordGamePayload } from '../../../utils/types';
+import { apiRecordGame } from '../../../utils/api/games-api-utils';
 import GameSelectionStep from './steps/GameSelectionStep';
 import WinConditionStep from './steps/WinConditionStep';
 import PlayersStep from './steps/PlayersStep';

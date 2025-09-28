@@ -1,15 +1,5 @@
 import { apiDelete, apiGet, apiPost } from './api-utils';
-
-export interface RecordGamePayload {
-	groupId: number;
-	gameId: number;
-	datePlayed: string; // ISO date string
-	playerIds: number[];
-	points: number[];
-	playerTeams: string[];
-	hasWon: boolean[];
-	notes?: string;
-}
+import type { RecordGamePayload } from '../types';
 
 export const apiRecordGame = async (payload: RecordGamePayload) => {
 	const res = await apiPost('/results/record', payload);

@@ -28,4 +28,22 @@ interface Group {
 	members: GroupMember[];
 }
 
-export type { Account, Permission, GroupPermissions, GroupMember, Group };
+interface RecordGamePayload {
+	groupId: number;
+	gameId: number;
+	datePlayed: string; // ISO date string
+	playerIds: number[];
+	points: number[];
+	playerTeams: string[];
+	hasWon: boolean[];
+	notes?: string;
+}
+
+export type {
+	Account,
+	Permission,
+	GroupPermissions,
+	GroupMember,
+	Group,
+	RecordGamePayload,
+};
