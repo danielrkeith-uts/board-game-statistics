@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import type { Group, RecordGamePayload } from '../../../utils/types';
+import type {
+	Group,
+	RecordGamePayload,
+	WinCondition,
+} from '../../../utils/types';
 import { apiRecordGame } from '../../../utils/api/games-api-utils';
 import GameSelectionStep from './steps/GameSelectionStep';
 import WinConditionStep from './steps/WinConditionStep';
 import PlayersStep from './steps/PlayersStep';
-
-type WinCondition = 'single' | 'team' | 'coop';
 
 interface RecordGameModalProps {
 	show: boolean;

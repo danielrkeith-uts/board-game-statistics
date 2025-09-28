@@ -1,7 +1,6 @@
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select';
-
-type WinCondition = 'single' | 'team' | 'coop';
+import type { WinCondition } from '../../../../utils/types';
 
 interface Player {
 	id: string;
@@ -88,7 +87,9 @@ const PlayersStep = (props: PlayersStepProps) => {
 								const player = groupPlayers.find(
 									(p) => p.id === playerId
 								);
-								if (!player) {return null;}
+								if (!player) {
+									return null;
+								}
 
 								return (
 									<div

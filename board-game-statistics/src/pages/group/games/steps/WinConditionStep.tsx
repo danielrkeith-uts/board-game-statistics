@@ -1,6 +1,5 @@
 import Form from 'react-bootstrap/Form';
-
-type WinCondition = 'single' | 'team' | 'coop';
+import type { WinCondition } from '../../../../utils/types';
 
 interface WinConditionStepProps {
 	winCondition: WinCondition;

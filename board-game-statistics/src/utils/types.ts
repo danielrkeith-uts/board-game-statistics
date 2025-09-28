@@ -49,6 +49,8 @@ interface GameRecordDto {
 	hasWon: boolean[];
 }
 
+type WinCondition = 'single' | 'team' | 'coop';
+
 export type {
 	Account,
 	Permission,
@@ -57,4 +59,5 @@ export type {
 	Group,
 	RecordGamePayload,
 	GameRecordDto,
+	WinCondition,
 };
