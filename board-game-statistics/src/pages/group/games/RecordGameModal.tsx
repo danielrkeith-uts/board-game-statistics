@@ -160,10 +160,11 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	const doAllPlayersHaveTeam =
 		winCondition !== 'team' ||
 		(selectedPlayerIds.length > 0 &&
-			selectedPlayerIds.every((pid) => {
-				const t = Number(playerIdToTeam[pid] || '0');
+			selectedPlayerIds.every((playerId) => {
+				const teamNumber = Number(playerIdToTeam[playerId] || '0');
 				return (
-					t >= 1 && (numTeams === '' ? true : t <= Number(numTeams))
+					teamNumber >= 1 &&
+					(numTeams === '' ? true : teamNumber <= Number(numTeams))
 				);
 			}));
 	const areAllTeamsNonEmpty =
@@ -172,14 +173,14 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			if (!isNumTeamsValid) {
 				return false;
 			}
-			const totals = new Array(Number(numTeams)).fill(0);
-			selectedPlayerIds.forEach((pid) => {
-				const t = Number(playerIdToTeam[pid] || '0');
-				if (t >= 1 && t <= Number(numTeams)) {
-					totals[t - 1]++;
+			const teamPlayerCounts = new Array(Number(numTeams)).fill(0);
+			selectedPlayerIds.forEach((playerId) => {
+				const teamNumber = Number(playerIdToTeam[playerId] || '0');
+				if (teamNumber >= 1 && teamNumber <= Number(numTeams)) {
+					teamPlayerCounts[teamNumber - 1]++;
 				}
 			});
-			return totals.every((c) => c > 0);
+			return teamPlayerCounts.every((playerCount) => playerCount > 0);
 		})();
 	const isWinnerSelected =
 		winCondition === 'single'
