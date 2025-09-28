@@ -5,6 +5,7 @@ import {
 	GROUPS_PAGE_URL,
 	HOME_PAGE_URL,
 	LOGIN_PAGE_URL,
+	MANAGE_ACCOUNT_PAGE_URL,
 	CREATE_ACCOUNT_PAGE_URL,
 } from '../utils/constants';
 import '../css/custom.css';
@@ -34,7 +35,6 @@ const Header = () => {
 		<nav className='navbar navbar-expand bg-primary-subtle'>
 			<div className='container'>
 				<span className='navbar-brand'>Logo</span>
-
 				<div className='collapse navbar-collapse' id='navbarNav'>
 					<ul className='navbar-nav'>
 						<li className='nav-item'>
@@ -42,6 +42,16 @@ const Header = () => {
 								Home
 							</Link>
 						</li>
+						{account && (
+							<li className='nav-item'>
+								<Link
+									className='nav-link'
+									to={MANAGE_ACCOUNT_PAGE_URL}
+								>
+									Account
+								</Link>
+							</li>
+						)}
 						<li className='nav-item'>
 							<Link className='nav-link' to={GAMES_PAGE_URL}>
 								Games
@@ -54,7 +64,6 @@ const Header = () => {
 						</li>
 					</ul>
 				</div>
-
 				<ul className='navbar-nav'>
 					{account ? (
 						<li className='nav-item'>
@@ -65,16 +74,16 @@ const Header = () => {
 					) : (
 						<>
 							<li className='nav-item'>
-								<Link className='nav-link' to={LOGIN_PAGE_URL}>
-									Login
-								</Link>
-							</li>
-							<li className='nav-item'>
 								<Link
 									className='nav-link'
 									to={CREATE_ACCOUNT_PAGE_URL}
 								>
 									Create account
+								</Link>
+							</li>
+							<li className='nav-item'>
+								<Link className='nav-link' to={LOGIN_PAGE_URL}>
+									Login
 								</Link>
 							</li>
 						</>
