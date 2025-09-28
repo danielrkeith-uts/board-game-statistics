@@ -1,4 +1,5 @@
 import Form from 'react-bootstrap/Form';
+import Select from 'react-select';
 
 type WinCondition = 'single' | 'team' | 'coop';
 
@@ -49,82 +50,120 @@ const PlayersStep = (props: PlayersStepProps) => {
 			<Form>
 				<Form.Group>
 					<Form.Label>Select players</Form.Label>
-					<div className='d-flex flex-column'>
-						{groupPlayers.map((p) => (
-							<div
-								key={p.id}
-								className='d-flex align-items-center gap-2 mb-1'
-							>
-								<Form.Check
-									type='checkbox'
-									label={p.name}
-									checked={selectedPlayerIds.includes(p.id)}
-									onChange={() => onTogglePlayer(p.id)}
-								/>
-								{winCondition === 'team' &&
-									selectedPlayerIds.includes(p.id) && (
-										<Form.Select
-											aria-label='Select team'
+					<Select
+						isMulti
+						options={groupPlayers.map((p) => ({
+							value: p.id,
+							label: p.name,
+						}))}
+						value={groupPlayers
+							.filter((p) => selectedPlayerIds.includes(p.id))
+							.map((p) => ({
+								value: p.id,
+								label: p.name,
+							}))}
+						onChange={(selectedOptions) => {
+							const newSelectedIds = selectedOptions
+								? selectedOptions.map((option) => option.value)
+								: [];
+
+							const addedPlayers = newSelectedIds.filter(
+								(id) => !selectedPlayerIds.includes(id)
+							);
+							const removedPlayers = selectedPlayerIds.filter(
+								(id) => !newSelectedIds.includes(id)
+							);
+
+							[...addedPlayers, ...removedPlayers].forEach((id) =>
+								onTogglePlayer(id)
+							);
+						}}
+						placeholder='Select players...'
+						className='mb-3'
+					/>
+
+					{selectedPlayerIds.length > 0 && (
+						<div className='vstack gap-2'>
+							{selectedPlayerIds.map((playerId) => {
+								const player = groupPlayers.find(
+									(p) => p.id === playerId
+								);
+								if (!player) {return null;}
+
+								return (
+									<div
+										key={playerId}
+										className='d-flex align-items-center gap-2 p-2 border rounded'
+									>
+										<span className='fw-medium'>
+											{player.name}
+										</span>
+										{winCondition === 'team' && (
+											<Form.Select
+												aria-label='Select team'
+												size='sm'
+												className='w-auto'
+												value={
+													playerIdToTeam[playerId] ??
+													'1'
+												}
+												onChange={(e) =>
+													onPlayerTeamChange(
+														playerId,
+														e.target.value
+													)
+												}
+											>
+												{(numTeams || 0) >= 2
+													? Array.from(
+															{
+																length: Number(
+																	numTeams
+																),
+															},
+															(_, i) => `${i + 1}`
+														).map((t) => (
+															<option
+																key={t}
+																value={t}
+															>
+																{`Team ${t}`}
+															</option>
+														))
+													: [
+															<option
+																key='1'
+																value='1'
+															>
+																Team 1
+															</option>,
+															<option
+																key='2'
+																value='2'
+															>
+																Team 2
+															</option>,
+														]}
+											</Form.Select>
+										)}
+										<Form.Control
+											type='number'
 											size='sm'
 											className='w-auto'
-											value={playerIdToTeam[p.id] ?? '1'}
+											placeholder='Points'
+											value={playerPoints[playerId] || ''}
 											onChange={(e) =>
-												onPlayerTeamChange(
-													p.id,
-													e.target.value
+												onPlayerPointsChange(
+													playerId,
+													Number(e.target.value) || 0
 												)
 											}
-										>
-											{(numTeams || 0) >= 2
-												? Array.from(
-														{
-															length: Number(
-																numTeams
-															),
-														},
-														(_, i) => `${i + 1}`
-													).map((t) => (
-														<option
-															key={t}
-															value={t}
-														>
-															{`Team ${t}`}
-														</option>
-													))
-												: [
-														<option
-															key='1'
-															value='1'
-														>
-															Team 1
-														</option>,
-														<option
-															key='2'
-															value='2'
-														>
-															Team 2
-														</option>,
-													]}
-										</Form.Select>
-									)}
-								{selectedPlayerIds.includes(p.id) && (
-									<Form.Control
-										type='number'
-										size='sm'
-										className='w-auto ms-2'
-										placeholder='Points'
-										value={playerPoints[p.id] || ''}
-										onChange={(e) =>
-											onPlayerPointsChange(
-												p.id,
-												Number(e.target.value) || 0
-											)
-										}
-									/>
-								)}
-							</div>
-						))}
-					</div>
+										/>
+									</div>
+								);
+							})}
+						</div>
+					)}
 				</Form.Group>
 				{winCondition === 'team' &&
 					(numTeams === '' || Number(numTeams) < 2) && (
