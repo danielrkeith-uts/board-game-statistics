@@ -2,19 +2,8 @@ import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { apiDeleteGameRecord } from '../../../utils/api/games-api-utils';
-import type { Group } from '../../../utils/types';
+import type { Group, GameRecordDto } from '../../../utils/types';
 import AlertMessage from '../AlertMessage';
-
-export interface GameRecordDto {
-	playedGameId: number;
-	groupId: number;
-	gameId: number;
-	datePlayed: string;
-	playerIds: number[];
-	points: number[];
-	playerTeams: string[];
-	hasWon: boolean[];
-}
 
 interface EditRecordedGameModalProps {
 	record: GameRecordDto | null;

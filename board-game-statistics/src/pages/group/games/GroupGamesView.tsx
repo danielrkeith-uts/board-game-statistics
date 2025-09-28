@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import type { Group } from '../../../utils/types';
+import type { Group, GameRecordDto } from '../../../utils/types';
 import RecordGameModal from './RecordGameModal.tsx';
 import AlertMessage from '../AlertMessage';
 import { apiGetGroupGames } from '../../../utils/api/games-api-utils';
 import Spinner from 'react-bootstrap/Spinner';
-import EditRecordedGameModal, {
-	type GameRecordDto,
-} from './EditRecordedGameModal';
+import EditRecordedGameModal from './EditRecordedGameModal';
 
 interface GroupGamesViewProps {
 	group: Group;

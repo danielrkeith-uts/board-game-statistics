@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { apiGetGroupGames } from '../../../utils/api/games-api-utils';
-import type { Group } from '../../../utils/types';
-import EditRecordedGameModal, {
-	type GameRecordDto,
-} from '../games/EditRecordedGameModal';
+import type { Group, GameRecordDto } from '../../../utils/types';
+import EditRecordedGameModal from '../games/EditRecordedGameModal';
 
 interface Props {
 	group: Group;

@@ -36,7 +36,17 @@ interface RecordGamePayload {
 	points: number[];
 	playerTeams: string[];
 	hasWon: boolean[];
-	notes?: string;
+}
+
+interface GameRecordDto {
+	playedGameId: number;
+	groupId: number;
+	gameId: number;
+	datePlayed: string;
+	playerIds: number[];
+	points: number[];
+	playerTeams: string[];
+	hasWon: boolean[];
 }
 
 export type {
@@ -46,4 +56,5 @@ export type {
 	GroupMember,
 	Group,
 	RecordGamePayload,
+	GameRecordDto,
 };
