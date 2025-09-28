@@ -9,19 +9,22 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class GameRecordService {
+public class GameRecordService implements IGameRecordService {
     @Autowired
     private IGameRecordRepository gameRecordRepository;
 
+    @Override
     public GameRecordResponse recordGame(Account account, GameRecordRequest request) {
         validateRequest(request);
         return gameRecordRepository.createGameRecord(request);
     }
 
+    @Override
     public List<GameRecordResponse> getRecordsForGroup(Account account, int groupId) {
         return gameRecordRepository.getGameRecordsByGroup(groupId);
     }
 
+    @Override
     public void deleteRecord(Account account, int playedGameId) {
         gameRecordRepository.deleteGameRecord(playedGameId);
     }
