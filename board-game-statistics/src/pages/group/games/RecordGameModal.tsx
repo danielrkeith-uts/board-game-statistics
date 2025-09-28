@@ -258,9 +258,10 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 						variant='primary'
 						onClick={handleNext}
 						disabled={
-							step === 2 &&
-							winCondition === 'team' &&
-							!isNumTeamsValid
+							(step === 1 && !selectedGameId) ||
+							(step === 2 &&
+								winCondition === 'team' &&
+								!isNumTeamsValid)
 						}
 					>
 						Next
