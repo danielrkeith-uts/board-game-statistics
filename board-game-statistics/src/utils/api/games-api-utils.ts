@@ -12,7 +12,7 @@ export interface RecordGamePayload {
 }
 
 export const apiRecordGame = async (payload: RecordGamePayload) => {
-	const res = await apiPost('/games/record', payload);
+	const res = await apiPost('/results/record', payload);
 	if (!res.ok) {
 		throw new Error(await res.text());
 	}
@@ -20,7 +20,7 @@ export const apiRecordGame = async (payload: RecordGamePayload) => {
 };
 
 export const apiGetGroupGames = async (groupId: number) => {
-	const res = await apiGet(`/games/${groupId}`);
+	const res = await apiGet(`/results/${groupId}`);
 	if (!res.ok) {
 		throw new Error(await res.text());
 	}
@@ -28,7 +28,7 @@ export const apiGetGroupGames = async (groupId: number) => {
 };
 
 export const apiDeleteGameRecord = async (recordId: number) => {
-	const res = await apiDelete(`/games/record/${recordId}`);
+	const res = await apiDelete(`/results/record/${recordId}`);
 	if (!res.ok) {
 		throw new Error(await res.text());
 	}

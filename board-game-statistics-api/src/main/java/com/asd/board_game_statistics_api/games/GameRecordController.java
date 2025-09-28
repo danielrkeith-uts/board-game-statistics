@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/games")
+@RequestMapping("/api/results")
 public class GameRecordController {
     @Autowired
     private GameRecordService gameRecordService;
