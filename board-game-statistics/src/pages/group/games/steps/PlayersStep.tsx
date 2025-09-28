@@ -1,11 +1,6 @@
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select';
-import type { WinCondition } from '../../../../utils/types';
-
-interface Player {
-	id: string;
-	name: string;
-}
+import type { WinCondition, Player } from '../../../../utils/types';
 
 interface PlayersStepProps {
 	groupPlayers: Player[];

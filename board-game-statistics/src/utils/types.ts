@@ -51,6 +51,11 @@ interface GameRecordDto {
 
 type WinCondition = 'single' | 'team' | 'coop';
 
+interface Player {
+	id: string;
+	name: string;
+}
+
 export type {
 	Account,
 	Permission,
@@ -60,4 +65,5 @@ export type {
 	RecordGamePayload,
 	GameRecordDto,
 	WinCondition,
+	Player,
 };
