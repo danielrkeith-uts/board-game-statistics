@@ -43,6 +43,39 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 		fetchRecords();
 	}, [group.id]);
 
+	const renderRecordItem = (r: GameRecordDto) => {
+		const displayDate = new Date(r.datePlayed).toLocaleDateString();
+		const gameName = `Game #${r.gameId}`; // TODO: replace with real name
+
+		// Find winners
+		const winners = r.playerIds
+			.filter((_, index) => r.hasWon[index])
+			.map((playerId) => {
+				const member = group.members.find((m) => m.id === playerId);
+				return member
+					? `${member.firstName} ${member.lastName}`
+					: `Player ${playerId}`;
+			});
+
+		const winnerText =
+			winners.length > 0 ? `Winners: ${winners.join(', ')}` : '';
+
+		return (
+			<li
+				key={r.playedGameId}
+				className='list-group-item d-flex justify-content-between align-items-center'
+				role='button'
+				onClick={() => setSelected(r)}
+			>
+				<span>
+					{gameName}
+					{winnerText ? ` • ${winnerText}` : ''}
+				</span>
+				<span className='text-muted'>{displayDate}</span>
+			</li>
+		);
+	};
+
 	return (
 		<div className='container vstack gap-3'>
 			<div className='d-flex justify-content-between align-items-center mt-2'>
@@ -66,46 +99,7 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 					<div className='text-muted'>No games recorded yet.</div>
 				) : (
 					<ul className='list-group'>
-						{records.map((r) => {
-							const displayDate = new Date(
-								r.datePlayed
-							).toLocaleDateString();
-							const gameName = `Game #${r.gameId}`; // TODO: replace with real name
-
-							// Find winners
-							const winners = r.playerIds
-								.filter((_, index) => r.hasWon[index])
-								.map((playerId) => {
-									const member = group.members.find(
-										(m) => m.id === playerId
-									);
-									return member
-										? `${member.firstName} ${member.lastName}`
-										: `Player ${playerId}`;
-								});
-
-							const winnerText =
-								winners.length > 0
-									? `Winners: ${winners.join(', ')}`
-									: '';
-
-							return (
-								<li
-									key={r.playedGameId}
-									className='list-group-item d-flex justify-content-between align-items-center'
-									role='button'
-									onClick={() => setSelected(r)}
-								>
-									<span>
-										{gameName}
-										{winnerText ? ` • ${winnerText}` : ''}
-									</span>
-									<span className='text-muted'>
-										{displayDate}
-									</span>
-								</li>
-							);
-						})}
+						{records.map(renderRecordItem)}
 					</ul>
 				)}
 			</div>
