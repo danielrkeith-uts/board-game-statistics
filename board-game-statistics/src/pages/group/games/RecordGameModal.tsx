@@ -155,9 +155,9 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		}
 	};
 
-	const numTeamsValid =
+	const isNumTeamsValid =
 		winCondition !== 'team' || (numTeams !== '' && Number(numTeams) >= 2);
-	const allPlayersHaveTeam =
+	const doAllPlayersHaveTeam =
 		winCondition !== 'team' ||
 		(selectedPlayerIds.length > 0 &&
 			selectedPlayerIds.every((pid) => {
@@ -166,10 +166,10 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 					t >= 1 && (numTeams === '' ? true : t <= Number(numTeams))
 				);
 			}));
-	const allTeamsNonEmpty =
+	const areAllTeamsNonEmpty =
 		winCondition !== 'team' ||
 		(() => {
-			if (!numTeamsValid) {
+			if (!isNumTeamsValid) {
 				return false;
 			}
 			const totals = new Array(Number(numTeams)).fill(0);
@@ -181,7 +181,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			});
 			return totals.every((c) => c > 0);
 		})();
-	const winnerSelected =
+	const isWinnerSelected =
 		winCondition === 'single'
 			? singleWinnerId !== ''
 			: winCondition === 'team'
@@ -260,7 +260,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 						disabled={
 							step === 2 &&
 							winCondition === 'team' &&
-							!numTeamsValid
+							!isNumTeamsValid
 						}
 					>
 						Next
@@ -271,10 +271,10 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 						onClick={handleSave}
 						disabled={
 							(winCondition === 'team' &&
-								(!numTeamsValid ||
-									!allPlayersHaveTeam ||
-									!allTeamsNonEmpty)) ||
-							!winnerSelected
+								(!isNumTeamsValid ||
+									!doAllPlayersHaveTeam ||
+									!areAllTeamsNonEmpty)) ||
+							!isWinnerSelected
 						}
 					>
 						Save
