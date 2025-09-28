@@ -56,6 +56,11 @@ interface Player {
 	name: string;
 }
 
+interface Game {
+	id: string;
+	name: string;
+}
+
 export type {
 	Account,
 	Permission,
@@ -66,4 +71,5 @@ export type {
 	GameRecordDto,
 	WinCondition,
 	Player,
+	Game,
 };

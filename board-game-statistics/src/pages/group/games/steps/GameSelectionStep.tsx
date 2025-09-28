@@ -1,9 +1,5 @@
 import Form from 'react-bootstrap/Form';
-
-interface Game {
-	id: string;
-	name: string;
-}
+import type { Game } from '../../../../utils/types';
 
 interface GameSelectionStepProps {
 	selectedGameId: string;
