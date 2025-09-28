@@ -43,7 +43,6 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 
 	useEffect(() => {
 		fetchRecords();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [group.id]);
 
 	return (
