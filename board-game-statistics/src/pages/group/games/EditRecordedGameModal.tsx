@@ -56,7 +56,7 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 								<ul className='mb-0'>
 									{record.playerIds.map((playerId, index) => {
 										const member = group.members.find(
-											(m) => m.id === playerId
+											(member) => member.id === playerId
 										);
 										const playerName = member
 											? `${member.firstName} ${member.lastName}`

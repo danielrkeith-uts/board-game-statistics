@@ -45,20 +45,20 @@ const GameResultsSection = (props: Props) => {
 					</a>
 				) : (
 					<>
-						{recent.map((r) => (
+						{recent.map((record) => (
 							<a
-								key={r.playedGameId}
+								key={record.playedGameId}
 								href='#'
 								className='list-group-item list-group-item-action d-flex justify-content-between'
 								onClick={(e) => {
 									e.preventDefault();
-									setSelected(r);
+									setSelected(record);
 								}}
 							>
-								<span>{`Game #${r.gameId}`}</span>
+								<span>{`Game #${record.gameId}`}</span>
 								<span className='text-muted'>
 									{new Date(
-										r.datePlayed
+										record.datePlayed
 									).toLocaleDateString()}
 								</span>
 							</a>

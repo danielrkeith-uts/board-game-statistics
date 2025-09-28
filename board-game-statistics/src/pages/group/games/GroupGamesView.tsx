@@ -51,7 +51,9 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 		const winners = r.playerIds
 			.filter((_, index) => r.hasWon[index])
 			.map((playerId) => {
-				const member = group.members.find((m) => m.id === playerId);
+				const member = group.members.find(
+					(groupMember) => groupMember.id === playerId
+				);
 				return member
 					? `${member.firstName} ${member.lastName}`
 					: `Player ${playerId}`;

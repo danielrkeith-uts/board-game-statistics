@@ -7,7 +7,7 @@ interface PlayersStepProps {
 	selectedPlayerIds: number[];
 	onTogglePlayer: (playerId: number) => void;
 	winCondition: WinCondition;
-	numTeams: number | '';
+	numTeams: number | null;
 	playerIdToTeam: Record<number, string>;
 	onPlayerTeamChange: (playerId: number, team: string) => void;
 	playerPoints: Record<number, number>;
@@ -46,15 +46,17 @@ const PlayersStep = (props: PlayersStepProps) => {
 					<Form.Label>Select players</Form.Label>
 					<Select
 						isMulti
-						options={groupPlayers.map((p) => ({
-							value: p.id,
-							label: p.name,
+						options={groupPlayers.map((player) => ({
+							value: player.id,
+							label: player.name,
 						}))}
 						value={groupPlayers
-							.filter((p) => selectedPlayerIds.includes(p.id))
-							.map((p) => ({
-								value: p.id,
-								label: p.name,
+							.filter((player) =>
+								selectedPlayerIds.includes(player.id)
+							)
+							.map((player) => ({
+								value: player.id,
+								label: player.name,
 							}))}
 						onChange={(selectedOptions) => {
 							const newSelectedIds = selectedOptions
@@ -82,7 +84,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 						<div className='vstack gap-2'>
 							{selectedPlayerIds.map((playerId) => {
 								const player = groupPlayers.find(
-									(p) => p.id === playerId
+									(gp) => gp.id === playerId
 								);
 								if (!player) {
 									return null;
@@ -112,20 +114,20 @@ const PlayersStep = (props: PlayersStepProps) => {
 													)
 												}
 											>
-												{(numTeams || 0) >= 2
+												{(numTeams ?? 0) >= 2
 													? Array.from(
 															{
-																length: Number(
-																	numTeams
-																),
+																length:
+																	numTeams ??
+																	0,
 															},
 															(_, i) => `${i + 1}`
-														).map((t) => (
+														).map((team) => (
 															<option
-																key={t}
-																value={t}
+																key={team}
+																value={team}
 															>
-																{`Team ${t}`}
+																{`Team ${team}`}
 															</option>
 														))
 													: [
@@ -164,13 +166,13 @@ const PlayersStep = (props: PlayersStepProps) => {
 					)}
 				</Form.Group>
 				{winCondition === 'team' &&
-					(numTeams === '' || Number(numTeams) < 2) && (
+					(numTeams === null || numTeams < 2) && (
 						<div className='text-danger small mt-1'>
 							Enter number of teams (2 or more).
 						</div>
 					)}
 				{winCondition === 'team' &&
-					Number(numTeams) >= 2 &&
+					(numTeams ?? 0) >= 2 &&
 					selectedPlayerIds.length > 0 &&
 					selectedPlayerIds.some((pid) => !playerIdToTeam[pid]) && (
 						<div className='text-danger small mt-1'>
@@ -178,16 +180,25 @@ const PlayersStep = (props: PlayersStepProps) => {
 						</div>
 					)}
 				{winCondition === 'team' &&
-					Number(numTeams) >= 2 &&
+					(numTeams ?? 0) >= 2 &&
 					(() => {
-						const totals = new Array(Number(numTeams)).fill(0);
-						selectedPlayerIds.forEach((pid) => {
-							const t = Number(playerIdToTeam[pid] || '0');
-							if (t >= 1 && t <= Number(numTeams)) {
-								totals[t - 1]++;
+						const teamPlayerCounts = new Array(numTeams ?? 0).fill(
+							0
+						);
+						selectedPlayerIds.forEach((playerId) => {
+							const teamNumber = Number(
+								playerIdToTeam[playerId] || '0'
+							);
+							if (
+								teamNumber >= 1 &&
+								teamNumber <= (numTeams ?? 0)
+							) {
+								teamPlayerCounts[teamNumber - 1]++;
 							}
 						});
-						return totals.some((c) => c === 0);
+						return teamPlayerCounts.some(
+							(playerCount) => playerCount === 0
+						);
 					})() && (
 						<div className='text-danger small mt-1'>
 							Each team must have at least one player.
@@ -197,19 +208,23 @@ const PlayersStep = (props: PlayersStepProps) => {
 					<Form.Group className='mt-2'>
 						<Form.Label>Winning player</Form.Label>
 						<div>
-							{selectedPlayerIds.map((pid) => (
+							{selectedPlayerIds.map((playerIdOption) => (
 								<Form.Check
-									key={`singleWinner-${pid}`}
+									key={`singleWinner-${playerIdOption}`}
 									inline
 									type='radio'
 									label={
-										groupPlayers.find((p) => p.id === pid)
-											?.name || `Player ${pid}`
+										groupPlayers.find(
+											(player) =>
+												player.id === playerIdOption
+										)?.name || `Player ${playerIdOption}`
 									}
 									name='singleWinner'
-									id={`singleWinner-${pid}`}
-									checked={singleWinnerId === pid}
-									onChange={() => onSingleWinnerChange(pid)}
+									id={`singleWinner-${playerIdOption}`}
+									checked={singleWinnerId === playerIdOption}
+									onChange={() =>
+										onSingleWinnerChange(playerIdOption)
+									}
 								/>
 							))}
 						</div>
@@ -219,20 +234,22 @@ const PlayersStep = (props: PlayersStepProps) => {
 					<Form.Group className='mt-2'>
 						<Form.Label>Winning team</Form.Label>
 						<div>
-							{(numTeams || 0) >= 2 &&
+							{(numTeams ?? 0) >= 2 &&
 								Array.from(
-									{ length: Number(numTeams) },
+									{ length: numTeams ?? 0 },
 									(_, i) => `${i + 1}`
-								).map((t) => (
+								).map((team) => (
 									<Form.Check
-										key={`teamWinner-${t}`}
+										key={`teamWinner-${team}`}
 										inline
 										type='radio'
-										label={`Team ${t}`}
+										label={`Team ${team}`}
 										name='teamWinner'
-										id={`teamWinner-${t}`}
-										checked={teamWinner === t}
-										onChange={() => onTeamWinnerChange(t)}
+										id={`teamWinner-${team}`}
+										checked={teamWinner === team}
+										onChange={() =>
+											onTeamWinnerChange(team)
+										}
 									/>
 								))}
 						</div>

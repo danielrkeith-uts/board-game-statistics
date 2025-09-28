@@ -28,7 +28,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	const [selectedGameId, setSelectedGameId] = useState<string>('');
 	const [selectedPlayerIds, setSelectedPlayerIds] = useState<number[]>([]);
 	const [winCondition, setWinCondition] = useState<WinCondition>('single');
-	const [numTeams, setNumTeams] = useState<number | ''>('');
+	const [numTeams, setNumTeams] = useState<number | null>(null);
 	const [playerIdToTeam, setPlayerIdToTeam] = useState<
 		Record<number, string>
 	>({});
@@ -64,7 +64,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		setSelectedGameId('');
 		setSelectedPlayerIds([]);
 		setWinCondition('single');
-		setNumTeams('');
+		setNumTeams(null);
 		setPlayerIdToTeam({});
 		setPlayerPoints({});
 		setSingleWinnerId(null);
@@ -74,8 +74,10 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	};
 
 	const togglePlayer = (id: number) => {
-		setSelectedPlayerIds((prev) =>
-			prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
+		setSelectedPlayerIds((previousSelected) =>
+			previousSelected.includes(id)
+				? previousSelected.filter((playerId) => playerId !== id)
+				: [...previousSelected, id]
 		);
 
 		// If enabling player in team mode, default to Team 1
@@ -100,9 +102,9 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	];
 
 	// Use members from group as selectable players
-	const groupPlayers = group.members.map((m) => ({
-		id: m.id,
-		name: `${m.firstName} ${m.lastName}`.trim(),
+	const groupPlayers = group.members.map((member) => ({
+		id: member.id,
+		name: `${member.firstName} ${member.lastName}`.trim(),
 	}));
 
 	const renderGameStep = () => (
@@ -156,7 +158,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	};
 
 	const isNumTeamsValid =
-		winCondition !== 'team' || (numTeams !== '' && Number(numTeams) >= 2);
+		winCondition !== 'team' || (numTeams !== null && numTeams >= 2);
 	const doAllPlayersHaveTeam =
 		winCondition !== 'team' ||
 		(selectedPlayerIds.length > 0 &&
@@ -164,7 +166,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 				const teamNumber = Number(playerIdToTeam[playerId] || '0');
 				return (
 					teamNumber >= 1 &&
-					(numTeams === '' ? true : teamNumber <= Number(numTeams))
+					(numTeams === null ? true : teamNumber <= numTeams)
 				);
 			}));
 	const areAllTeamsNonEmpty =
@@ -173,10 +175,10 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			if (!isNumTeamsValid) {
 				return false;
 			}
-			const teamPlayerCounts = new Array(Number(numTeams)).fill(0);
+			const teamPlayerCounts = new Array(numTeams ?? 0).fill(0);
 			selectedPlayerIds.forEach((playerId) => {
 				const teamNumber = Number(playerIdToTeam[playerId] || '0');
-				if (teamNumber >= 1 && teamNumber <= Number(numTeams)) {
+				if (teamNumber >= 1 && teamNumber <= (numTeams ?? 0)) {
 					teamPlayerCounts[teamNumber - 1]++;
 				}
 			});

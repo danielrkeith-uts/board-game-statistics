@@ -1,11 +1,12 @@
 import Form from 'react-bootstrap/Form';
+import type { Dispatch, SetStateAction } from 'react';
 import type { WinCondition } from '../../../../utils/types';
 
 interface WinConditionStepProps {
 	winCondition: WinCondition;
 	onWinConditionChange: (condition: WinCondition) => void;
-	numTeams: number | '';
-	onNumTeamsChange: (numTeams: number | '') => void;
+	numTeams: number | null;
+	onNumTeamsChange: Dispatch<SetStateAction<number | null>>;
 }
 
 const WinConditionStep = (props: WinConditionStepProps) => {
@@ -34,15 +35,15 @@ const WinConditionStep = (props: WinConditionStepProps) => {
 						type='number'
 						min={2}
 						placeholder='e.g. 2'
-						value={numTeams}
+						value={numTeams ?? ''}
 						onChange={(e) => {
 							const v = e.target.value;
 							onNumTeamsChange(
-								v === '' ? '' : Math.max(2, Number(v))
+								v === '' ? null : Math.max(2, Number(v))
 							);
 						}}
 					/>
-					{(numTeams === '' || Number(numTeams) < 2) && (
+					{(numTeams === null || numTeams < 2) && (
 						<Form.Text className='text-danger'>
 							Please enter at least 2 teams.
 						</Form.Text>
