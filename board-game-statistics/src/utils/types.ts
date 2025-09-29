@@ -61,6 +61,12 @@ interface Game {
 	name: string;
 }
 
+interface PlayerStatistic {
+	numOfGamesPlayed: number;
+	wins: number;
+	losses: number;
+}
+
 export type {
 	Account,
 	Permission,
@@ -72,4 +78,5 @@ export type {
 	WinCondition,
 	Player,
 	Game,
+	PlayerStatistic,
 };

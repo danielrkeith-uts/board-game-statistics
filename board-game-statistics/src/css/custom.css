@@ -12460,4 +12460,8 @@ fieldset:disabled .btn {
 	z-index: 1;
 }
 
+.gameResultsSection {
+	height: 11rem;
+}
+
 /*# sourceMappingURL=custom.css.map */
