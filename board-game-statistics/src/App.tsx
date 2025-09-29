@@ -16,6 +16,7 @@ import GamesView from './pages/games/GamesView';
 import LoginView from './pages/login/LoginView';
 import ForgotPasswordView from './pages/login/ForgotPasswordView';
 import ManageAccountView from './pages/account/ManageAccountView';
+import SignupView from './pages/signup/SignupView';
 
 function App() {
 	return (
@@ -36,7 +37,10 @@ function App() {
 						path={FORGOT_PASSWORD_PAGE_URL}
 						element={<ForgotPasswordView />}
 					/>
-					<Route path={CREATE_ACCOUNT_PAGE_URL} />
+					<Route
+						path={CREATE_ACCOUNT_PAGE_URL}
+						element={<SignupView />}
+					/>
 				</Routes>
 			</div>
 		</AccountContextProvider>
