@@ -28,4 +28,48 @@ interface Group {
 	members: GroupMember[];
 }
 
-export type { Account, Permission, GroupPermissions, GroupMember, Group };
+interface RecordGamePayload {
+	groupId: number;
+	gameId: number;
+	datePlayed: string; // ISO date string
+	playerIds: number[];
+	points: number[];
+	playerTeams: (number | null)[];
+	hasWon: boolean[];
+}
+
+interface GameRecordDto {
+	playedGameId: number;
+	groupId: number;
+	gameId: number;
+	datePlayed: string;
+	playerIds: number[];
+	points: number[];
+	playerTeams: (number | null)[];
+	hasWon: boolean[];
+}
+
+type WinCondition = 'single' | 'team' | 'coop';
+
+interface Player {
+	id: number;
+	name: string;
+}
+
+interface Game {
+	id: string;
+	name: string;
+}
+
+export type {
+	Account,
+	Permission,
+	GroupPermissions,
+	GroupMember,
+	Group,
+	RecordGamePayload,
+	GameRecordDto,
+	WinCondition,
+	Player,
+	Game,
+};
