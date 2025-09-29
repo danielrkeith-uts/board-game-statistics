@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { apiDeleteGameRecord } from '../../../utils/api/games-api-utils';
@@ -16,6 +16,15 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 	const { record, group, onClose, onDeleted } = props;
 	const [error, setError] = useState<string | null>(null);
 	const [success, setSuccess] = useState<string | null>(null);
+	const [visibleRecord, setVisibleRecord] = useState<GameRecordDto | null>(
+		null
+	);
+
+	useEffect(() => {
+		if (record) {
+			setVisibleRecord(record);
+		}
+	}, [record]);
 
 	const handleDelete = async () => {
 		if (!record) {
@@ -36,44 +45,57 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 
 	return (
 		<>
-			<Modal show={!!record} onHide={onClose}>
+			<Modal
+				show={!!record}
+				onHide={onClose}
+				onExited={() => setVisibleRecord(null)}
+			>
 				<Modal.Header closeButton>
 					<Modal.Title>
-						{record ? `Game #${record.gameId}` : 'Game details'}
+						{visibleRecord
+							? `Game #${visibleRecord.gameId}`
+							: 'Game details'}
 					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					{record && (
+					{visibleRecord && (
 						<div className='vstack gap-2'>
 							<div>
 								<strong>Date: </strong>
 								{new Date(
-									record.datePlayed
+									visibleRecord.datePlayed
 								).toLocaleDateString()}
 							</div>
 							<div>
 								<strong>Players:</strong>
 								<ul className='mb-0'>
-									{record.playerIds.map((playerId, index) => {
-										const member = group.members.find(
-											(member) => member.id === playerId
-										);
-										const playerName = member
-											? `${member.firstName} ${member.lastName}`
-											: `Player ${playerId}`;
-										const points =
-											record.points[index] || 0;
-										const team = record.playerTeams[index]
-											? `Team ${record.playerTeams[index]}`
-											: 'Solo/Co-op';
-										const isWinner = record.hasWon[index];
-										return (
-											<li key={playerId}>
-												{playerName} - {points} points (
-												{team}) {isWinner ? '🏆' : ''}
-											</li>
-										);
-									})}
+									{visibleRecord.playerIds.map(
+										(playerId, index) => {
+											const member = group.members.find(
+												(member) =>
+													member.id === playerId
+											);
+											const playerName = member
+												? `${member.firstName} ${member.lastName}`
+												: `Player ${playerId}`;
+											const points =
+												visibleRecord.points[index] ||
+												0;
+											const team = visibleRecord
+												.playerTeams[index]
+												? `Team ${visibleRecord.playerTeams[index]}`
+												: 'Solo/Co-op';
+											const isWinner =
+												visibleRecord.hasWon[index];
+											return (
+												<li key={playerId}>
+													{playerName} - {points}{' '}
+													points ({team}){' '}
+													{isWinner ? '🏆' : ''}
+												</li>
+											);
+										}
+									)}
 								</ul>
 							</div>
 						</div>
