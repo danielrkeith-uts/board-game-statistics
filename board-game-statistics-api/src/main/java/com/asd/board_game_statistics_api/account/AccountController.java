@@ -1,10 +1,6 @@
 package com.asd.board_game_statistics_api.account;
 
-import com.asd.board_game_statistics_api.account.dto.LoginRequest;
-import com.asd.board_game_statistics_api.account.dto.CreateAccountRequest;
-import com.asd.board_game_statistics_api.account.dto.MeResponse;
-import com.asd.board_game_statistics_api.account.dto.UpdateAccountRequest;
-import com.asd.board_game_statistics_api.account.dto.ChangePasswordRequest;
+import com.asd.board_game_statistics_api.account.dto.*;
 import com.asd.board_game_statistics_api.model.Account;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/account")
@@ -62,6 +56,12 @@ public class AccountController {
     @GetMapping("/me")
     public ResponseEntity<MeResponse> getCurrentUser(@AuthenticationPrincipal Account account) {
         return ResponseEntity.ok(new MeResponse(account.firstName(), account.lastName(), account.email()));
+    }
+
+    @PostMapping("/send-password-reset")
+    public ResponseEntity<String> sendPasswordReset(@RequestBody SendPasswordResetRequest sendPasswordResetRequest) {
+        accountService.sendPasswordReset(sendPasswordResetRequest.email());
+        return ResponseEntity.ok("Password successfully reset");
     }
 
     @PutMapping("/update")

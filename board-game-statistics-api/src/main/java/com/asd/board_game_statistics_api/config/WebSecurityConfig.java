@@ -29,7 +29,7 @@ public class WebSecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/api/admin/**", "/api/account/login", "/api/account/create").permitAll()
+                    .requestMatchers("/api/admin/**", "/api/account/login", "/api/account/create", "/api/account/send-password-reset").permitAll()
                     .anyRequest().authenticated()
             )
             .formLogin(AbstractHttpConfigurer::disable)

@@ -10,6 +10,13 @@ CREATE TABLE bgs.account (
     last_name VARCHAR(100)
 );
 
+CREATE TABLE bgs.reset_password_code (
+    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    account_id INT REFERENCES bgs.account(id),
+    code INT DEFAULT floor(random() * (999999 - 100000 + 1) + 100000)::int UNIQUE,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE bgs.invitation
 (
     invite_id   INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,

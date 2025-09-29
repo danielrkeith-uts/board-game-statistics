@@ -1,10 +1,8 @@
 package com.asd.board_game_statistics_api.account;
 
-import com.asd.board_game_statistics_api.account.exceptions.CreateAccountException;
-import com.asd.board_game_statistics_api.account.exceptions.InvalidEmailException;
-import com.asd.board_game_statistics_api.account.exceptions.InvalidPasswordException;
-import com.asd.board_game_statistics_api.account.exceptions.EmailTakenException;
+import com.asd.board_game_statistics_api.account.exceptions.*;
 import com.asd.board_game_statistics_api.model.Account;
+import com.asd.board_game_statistics_api.util.EmailService;
 import com.asd.board_game_statistics_api.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +15,10 @@ public class AccountService implements IAccountService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private IAccountRepository accountRepository;
+    @Autowired
+    private IResetPasswordCodeRepository resetPasswordCodeRepository;
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public void createAccount(String email, String password, String firstName, String lastName) throws CreateAccountException {
@@ -35,6 +37,19 @@ public class AccountService implements IAccountService {
         String hashedPassword = passwordEncoder.encode(password);
 
         accountRepository.create(email, hashedPassword, firstName, lastName);
+    }
+
+    @Override
+    public void sendPasswordReset(String email) throws AccountDoesNotExistException {
+        Account account = accountRepository.get(email);
+
+        if (account == null) {
+            throw new AccountDoesNotExistException();
+        }
+
+        int code = resetPasswordCodeRepository.create(account.id());
+
+        emailService.sendEmail(email, "Reset password code", "Reset password code: " + code);
     }
 
     @Override

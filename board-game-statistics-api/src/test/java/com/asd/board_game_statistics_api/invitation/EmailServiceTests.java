@@ -13,7 +13,7 @@ public class EmailServiceTests extends TestsWithMockedDatabase {
     @Test
     public void emailServiceTests() {
         Assertions.assertDoesNotThrow(() -> {
-            emailService.sendEmail("test@example.com", "t5337271@gmail.com", "Test Send Email", "Test test");
+            emailService.sendEmail("test@example.com", "Test Send Email", "Test test");
         });
     }
 }

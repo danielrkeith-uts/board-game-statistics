@@ -21,4 +21,8 @@ public class EmailService{
 
         emailSender.send(message);
     }
+
+    public void sendEmail(String to, String subject, String text) {
+        sendEmail(to, "t5337271@gmail.com", subject, text);
+    }
 }
