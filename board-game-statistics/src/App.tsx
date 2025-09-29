@@ -28,7 +28,7 @@ function App() {
           <Route path={GAMES_PAGE_URL} element={<GamesView />} />
           <Route path={GROUPS_PAGE_URL} element={<GroupView />} />
           <Route path={LOGIN_PAGE_URL} element={<LoginView />} />
-          <Route path={CREATE_ACCOUNT_PAGE_URL} element={<SignupView />} /> {/* ← fix */}
+          <Route path={CREATE_ACCOUNT_PAGE_URL} element={<SignupView />} /> 
         </Routes>
       </div>
     </AccountContextProvider>
