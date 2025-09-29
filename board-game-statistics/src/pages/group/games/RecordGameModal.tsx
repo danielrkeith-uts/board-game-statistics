@@ -200,20 +200,22 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		try {
 			const playerIds = selectedPlayerIds;
 			const points = selectedPlayerIds.map(
-				(pid) => playerPoints[pid] || 0
+				(playerId) => playerPoints[playerId] || 0
 			);
-			const playerTeams = selectedPlayerIds.map((pid) => {
+			const playerTeams = selectedPlayerIds.map((playerId) => {
 				if (winCondition === 'team') {
-					return Number(playerIdToTeam[pid] || '1');
+					return Number(playerIdToTeam[playerId] || '1');
 				} else {
 					return null; // Solo or cooperative games
 				}
 			});
-			const hasWon = selectedPlayerIds.map((pid) => {
+			const hasWon = selectedPlayerIds.map((playerId) => {
 				if (winCondition === 'single') {
-					return pid === singleWinnerId;
+					return playerId === singleWinnerId;
 				} else if (winCondition === 'team') {
-					return String(playerIdToTeam[pid] || '1') === teamWinner;
+					return (
+						String(playerIdToTeam[playerId] || '1') === teamWinner
+					);
 				} else {
 					// coop: all players have the same win status
 					return coopWinner === true;
