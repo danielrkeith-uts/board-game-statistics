@@ -21,4 +21,10 @@ public class Validator {
                 && password.length() >= MINIMUM_PASSWORD_LENGTH;
     }
 
+    public static boolean isValidGroupName(String groupName) {
+        Pattern groupNamePattern = Pattern.compile("^[a-zA-Z0-9][a-zA-Z0-9\\s]{0,29}$");
+
+        return groupNamePattern.matcher(groupName).find();
+    }
+
 }

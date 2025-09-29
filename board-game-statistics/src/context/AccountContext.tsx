@@ -6,21 +6,47 @@ interface AccountContextProviderProps {
 	children: ReactNode;
 }
 
-const AccountContext = createContext<Account | null>(null);
+interface AccountContextType {
+	account: Account | null;
+	loading: boolean;
+	error: string | null;
+}
+
+const AccountContext = createContext<AccountContextType>({
+	account: null,
+	loading: true,
+	error: null,
+});
 
 const AccountContextProvider = ({ children }: AccountContextProviderProps) => {
 	const [account, setAccount] = useState<Account | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
+		setLoading(true);
+
 		apiGetLoggedInAccount()
 			.then((result) => {
 				setAccount(result);
+				setError(null);
 			})
-			.catch((err) => console.error(err));
+			.catch((err) => {
+				console.error(err);
+				setError('Failed to load account');
+				setAccount(null);
+			})
+			.finally(() => setLoading(false));
 	}, []);
 
+	const contextValue: AccountContextType = {
+		account,
+		loading,
+		error,
+	};
+
 	return (
-		<AccountContext.Provider value={account}>
+		<AccountContext.Provider value={contextValue}>
 			{children}
 		</AccountContext.Provider>
 	);

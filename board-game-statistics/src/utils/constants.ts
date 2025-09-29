@@ -7,3 +7,9 @@ export const CREATE_ACCOUNT_PAGE_URL = '/createAccount';
 export const MANAGE_ACCOUNT_PAGE_URL = '/manageAccount';
 export const FORGOT_PASSWORD_PAGE_URL = '/forgot-password';
 export const RESET_PASSWORD_PAGE_URL = '/reset-password';
+
+export const allowedPagesWhileLoggedOut = [
+	HOME_PAGE_URL,
+	LOGIN_PAGE_URL,
+	CREATE_ACCOUNT_PAGE_URL,
+];
