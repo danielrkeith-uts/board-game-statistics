@@ -41,8 +41,10 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		undefined
 	);
 
-	const handleNext = () => setStep((s) => Math.min(s + 1, 3));
-	const handleBack = () => setStep((s) => Math.max(s - 1, 1));
+	const handleNext = () =>
+		setStep((currentStep) => Math.min(currentStep + 1, 3));
+	const handleBack = () =>
+		setStep((currentStep) => Math.max(currentStep - 1, 1));
 
 	// Handler functions for PlayersStep
 	const handlePlayerTeamChange = (playerId: number, team: string) => {
