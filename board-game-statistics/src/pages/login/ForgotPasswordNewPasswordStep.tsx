@@ -1,14 +1,27 @@
 import { Button, Container, Form } from 'react-bootstrap';
 import { useState } from 'react';
 
-const ResetPasswordView = () => {
+interface ForgotPasswordNewPasswordStepProps {
+	nextStep: (password: string) => void;
+}
+
+const ForgotPasswordNewPasswordStep = ({
+	nextStep,
+}: ForgotPasswordNewPasswordStepProps) => {
 	const [passwordA, setPasswordA] = useState('');
 	const [passwordB, setPasswordB] = useState('');
+
+	const handleSubmission = (e: React.FormEvent) => {
+		e.preventDefault();
+
+		// TODO - proper password checking
+		nextStep(passwordA);
+	};
 
 	return (
 		<Container fluid>
 			<h1 className='mb-3 text-center'>Reset Password</h1>
-			<Form>
+			<Form onSubmit={handleSubmission}>
 				<Form.Group
 					className='mb-3'
 					controlId='resetPassword.passwordA'
@@ -41,4 +54,4 @@ const ResetPasswordView = () => {
 	);
 };
 
-export default ResetPasswordView;
+export default ForgotPasswordNewPasswordStep;

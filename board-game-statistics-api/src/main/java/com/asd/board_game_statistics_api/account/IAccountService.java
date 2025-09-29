@@ -9,6 +9,8 @@ public interface IAccountService {
 
     void sendPasswordReset(String email) throws AccountDoesNotExistException;
 
+    boolean checkPasswordResetCode(int code);
+
     Account account(String email);
 
     void updateAccount(String email, String firstName, String lastName, String newEmail) throws Exception;

@@ -2,6 +2,7 @@ package com.asd.board_game_statistics_api.account;
 
 import com.asd.board_game_statistics_api.account.exceptions.*;
 import com.asd.board_game_statistics_api.model.Account;
+import com.asd.board_game_statistics_api.model.ResetPasswordCode;
 import com.asd.board_game_statistics_api.util.EmailService;
 import com.asd.board_game_statistics_api.util.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,13 @@ public class AccountService implements IAccountService {
         int code = resetPasswordCodeRepository.create(account.id());
 
         emailService.sendEmail(email, "Reset password code", "Reset password code: " + code);
+    }
+
+    @Override
+    public boolean checkPasswordResetCode(int code) {
+        ResetPasswordCode resetPasswordCode = resetPasswordCodeRepository.get(code);
+
+        return resetPasswordCode != null && resetPasswordCode.isValid();
     }
 
     @Override

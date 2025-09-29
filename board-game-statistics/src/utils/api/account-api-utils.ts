@@ -89,3 +89,14 @@ export const apiSendPasswordReset = (
 			`Error creating account: ${res.status} ${res.statusText}`
 		);
 	});
+
+export const apiCheckPasswordResetCode = (code: number): Promise<boolean> =>
+	apiPut('/account/check-password-reset-code', { code })
+		.then((res) => {
+			if (res.ok) {
+				return res.json();
+			}
+
+			throw new Error(`Error checking code: ${res.statusText}`);
+		})
+		.then((data) => data as boolean);

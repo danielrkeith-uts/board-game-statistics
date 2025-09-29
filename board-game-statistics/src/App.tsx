@@ -8,7 +8,6 @@ import {
 	HOME_PAGE_URL,
 	LOGIN_PAGE_URL,
 	MANAGE_ACCOUNT_PAGE_URL,
-	RESET_PASSWORD_PAGE_URL,
 } from './utils/constants';
 import HomeView from './pages/home/HomeView';
 import GroupView from './pages/group/GroupView';
@@ -16,7 +15,6 @@ import { AccountContextProvider } from './context/AccountContext';
 import GamesView from './pages/games/GamesView';
 import LoginView from './pages/login/LoginView';
 import ForgotPasswordView from './pages/login/ForgotPasswordView';
-import ResetPasswordView from './pages/login/ResetPasswordView';
 import ManageAccountView from './pages/account/ManageAccountView';
 
 function App() {
@@ -37,10 +35,6 @@ function App() {
 					<Route
 						path={FORGOT_PASSWORD_PAGE_URL}
 						element={<ForgotPasswordView />}
-					/>
-					<Route
-						path={RESET_PASSWORD_PAGE_URL}
-						element={<ResetPasswordView />}
 					/>
 					<Route path={CREATE_ACCOUNT_PAGE_URL} />
 				</Routes>
