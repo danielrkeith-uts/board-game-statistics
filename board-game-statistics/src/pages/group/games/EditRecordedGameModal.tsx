@@ -3,7 +3,8 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { apiDeleteGameRecord } from '../../../utils/api/games-api-utils';
 import type { Group, GameRecordDto } from '../../../utils/types';
-import AlertMessage from '../AlertMessage';
+import { useContext } from 'react';
+import { AlertContext } from '../../../context/AlertContext';
 
 interface EditRecordedGameModalProps {
 	record: GameRecordDto | null;
@@ -14,8 +15,9 @@ interface EditRecordedGameModalProps {
 
 const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 	const { record, group, onClose, onDeleted } = props;
-	const [error, setError] = useState<string | null>(null);
-	const [success, setSuccess] = useState<string | null>(null);
+
+	const { setSuccess, setError } = useContext(AlertContext);
+
 	const [visibleRecord, setVisibleRecord] = useState<GameRecordDto | null>(
 		null
 	);
@@ -110,16 +112,6 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 					</Button>
 				</div>
 			</Modal>
-			<AlertMessage
-				variant='danger'
-				message={error}
-				setMessage={setError}
-			/>
-			<AlertMessage
-				variant='success'
-				message={success}
-				setMessage={setSuccess}
-			/>
 		</>
 	);
 };

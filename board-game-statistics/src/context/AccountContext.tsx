@@ -1,6 +1,13 @@
-import { createContext, useEffect, useState, type ReactNode } from 'react';
+import {
+	createContext,
+	useContext,
+	useEffect,
+	useState,
+	type ReactNode,
+} from 'react';
 import { apiGetLoggedInAccount } from '../utils/api/account-api-utils';
 import type { Account } from '../utils/types';
+import { AlertContext } from './AlertContext';
 
 interface AccountContextProviderProps {
 	children: ReactNode;
@@ -9,19 +16,18 @@ interface AccountContextProviderProps {
 interface AccountContextType {
 	account: Account | null;
 	loading: boolean;
-	error: string | null;
 }
 
 const AccountContext = createContext<AccountContextType>({
 	account: null,
 	loading: true,
-	error: null,
 });
 
 const AccountContextProvider = ({ children }: AccountContextProviderProps) => {
+	const { setError } = useContext(AlertContext);
+
 	const [account, setAccount] = useState<Account | null>(null);
 	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		setLoading(true);
@@ -42,7 +48,6 @@ const AccountContextProvider = ({ children }: AccountContextProviderProps) => {
 	const contextValue: AccountContextType = {
 		account,
 		loading,
-		error,
 	};
 
 	return (

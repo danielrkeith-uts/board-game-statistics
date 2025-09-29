@@ -1,6 +1,13 @@
-import { createContext, useEffect, useState, type ReactNode } from 'react';
+import {
+	createContext,
+	useContext,
+	useEffect,
+	useState,
+	type ReactNode,
+} from 'react';
 import type { GroupPermissions } from '../utils/types';
 import { apiGetPermissions } from '../utils/api/permissions-api-utils';
+import { AlertContext } from './AlertContext';
 
 interface PermissionsContextProviderProps {
 	children: ReactNode;
@@ -9,23 +16,22 @@ interface PermissionsContextProviderProps {
 interface PermissionsContextType {
 	permissions: GroupPermissions[] | null;
 	loading: boolean;
-	error: string | null;
 }
 
 const PermissionsContext = createContext<PermissionsContextType>({
 	permissions: null,
 	loading: true,
-	error: null,
 });
 
 const PermissionsContextProvider = ({
 	children,
 }: PermissionsContextProviderProps) => {
+	const { setError } = useContext(AlertContext);
+
 	const [permissions, setPermissions] = useState<GroupPermissions[] | null>(
 		null
 	);
 	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		setLoading(true);
@@ -46,7 +52,6 @@ const PermissionsContextProvider = ({
 	const contextValue: PermissionsContextType = {
 		permissions,
 		loading,
-		error,
 	};
 
 	return (
