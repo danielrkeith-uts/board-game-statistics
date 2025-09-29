@@ -23,20 +23,10 @@ public class InvitationControllerTests extends TestsWithMockedDatabase {
     }
 
     @Test
-    public void invitationProcessedCorrectly() {
-        try{
-            String testEmail = "aaron.falco2@gmail.com";
-            String testGroupId = "1";
-            int accountId = 22;
-            invitationService.createInvitation(testEmail, testGroupId);
-            Invitation invitation = invitationService.getInvitationByEmailAndGroup(testEmail, testGroupId);
-            invitationService.joinGroup(String.valueOf(invitation.invite_code()));
-            Boolean invitationDeleted = !invitationService.checkInvitationExistsByEmailAndGroup(testEmail, testGroupId);
-            Boolean groupJoined = groupService.belongsToGroup(accountId, invitation.group_id());
-            Assertions.assertTrue(invitationDeleted && groupJoined);
-        }
-        catch (Exception e){
-            Assertions.fail(e.getMessage());
-        }
+    public void isMemberAddedSuccessfully() {
+        int userId = 22;
+        int groupId = 1;
+        invitationService.joinGroup(userId, groupId);
+        Assertions.assertTrue(groupService.belongsToGroup(userId, groupId));
     }
 }
