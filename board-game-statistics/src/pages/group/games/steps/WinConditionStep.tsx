@@ -19,8 +19,8 @@ const WinConditionStep = (props: WinConditionStepProps) => {
 				<Form.Label>Win condition</Form.Label>
 				<Form.Select
 					value={winCondition}
-					onChange={(e) =>
-						onWinConditionChange(e.target.value as WinCondition)
+					onChange={(event) =>
+						onWinConditionChange(event.target.value as WinCondition)
 					}
 				>
 					<option value='single'>Single winner</option>
@@ -36,10 +36,12 @@ const WinConditionStep = (props: WinConditionStepProps) => {
 						min={2}
 						placeholder='e.g. 2'
 						value={numTeams ?? 2}
-						onChange={(e) => {
-							const v = e.target.value;
+						onChange={(event) => {
+							const inputValue = event.target.value;
 							onNumTeamsChange(
-								v === '' ? null : Math.max(2, Number(v))
+								inputValue === ''
+									? null
+									: Math.max(2, Number(inputValue))
 							);
 						}}
 					/>

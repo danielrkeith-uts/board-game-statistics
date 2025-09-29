@@ -16,7 +16,7 @@ const GameSelectionStep = (props: GameSelectionStepProps) => {
 				<Form.Label>Select game</Form.Label>
 				<Form.Select
 					value={selectedGameId}
-					onChange={(e) => onGameChange(e.target.value)}
+					onChange={(event) => onGameChange(event.target.value)}
 				>
 					<option value=''>Choose…</option>
 					{games.map((game) => (

@@ -43,13 +43,13 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 		fetchRecords();
 	}, [group.id]);
 
-	const renderRecordItem = (r: GameRecordDto) => {
-		const displayDate = new Date(r.datePlayed).toLocaleDateString();
-		const gameName = `Game #${r.gameId}`; // TODO: replace with real name
+	const renderRecordItem = (record: GameRecordDto) => {
+		const displayDate = new Date(record.datePlayed).toLocaleDateString();
+		const gameName = `Game #${record.gameId}`; // TODO: replace with real name
 
 		// Find winners
-		const winners = r.playerIds
-			.filter((_, index) => r.hasWon[index])
+		const winners = record.playerIds
+			.filter((_ignored, index) => record.hasWon[index])
 			.map((playerId) => {
 				const member = group.members.find(
 					(groupMember) => groupMember.id === playerId
@@ -64,10 +64,10 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 
 		return (
 			<li
-				key={r.playedGameId}
+				key={record.playedGameId}
 				className='list-group-item d-flex justify-content-between align-items-center'
 				role='button'
-				onClick={() => setSelected(r)}
+				onClick={() => setSelected(record)}
 			>
 				<span>
 					{gameName}
