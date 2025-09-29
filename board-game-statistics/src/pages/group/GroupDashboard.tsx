@@ -1,9 +1,10 @@
 import { Tabs, Tab } from 'react-bootstrap';
 import GroupHomeView from './home/GroupHomeView';
-import { type ChangeEvent } from 'react';
+import { useContext, type ChangeEvent } from 'react';
 import type { Group } from '../../utils/types';
 import GroupManagementHeader from './GroupManagementHeader';
 import InviteMemberView from './InviteMemberView';
+import { PermissionsContext } from '../../context/PermissionsContext';
 
 interface GroupDashboardProps {
 	groups: Group[];
@@ -21,6 +22,11 @@ const GroupDashboard = (props: GroupDashboardProps) => {
 		handleOpenCreateGroupModal,
 		handleOpenLeaveGroupModal,
 	} = props;
+
+	const { permissions } = useContext(PermissionsContext);
+	const thisGroupsPermissions = permissions?.find(
+		(groupPermission) => groupPermission.groupId === currentGroup.id
+	)?.permissions;
 
 	const handleGroupDropdownChange = (e: ChangeEvent<HTMLSelectElement>) => {
 		setCurrentGroup(
@@ -55,9 +61,11 @@ const GroupDashboard = (props: GroupDashboardProps) => {
 					<Tab eventKey='games' title='Games'>
 						Games
 					</Tab>
-					<Tab eventKey='invite' title='Invite'>
-						<InviteMemberView group={currentGroup} />
-					</Tab>
+					{thisGroupsPermissions?.includes('MANAGE_MEMBERS') && (
+						<Tab eventKey='invite' title='Invite'>
+							<InviteMemberView group={currentGroup} />
+						</Tab>
+					)}
 				</Tabs>
 			</div>
 		</>
