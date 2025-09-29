@@ -72,3 +72,20 @@ export const apiDeleteAccount = (): Promise<boolean> =>
 		}
 		throw new Error(`Error deleting account: ${res.statusText}`);
 	});
+
+export const apiSendPasswordReset = (
+	email: string
+): Promise<{ ok: boolean; message?: string }> =>
+	apiPost('/account/send-password-reset', { email }).then((res) => {
+		if (res.ok) {
+			return { ok: true };
+		}
+
+		if (res.status === 400) {
+			return res.json();
+		}
+
+		throw new Error(
+			`Error creating account: ${res.status} ${res.statusText}`
+		);
+	});

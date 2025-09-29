@@ -11,5 +11,6 @@ export const RESET_PASSWORD_PAGE_URL = '/reset-password';
 export const allowedPagesWhileLoggedOut = [
 	HOME_PAGE_URL,
 	LOGIN_PAGE_URL,
+	FORGOT_PASSWORD_PAGE_URL,
 	CREATE_ACCOUNT_PAGE_URL,
 ];
