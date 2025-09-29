@@ -86,12 +86,15 @@ export const apiSendPasswordReset = (
 		}
 
 		throw new Error(
-			`Error creating account: ${res.status} ${res.statusText}`
+			`Error sending password reset: ${res.status} ${res.statusText}`
 		);
 	});
 
-export const apiCheckPasswordResetCode = (code: number): Promise<boolean> =>
-	apiPut('/account/check-password-reset-code', { code })
+export const apiCheckPasswordResetCode = (
+	code: number,
+	email: string
+): Promise<boolean> =>
+	apiPut('/account/check-password-reset-code', { code, email })
 		.then((res) => {
 			if (res.ok) {
 				return res.json();
@@ -100,3 +103,20 @@ export const apiCheckPasswordResetCode = (code: number): Promise<boolean> =>
 			throw new Error(`Error checking code: ${res.statusText}`);
 		})
 		.then((data) => data as boolean);
+
+export const apiResetPassword = (
+	code: number,
+	email: string,
+	password: string
+): Promise<{ ok: boolean; message?: string }> =>
+	apiPut('/account/reset-password', { code, email, password }).then((res) => {
+		if (res.ok) {
+			return { ok: true };
+		}
+
+		if (res.status === 400) {
+			return res.json();
+		}
+
+		throw new Error(`Error resetting password: ${res.statusText}`);
+	});

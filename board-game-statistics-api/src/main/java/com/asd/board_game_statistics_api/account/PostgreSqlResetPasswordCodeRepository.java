@@ -44,4 +44,11 @@ public class PostgreSqlResetPasswordCodeRepository implements IResetPasswordCode
 
         return jdbcTemplate.query(sql, ResetPasswordCode::fromResultSet, code);
     }
+
+    @Override
+    public void destroyAccountCodes(int accountId) {
+        String sql = "DELETE FROM bgs.reset_password_code WHERE account_id = ?;";
+
+        jdbcTemplate.update(sql, accountId);
+    }
 }

@@ -48,16 +48,36 @@ public class AccountService implements IAccountService {
             throw new AccountDoesNotExistException();
         }
 
+        // Destroy other codes first so only one exists for the account
+        resetPasswordCodeRepository.destroyAccountCodes(account.id());
+
         int code = resetPasswordCodeRepository.create(account.id());
 
         emailService.sendEmail(email, "Reset password code", "Reset password code: " + code);
     }
 
     @Override
-    public boolean checkPasswordResetCode(int code) {
+    public boolean checkPasswordResetCode(int code, String email) {
         ResetPasswordCode resetPasswordCode = resetPasswordCodeRepository.get(code);
+        Account account = accountRepository.get(email);
 
-        return resetPasswordCode != null && resetPasswordCode.isValid();
+        return resetPasswordCode != null && resetPasswordCode.isValid() && resetPasswordCode.accountId() == account.id();
+    }
+
+    @Override
+    public void resetPassword(int code, String email, String password) throws InvalidResetPasswordCodeException {
+        if (!checkPasswordResetCode(code, email)) {
+            throw new InvalidResetPasswordCodeException();
+        }
+
+        if (!Validator.isValidPassword(password)) {
+            throw new InvalidPasswordException();
+        }
+
+        accountRepository.updatePassword(email, passwordEncoder.encode(password));
+
+        Account account = accountRepository.get(email);
+        resetPasswordCodeRepository.destroyAccountCodes(account.id());
     }
 
     @Override

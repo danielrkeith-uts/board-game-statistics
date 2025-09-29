@@ -8,4 +8,6 @@ public interface IResetPasswordCodeRepository {
 
     ResetPasswordCode get(int code);
 
+    void destroyAccountCodes(int accountId);
+
 }

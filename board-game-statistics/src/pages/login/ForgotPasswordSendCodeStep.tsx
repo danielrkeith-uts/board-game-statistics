@@ -6,7 +6,7 @@ import {
 } from '../../utils/api/account-api-utils';
 
 interface ForgotPasswordSendCodeStepProps {
-	nextStep: (code: number) => void;
+	nextStep: (email: string, code: number) => void;
 }
 
 const ForgotPasswordSendCodeStep = ({
@@ -40,9 +40,9 @@ const ForgotPasswordSendCodeStep = ({
 
 		const numericCode = +code;
 
-		apiCheckPasswordResetCode(numericCode).then((success) => {
+		apiCheckPasswordResetCode(numericCode, email).then((success) => {
 			if (success) {
-				nextStep(numericCode);
+				nextStep(email, numericCode);
 			} else {
 				setError('Invalid code');
 			}
@@ -85,6 +85,10 @@ const ForgotPasswordSendCodeStep = ({
 							value={code}
 							onChange={(e) => {
 								const { value } = e.target;
+
+								if (!value) {
+									setCode('');
+								}
 
 								if (/^[0-9]+$/.test(value)) {
 									setCode(value);

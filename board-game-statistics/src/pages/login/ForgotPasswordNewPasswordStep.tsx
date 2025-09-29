@@ -1,21 +1,44 @@
 import { Button, Container, Form } from 'react-bootstrap';
 import { useState } from 'react';
+import { apiResetPassword } from '../../utils/api/account-api-utils';
 
 interface ForgotPasswordNewPasswordStepProps {
-	nextStep: (password: string) => void;
+	code: number;
+	email: string;
+	nextStep: () => void;
 }
 
 const ForgotPasswordNewPasswordStep = ({
+	code,
+	email,
 	nextStep,
 }: ForgotPasswordNewPasswordStepProps) => {
 	const [passwordA, setPasswordA] = useState('');
 	const [passwordB, setPasswordB] = useState('');
+	const [error, setError] = useState('');
+
+	const clearPasswords = () => {
+		setPasswordA('');
+		setPasswordB('');
+	};
 
 	const handleSubmission = (e: React.FormEvent) => {
 		e.preventDefault();
 
-		// TODO - proper password checking
-		nextStep(passwordA);
+		if (passwordA !== passwordB) {
+			setError('Passwords do not match');
+			clearPasswords();
+			return;
+		}
+
+		apiResetPassword(code, email, passwordA).then((res) => {
+			if (res.ok) {
+				nextStep();
+			} else {
+				setError(res.message || 'Could not reset password');
+				clearPasswords();
+			}
+		});
 	};
 
 	return (
@@ -50,6 +73,7 @@ const ForgotPasswordNewPasswordStep = ({
 				</Form.Group>
 				<Button type='submit'>Reset Password</Button>
 			</Form>
+			{error && <p className='text-danger mt-3'>{error}</p>}
 		</Container>
 	);
 };

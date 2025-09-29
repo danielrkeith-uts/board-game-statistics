@@ -66,7 +66,13 @@ public class AccountController {
 
     @PutMapping("/check-password-reset-code")
     public ResponseEntity<Boolean> checkPasswordResetCode(@RequestBody CheckPasswordResetCodeRequest checkPasswordResetCodeRequest) {
-        return ResponseEntity.ok(accountService.checkPasswordResetCode(checkPasswordResetCodeRequest.code()));
+        return ResponseEntity.ok(accountService.checkPasswordResetCode(checkPasswordResetCodeRequest.code(), checkPasswordResetCodeRequest.email()));
+    }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        accountService.resetPassword(resetPasswordRequest.code(), resetPasswordRequest.email(), resetPasswordRequest.password());
+        return ResponseEntity.ok("Password successfully reset");
     }
 
     @PutMapping("/update")

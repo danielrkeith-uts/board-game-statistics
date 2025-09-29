@@ -1,18 +1,21 @@
 import { useState } from 'react';
 import ForgotPasswordSendCodeStep from './ForgotPasswordSendCodeStep';
 import ForgotPasswordNewPasswordStep from './ForgotPasswordNewPasswordStep';
+import ForgotPasswordCompleteStep from './ForgotPasswordCompleteStep';
 
-type Step = 'SEND_CODE' | 'NEW_PASSWORD';
+type Step = 'SEND_CODE' | 'NEW_PASSWORD' | 'COMPLETE';
 
 const ForgotPasswordView = () => {
 	const [step, setStep] = useState<Step>('SEND_CODE');
+	const [email, setEmail] = useState('');
 	const [code, setCode] = useState(0);
 
 	switch (step) {
 		case 'SEND_CODE':
 			return (
 				<ForgotPasswordSendCodeStep
-					nextStep={(code: number) => {
+					nextStep={(email: string, code: number) => {
+						setEmail(email);
 						setCode(code);
 						setStep('NEW_PASSWORD');
 					}}
@@ -21,12 +24,15 @@ const ForgotPasswordView = () => {
 		case 'NEW_PASSWORD':
 			return (
 				<ForgotPasswordNewPasswordStep
-					nextStep={(password: string) => {
-						// TODO - reset password
-						console.log(`Code: ${code}; Password: ${password}`);
+					code={code}
+					email={email}
+					nextStep={() => {
+						setStep('COMPLETE');
 					}}
 				/>
 			);
+		case 'COMPLETE':
+			return <ForgotPasswordCompleteStep />;
 		default:
 			throw new Error('Unreachable default case');
 	}

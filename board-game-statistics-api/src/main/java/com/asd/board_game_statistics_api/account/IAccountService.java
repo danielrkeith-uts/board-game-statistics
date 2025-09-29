@@ -1,5 +1,6 @@
 package com.asd.board_game_statistics_api.account;
 import com.asd.board_game_statistics_api.account.exceptions.AccountDoesNotExistException;
+import com.asd.board_game_statistics_api.account.exceptions.InvalidResetPasswordCodeException;
 import com.asd.board_game_statistics_api.model.Account;
 import com.asd.board_game_statistics_api.account.exceptions.CreateAccountException;
 
@@ -9,7 +10,9 @@ public interface IAccountService {
 
     void sendPasswordReset(String email) throws AccountDoesNotExistException;
 
-    boolean checkPasswordResetCode(int code);
+    boolean checkPasswordResetCode(int code, String email);
+
+    void resetPassword(int code, String email, String password) throws InvalidResetPasswordCodeException;
 
     Account account(String email);
 
