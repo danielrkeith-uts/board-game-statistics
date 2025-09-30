@@ -1,13 +1,6 @@
-import {
-	createContext,
-	useContext,
-	useEffect,
-	useState,
-	type ReactNode,
-} from 'react';
+import { createContext, useEffect, useState, type ReactNode } from 'react';
 import { apiGetLoggedInAccount } from '../utils/api/account-api-utils';
 import type { Account } from '../utils/types';
-import { AlertContext } from './AlertContext';
 
 interface AccountContextProviderProps {
 	children: ReactNode;
@@ -24,8 +17,6 @@ const AccountContext = createContext<AccountContextType>({
 });
 
 const AccountContextProvider = ({ children }: AccountContextProviderProps) => {
-	const { setError } = useContext(AlertContext);
-
 	const [account, setAccount] = useState<Account | null>(null);
 	const [loading, setLoading] = useState(true);
 
@@ -35,11 +26,9 @@ const AccountContextProvider = ({ children }: AccountContextProviderProps) => {
 		apiGetLoggedInAccount()
 			.then((result) => {
 				setAccount(result);
-				setError(null);
 			})
 			.catch((err) => {
 				console.error(err);
-				setError('Failed to load account');
 				setAccount(null);
 			})
 			.finally(() => setLoading(false));

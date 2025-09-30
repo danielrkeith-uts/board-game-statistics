@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/stats")
 public class StatisticsController {
     @Autowired
-    private StatisticsService statisticsService;
+    private IStatisticsService statisticsService;
 
     @GetMapping("/{groupId}")
     public ResponseEntity<?> getPlayerStatsByGroupId(@AuthenticationPrincipal Account account, @PathVariable Integer groupId) {

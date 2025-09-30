@@ -1,13 +1,6 @@
-import {
-	createContext,
-	useContext,
-	useEffect,
-	useState,
-	type ReactNode,
-} from 'react';
+import { createContext, useEffect, useState, type ReactNode } from 'react';
 import type { GroupPermissions } from '../utils/types';
 import { apiGetPermissions } from '../utils/api/permissions-api-utils';
-import { AlertContext } from './AlertContext';
 
 interface PermissionsContextProviderProps {
 	children: ReactNode;
@@ -26,8 +19,6 @@ const PermissionsContext = createContext<PermissionsContextType>({
 const PermissionsContextProvider = ({
 	children,
 }: PermissionsContextProviderProps) => {
-	const { setError } = useContext(AlertContext);
-
 	const [permissions, setPermissions] = useState<GroupPermissions[] | null>(
 		null
 	);
@@ -39,11 +30,9 @@ const PermissionsContextProvider = ({
 		apiGetPermissions()
 			.then((result) => {
 				setPermissions(result);
-				setError(null);
 			})
 			.catch((err) => {
 				console.error(err);
-				setError('Failed to load account');
 				setPermissions(null);
 			})
 			.finally(() => setLoading(false));

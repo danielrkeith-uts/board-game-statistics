@@ -26,7 +26,7 @@ const StatsSection = (props: StatsSectionProps) => {
 
 	return (
 		<>
-			{playerStats !== null ? (
+			{playerStats ? (
 				<table className='table'>
 					<tbody>
 						<tr>
