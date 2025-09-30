@@ -15,11 +15,16 @@ const LeaderboardTableView = (props: LeaderboardTableViewProps) => {
 					) : (
 						props.leaderboardRows.map(
 							(leaderboardRow: LeaderboardRow) => (
-								<li key={leaderboardRow.accountId}>
+								<a
+									href='#'
+									className='list-group-item list-group-item-action'
+									key={leaderboardRow.accountId}
+									onClick={() => {}}
+								>
 									{leaderboardRow.firstName}{' '}
 									{leaderboardRow.lastName} - Points:{' '}
 									{leaderboardRow.points}
-								</li>
+								</a>
 							)
 						)
 					)}

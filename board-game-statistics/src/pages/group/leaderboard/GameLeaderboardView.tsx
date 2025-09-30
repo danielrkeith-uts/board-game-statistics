@@ -47,7 +47,6 @@ const GameLeaderboardView = (props: GameLeaderboardViewProps) => {
 
 	return (
 		<>
-			{currentGameId}
 			<OwnedGamesDropDown
 				games={games}
 				onSelectedGameChange={onSelectedGameChange}
