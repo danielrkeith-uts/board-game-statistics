@@ -22,10 +22,8 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 		null
 	);
 
-	const { permissions } = useContext(PermissionsContext);
-	const thisGroupsPermissions = permissions?.find(
-		(groupPermissions) => groupPermissions.groupId === group.id
-	)?.permissions;
+	const { getGroupPermissions } = useContext(PermissionsContext);
+	const thisGroupsPermissions = getGroupPermissions(group.id);
 
 	useEffect(() => {
 		if (record) {

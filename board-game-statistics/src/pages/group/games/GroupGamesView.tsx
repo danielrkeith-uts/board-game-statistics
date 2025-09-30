@@ -22,10 +22,8 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [selected, setSelected] = useState<GameRecordDto | null>(null);
 
-	const { permissions } = useContext(PermissionsContext);
-	const thisGroupsPermissions = permissions?.find(
-		(groupPermissions) => groupPermissions.groupId === group.id
-	)?.permissions;
+	const { getGroupPermissions } = useContext(PermissionsContext);
+	const thisGroupsPermissions = getGroupPermissions(group.id);
 
 	const handleOpenRecordModal = () => setShowRecordModal(true);
 	const handleCloseRecordModal = () => setShowRecordModal(false);

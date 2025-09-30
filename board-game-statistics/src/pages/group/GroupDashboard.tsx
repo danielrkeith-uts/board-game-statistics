@@ -24,10 +24,8 @@ const GroupDashboard = (props: GroupDashboardProps) => {
 		handleOpenLeaveGroupModal,
 	} = props;
 
-	const { permissions } = useContext(PermissionsContext);
-	const thisGroupsPermissions = permissions?.find(
-		(groupPermission) => groupPermission.groupId === currentGroup.id
-	)?.permissions;
+	const { getGroupPermissions } = useContext(PermissionsContext);
+	const thisGroupsPermissions = getGroupPermissions(currentGroup.id);
 
 	const handleGroupDropdownChange = (e: ChangeEvent<HTMLSelectElement>) => {
 		setCurrentGroup(
