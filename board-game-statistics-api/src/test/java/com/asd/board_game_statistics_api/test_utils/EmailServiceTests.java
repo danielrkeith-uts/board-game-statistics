@@ -1,6 +1,5 @@
-package com.asd.board_game_statistics_api.invitation;
+package com.asd.board_game_statistics_api.test_utils;
 
-import com.asd.board_game_statistics_api.test_utils.TestsWithMockedDatabase;
 import com.asd.board_game_statistics_api.util.EmailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
