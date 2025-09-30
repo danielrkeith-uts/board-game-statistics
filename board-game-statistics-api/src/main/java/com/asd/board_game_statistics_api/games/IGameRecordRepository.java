@@ -11,4 +11,5 @@ public interface IGameRecordRepository {
     List<GameRecordResponse> getGameRecordsByGroup(int groupId);
     List<PlayerResult> getPlayerResultsByGroup(Integer accountId, Integer groupId);
     void deleteGameRecord(int playedGameId);
+    int getGroupOf(int playedGameId);
 }

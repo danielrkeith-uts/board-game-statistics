@@ -30,4 +30,9 @@ public class GameRecordService implements IGameRecordService {
         gameRecordRepository.deleteGameRecord(playedGameId);
     }
 
+    @Override
+    public int getGroupOf(int playedGameId) {
+        return gameRecordRepository.getGroupOf(playedGameId);
+    }
+
 }

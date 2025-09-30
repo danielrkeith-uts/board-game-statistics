@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { apiDeleteGameRecord } from '../../../utils/api/games-api-utils';
 import type { Group, GameRecordDto } from '../../../utils/types';
-import { useContext } from 'react';
+import { PermissionsContext } from '../../../context/PermissionsContext';
 import { AlertContext } from '../../../context/AlertContext';
 
 interface EditRecordedGameModalProps {
@@ -21,6 +21,9 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 	const [visibleRecord, setVisibleRecord] = useState<GameRecordDto | null>(
 		null
 	);
+
+	const { getGroupPermissions } = useContext(PermissionsContext);
+	const thisGroupsPermissions = getGroupPermissions(group.id);
 
 	useEffect(() => {
 		if (record) {
@@ -107,9 +110,11 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 					<Button variant='secondary' onClick={onClose}>
 						Close
 					</Button>
-					<Button variant='danger' onClick={handleDelete}>
-						Delete
-					</Button>
+					{thisGroupsPermissions?.includes('MANAGE_GAMES_PLAYED') && (
+						<Button variant='danger' onClick={handleDelete}>
+							Delete
+						</Button>
+					)}
 				</div>
 			</Modal>
 		</>

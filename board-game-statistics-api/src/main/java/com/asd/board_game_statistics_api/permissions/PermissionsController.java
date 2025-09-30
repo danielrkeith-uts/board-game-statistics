@@ -1,5 +1,6 @@
 package com.asd.board_game_statistics_api.permissions;
 
+import com.asd.board_game_statistics_api.exceptions.InvalidPermissionsException;
 import com.asd.board_game_statistics_api.group.IGroupService;
 import com.asd.board_game_statistics_api.model.Account;
 import com.asd.board_game_statistics_api.model.GroupPermissions;
@@ -66,7 +67,7 @@ public class PermissionsController {
         }
 
         if (!permissionsService.getPermissions(account.id(), groupId).contains(Permission.MANAGE_MEMBER_PERMISSIONS)) {
-            return ResponseEntity.status(401).body("Logged in user does not have permission for this action");
+            throw new InvalidPermissionsException();
         }
 
         // Cast permissions array to EnumSet
