@@ -34,7 +34,9 @@ const PermissionsContextProvider = ({
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		if (!account) {return;}
+		if (!account) {
+			return;
+		}
 
 		setLoading(true);
 
