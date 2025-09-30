@@ -13,7 +13,7 @@ CREATE TABLE bgs.account (
 CREATE TABLE bgs.reset_password_code (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     account_id INT REFERENCES bgs.account(id),
-    code INT DEFAULT floor(random() * (999999 - 100000 + 1) + 100000)::int UNIQUE,
+    code INT UNIQUE NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

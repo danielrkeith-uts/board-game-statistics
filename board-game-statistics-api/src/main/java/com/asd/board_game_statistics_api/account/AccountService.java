@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
+
 @Service
 public class AccountService implements IAccountService {
 
@@ -20,6 +22,7 @@ public class AccountService implements IAccountService {
     private IResetPasswordCodeRepository resetPasswordCodeRepository;
     @Autowired
     private EmailService emailService;
+    private final Random random = new Random();
 
     @Override
     public void createAccount(String email, String password, String firstName, String lastName) throws CreateAccountException {
@@ -51,7 +54,11 @@ public class AccountService implements IAccountService {
         // Destroy other codes first so only one exists for the account
         resetPasswordCodeRepository.destroyAccountCodes(account.id());
 
-        int code = resetPasswordCodeRepository.create(account.id());
+        int min = 100_000;
+        int max = 999_999;
+        int code = random.nextInt(max - min + 1) + min;
+
+        resetPasswordCodeRepository.create(account.id(), code);
 
         emailService.sendEmail(email, "Reset password code", "Reset password code: " + code);
     }
