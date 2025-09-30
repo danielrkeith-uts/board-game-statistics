@@ -13,7 +13,7 @@ public class LeaderboardController {
     @Autowired
     private LeaderboardService leaderboardService;
 
-    @GetMapping("/ownedgames/{groupId}")
+    @GetMapping("/api/ownedgames/{groupId}")
     public List<GameResponse> getOwnedGames(@PathVariable("groupId") int groupId) {
         return leaderboardService.getOwnedGames(groupId);
     }

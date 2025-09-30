@@ -61,6 +61,12 @@ interface Game {
 	name: string;
 }
 
+interface OwnedGame {
+	gameId: number;
+	groupId: number;
+	gameName: string;
+}
+
 export type {
 	Account,
 	Permission,
@@ -72,4 +78,5 @@ export type {
 	WinCondition,
 	Player,
 	Game,
+	OwnedGame,
 };

@@ -1,7 +1,7 @@
 import { apiGet } from './api-utils';
-import type { Game } from '../types.ts';
+import type { OwnedGame } from '../types.ts';
 
-export const apiOwnedGames = (groupId: number): Promise<Game[]> =>
+export const apiOwnedGames = (groupId: number): Promise<OwnedGame[]> =>
 	apiGet(`/ownedgames/${groupId}`)
 		.then((response) => {
 			if (response.ok) {
@@ -12,4 +12,4 @@ export const apiOwnedGames = (groupId: number): Promise<Game[]> =>
 			}
 			throw new Error(response.statusText);
 		})
-		.then((games) => games as Game[]);
+		.then((games) => games as OwnedGame[]);
