@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
 	apiCreateNewGroup,
 	apiGetGroupsByAccountId,
@@ -10,10 +10,12 @@ import GroupDashboard from './GroupDashboard.tsx';
 import CreateGroupModal from './CreateGroupModal.tsx';
 import LeaveGroupModal from './LeaveGroupModal.tsx';
 import CreateGroupButton from './CreateGroupButton.tsx';
-import AlertMessage from './AlertMessage.tsx';
 import { PermissionsContextProvider } from '../../context/PermissionsContext.tsx';
+import { AlertContext } from '../../context/AlertContext.tsx';
 
 const GroupView = () => {
+	const { setSuccess, setError } = useContext(AlertContext);
+
 	// Data state
 	const [groups, setGroups] = useState<Group[]>([]);
 	const [currentGroup, setCurrentGroup] = useState<Group>();
@@ -22,8 +24,6 @@ const GroupView = () => {
 	const [showLeaveGroupModal, setShowLeaveGroupModal] = useState(false);
 	// Status state
 	const [isLoading, setIsLoading] = useState<boolean>(true);
-	const [success, setSuccess] = useState<string | null>(null);
-	const [error, setError] = useState<string | null>(null);
 
 	const sortGroupsAlphabetically = (groups: Group[]) =>
 		groups.sort((groupA, groupB) =>
@@ -40,11 +40,6 @@ const GroupView = () => {
 	const handleCloseLeaveGroupModal = () => setShowLeaveGroupModal(false);
 
 	const minPageLoadTime: number = 700;
-	const minErrorPopupTime: number = 8000;
-	const minSuccessPopupTime: number = 5000;
-
-	const successTimeout = useRef<number | undefined>(undefined);
-	const errorTimeout = useRef<number | undefined>(undefined);
 
 	// On page load, get groups for current user
 	useEffect(() => {
@@ -63,29 +58,6 @@ const GroupView = () => {
 				setTimeout(() => setIsLoading(false), minPageLoadTime)
 			);
 	}, []);
-
-	// Hide alert popups after set delay. If the user closes the alert, cancel the timeout
-	useEffect(() => {
-		if (success) {
-			successTimeout.current = setTimeout(
-				() => setSuccess(null),
-				minSuccessPopupTime
-			);
-		} else {
-			clearTimeout(successTimeout.current);
-		}
-	}, [success]);
-
-	useEffect(() => {
-		if (error) {
-			errorTimeout.current = setTimeout(
-				() => setError(null),
-				minErrorPopupTime
-			);
-		} else {
-			clearTimeout(errorTimeout.current);
-		}
-	}, [error]);
 
 	const handleCreateGroup = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -127,7 +99,7 @@ const GroupView = () => {
 
 			handleCloseLeaveGroupModal();
 		} else {
-			// Handle error - user is not a member of any groups
+			setError('No group is currently selected.');
 		}
 	};
 
@@ -164,17 +136,6 @@ const GroupView = () => {
 					<CreateGroupButton onClick={handleOpenCreateGroupModal} />
 				</div>
 			)}
-
-			<AlertMessage
-				variant='danger'
-				message={error}
-				setMessage={setError}
-			/>
-			<AlertMessage
-				variant='success'
-				message={success}
-				setMessage={setSuccess}
-			/>
 		</PermissionsContextProvider>
 	);
 };

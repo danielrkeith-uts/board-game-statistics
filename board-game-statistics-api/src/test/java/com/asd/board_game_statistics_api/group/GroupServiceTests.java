@@ -15,7 +15,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupControllerTests extends TestsWithMockedDatabase {
+public class GroupServiceTests extends TestsWithMockedDatabase {
     @Autowired
     GroupService groupService;
     @Autowired

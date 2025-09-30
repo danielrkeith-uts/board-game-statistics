@@ -17,33 +17,39 @@ import LoginView from './pages/login/LoginView';
 import ForgotPasswordView from './pages/login/ForgotPasswordView';
 import ManageAccountView from './pages/account/ManageAccountView';
 import SignupView from './pages/signup/SignupView';
+import { AlertContextProvider } from './context/AlertContext';
+import Alerts from './components/Alerts';
 
 function App() {
 	return (
-		<AccountContextProvider>
-			<Header />
-			<div className='m-4'>
-				<Routes>
-					{/* PLEASE PLUG IN YOUR PAGE VIEW AS AN ELEMENT INTO YOUR ROUTE */}
-					<Route path={HOME_PAGE_URL} element={<HomeView />} />
-					<Route
-						path={MANAGE_ACCOUNT_PAGE_URL}
-						element={<ManageAccountView />}
-					/>
-					<Route path={GAMES_PAGE_URL} element={<GamesView />} />
-					<Route path={GROUPS_PAGE_URL} element={<GroupView />} />
-					<Route path={LOGIN_PAGE_URL} element={<LoginView />} />
-					<Route
-						path={FORGOT_PASSWORD_PAGE_URL}
-						element={<ForgotPasswordView />}
-					/>
-					<Route
-						path={CREATE_ACCOUNT_PAGE_URL}
-						element={<SignupView />}
-					/>
-				</Routes>
-			</div>
-		</AccountContextProvider>
+		<AlertContextProvider>
+			<AccountContextProvider>
+				<Header />
+				<div className='m-4'>
+					<Routes>
+						{/* PLEASE PLUG IN YOUR PAGE VIEW AS AN ELEMENT INTO YOUR ROUTE */}
+						<Route path={HOME_PAGE_URL} element={<HomeView />} />
+						<Route
+							path={MANAGE_ACCOUNT_PAGE_URL}
+							element={<ManageAccountView />}
+						/>
+						<Route path={GAMES_PAGE_URL} element={<GamesView />} />
+						<Route path={GROUPS_PAGE_URL} element={<GroupView />} />
+						<Route path={LOGIN_PAGE_URL} element={<LoginView />} />
+						<Route
+							path={FORGOT_PASSWORD_PAGE_URL}
+							element={<ForgotPasswordView />}
+						/>
+						<Route
+							path={CREATE_ACCOUNT_PAGE_URL}
+							element={<SignupView />}
+						/>
+					</Routes>
+
+					<Alerts />
+				</div>
+			</AccountContextProvider>
+		</AlertContextProvider>
 	);
 }
 
