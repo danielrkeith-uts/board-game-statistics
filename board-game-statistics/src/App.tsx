@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import {
 	CREATE_ACCOUNT_PAGE_URL,
 	GAMES_PAGE_URL,
+	GLOBAL_STATS_PAGE_URL,
 	GROUPS_PAGE_URL,
 	HOME_PAGE_URL,
 	LOGIN_PAGE_URL,
@@ -17,6 +18,7 @@ import ManageAccountView from './pages/account/ManageAccountView';
 import SignupView from './pages/signup/SignupView';
 import { AlertContextProvider } from './context/AlertContext';
 import Alerts from './components/Alerts';
+import GlobalStats from './pages/globalStats/GlobalStats';
 
 function App() {
 	return (
@@ -37,6 +39,10 @@ function App() {
 						<Route
 							path={CREATE_ACCOUNT_PAGE_URL}
 							element={<SignupView />}
+						/>
+						<Route
+							path={GLOBAL_STATS_PAGE_URL}
+							element={<GlobalStats />}
 						/>
 					</Routes>
 

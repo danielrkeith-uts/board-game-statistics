@@ -5,12 +5,12 @@ import {
 	GROUPS_PAGE_URL,
 	HOME_PAGE_URL,
 	LOGIN_PAGE_URL,
-	MANAGE_ACCOUNT_PAGE_URL,
 } from '../utils/constants';
 import '../css/custom.css';
 import { useContext, useEffect } from 'react';
 import { AccountContext } from '../context/AccountContext';
 import { apiLogout } from '../utils/api/account-api-utils';
+import ProfileMenu from './ProfileMenu';
 
 const logout = () => apiLogout().then(() => window.location.replace('/'));
 
@@ -42,16 +42,6 @@ const Header = () => {
 								Home
 							</Link>
 						</li>
-						{account && (
-							<li className='nav-item'>
-								<Link
-									className='nav-link'
-									to={MANAGE_ACCOUNT_PAGE_URL}
-								>
-									Account
-								</Link>
-							</li>
-						)}
 						<li className='nav-item'>
 							<Link className='nav-link' to={GAMES_PAGE_URL}>
 								Games
@@ -64,12 +54,10 @@ const Header = () => {
 						</li>
 					</ul>
 				</div>
-				<ul className='navbar-nav'>
+				<ul className='navbar-nav align-items-center'>
 					<li className='nav-item'>
 						{account ? (
-							<Link className='nav-link' to='#' onClick={logout}>
-								Logout
-							</Link>
+							<ProfileMenu logout={logout} />
 						) : (
 							<Link className='nav-link' to={LOGIN_PAGE_URL}>
 								Login

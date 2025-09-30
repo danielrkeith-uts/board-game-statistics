@@ -5,6 +5,7 @@ export const GROUPS_PAGE_URL = '/groups';
 export const LOGIN_PAGE_URL = '/login';
 export const CREATE_ACCOUNT_PAGE_URL = '/createAccount';
 export const MANAGE_ACCOUNT_PAGE_URL = '/manageAccount';
+export const GLOBAL_STATS_PAGE_URL = '/globalStats';
 
 export const allowedPagesWhileLoggedOut = [
 	HOME_PAGE_URL,
