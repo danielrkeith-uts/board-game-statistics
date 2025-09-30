@@ -12,16 +12,16 @@ const AlertMessage = (props: ErrorAlert) => {
 	return (
 		<Alert
 			variant={variant}
-			className="position-fixed bottom-0 end-0 z-3 me-5 mb-4"
+			className='position-fixed bottom-0 end-0 z-3 me-5 mb-4'
 			onClose={() => setMessage(null)}
 			show={!!message}
 			dismissible
 		>
-			<Alert.Heading className="h5">
+			<Alert.Heading className='h5'>
 				{variant === 'danger' ? 'Error' : 'Success'}
 			</Alert.Heading>
 			<hr />
-			<p className="mb-0">{message}</p>
+			<p className='mb-0'>{message}</p>
 		</Alert>
 	);
 };

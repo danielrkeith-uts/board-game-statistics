@@ -9,19 +9,16 @@ interface AccountContextProviderProps {
 interface AccountContextType {
 	account: Account | null;
 	loading: boolean;
-	error: string | null;
 }
 
 const AccountContext = createContext<AccountContextType>({
 	account: null,
 	loading: true,
-	error: null,
 });
 
 const AccountContextProvider = ({ children }: AccountContextProviderProps) => {
 	const [account, setAccount] = useState<Account | null>(null);
 	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		setLoading(true);
@@ -29,11 +26,9 @@ const AccountContextProvider = ({ children }: AccountContextProviderProps) => {
 		apiGetLoggedInAccount()
 			.then((result) => {
 				setAccount(result);
-				setError(null);
 			})
 			.catch((err) => {
 				console.error(err);
-				setError('Failed to load account');
 				setAccount(null);
 			})
 			.finally(() => setLoading(false));
@@ -42,7 +37,6 @@ const AccountContextProvider = ({ children }: AccountContextProviderProps) => {
 	const contextValue: AccountContextType = {
 		account,
 		loading,
-		error,
 	};
 
 	return (

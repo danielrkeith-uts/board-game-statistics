@@ -2,11 +2,11 @@ import { useContext, useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import type { Group, GameRecordDto } from '../../../utils/types';
 import RecordGameModal from './RecordGameModal.tsx';
-import AlertMessage from '../AlertMessage';
 import { apiGetGroupGames } from '../../../utils/api/games-api-utils';
 import Spinner from 'react-bootstrap/Spinner';
 import EditRecordedGameModal from './EditRecordedGameModal';
 import { PermissionsContext } from '../../../context/PermissionsContext.tsx';
+import { AlertContext } from '../../../context/AlertContext.tsx';
 
 interface GroupGamesViewProps {
 	group: Group;
@@ -14,9 +14,10 @@ interface GroupGamesViewProps {
 
 const GroupGamesView = (props: GroupGamesViewProps) => {
 	const { group } = props;
+
+	const { setSuccess, setError } = useContext(AlertContext);
+
 	const [showRecordModal, setShowRecordModal] = useState(false);
-	const [success, setSuccess] = useState<string | null>(null);
-	const [error, setError] = useState<string | null>(null);
 	const [records, setRecords] = useState<GameRecordDto[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [selected, setSelected] = useState<GameRecordDto | null>(null);
@@ -125,17 +126,6 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 					fetchRecords();
 				}}
 				onError={(msg) => setError(msg)}
-			/>
-
-			<AlertMessage
-				variant='success'
-				message={success}
-				setMessage={setSuccess}
-			/>
-			<AlertMessage
-				variant='danger'
-				message={error}
-				setMessage={setError}
 			/>
 
 			<EditRecordedGameModal
