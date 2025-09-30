@@ -1,5 +1,7 @@
 package com.asd.board_game_statistics_api.util;
 
+import com.asd.board_game_statistics_api.games.dto.GameRecordRequest;
+
 import java.util.regex.Pattern;
 
 public class Validator {
@@ -25,6 +27,21 @@ public class Validator {
         Pattern groupNamePattern = Pattern.compile("^[a-zA-Z0-9][a-zA-Z0-9\\s]{0,29}$");
 
         return groupNamePattern.matcher(groupName).find();
+    }
+
+    public static void validateGameRecordRequest(GameRecordRequest request) {
+        if (request.groupId() <= 0) throw new IllegalArgumentException("groupId required");
+        if (request.gameId() <= 0) throw new IllegalArgumentException("gameId required");
+        if (request.datePlayed() == null || request.datePlayed().isEmpty())
+            throw new IllegalArgumentException("datePlayed required");
+        if (request.playerIds() == null || request.playerIds().isEmpty())
+            throw new IllegalArgumentException("At least one player required");
+        if (request.points() == null || request.points().size() != request.playerIds().size())
+            throw new IllegalArgumentException("Points must be provided for all players");
+        if (request.playerTeams() == null || request.playerTeams().size() != request.playerIds().size())
+            throw new IllegalArgumentException("Player teams must be provided for all players");
+        if (request.hasWon() == null || request.hasWon().size() != request.playerIds().size())
+            throw new IllegalArgumentException("Win status must be provided for all players");
     }
 
 }

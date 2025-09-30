@@ -5,6 +5,7 @@ import type { Group } from '../../utils/types';
 import GroupManagementHeader from './GroupManagementHeader';
 import InviteMemberView from './InviteMemberView';
 import { PermissionsContext } from '../../context/PermissionsContext';
+import GroupGamesView from './games/GroupGamesView';
 
 interface GroupDashboardProps {
 	groups: Group[];
@@ -59,7 +60,7 @@ const GroupDashboard = (props: GroupDashboardProps) => {
 						Leaderboard
 					</Tab>
 					<Tab eventKey='games' title='Games'>
-						Games
+						<GroupGamesView group={currentGroup} />
 					</Tab>
 					{thisGroupsPermissions?.includes('MANAGE_MEMBERS') && (
 						<Tab eventKey='invite' title='Invite'>
