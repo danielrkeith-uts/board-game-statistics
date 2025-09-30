@@ -74,6 +74,12 @@ interface LeaderboardRow {
 	points: number;
 }
 
+interface PlayerStatistic {
+	numOfGamesPlayed: number;
+	wins: number;
+	losses: number;
+}
+
 export type {
 	Account,
 	Permission,
@@ -87,4 +93,5 @@ export type {
 	Game,
 	OwnedGame,
 	LeaderboardRow,
+	PlayerStatistic,
 };
