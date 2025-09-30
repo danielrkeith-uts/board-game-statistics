@@ -13,4 +13,6 @@ public interface IGameRecordService {
     List<GameRecordResponse> getRecordsForGroup(Account account, int groupId);
 
     void deleteRecord(Account account, int playedGameId);
+
+    int getGroupOf(int playedGameId);
 }

@@ -9,4 +9,5 @@ public interface IGameRecordRepository {
     GameRecordResponse createGameRecord(GameRecordRequest request);
     List<GameRecordResponse> getGameRecordsByGroup(int groupId);
     void deleteGameRecord(int playedGameId);
+    int getGroupOf(int playedGameId);
 }

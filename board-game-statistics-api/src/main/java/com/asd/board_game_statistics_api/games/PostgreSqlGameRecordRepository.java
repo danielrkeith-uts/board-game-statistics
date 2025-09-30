@@ -66,6 +66,19 @@ public class PostgreSqlGameRecordRepository implements IGameRecordRepository {
         jdbcTemplate.update("DELETE FROM bgs.played_game WHERE played_game_id = ?", playedGameId);
     }
 
+    @Override
+    public int getGroupOf(int playedGameId) {
+        String sql = "SELECT group_id FROM bgs.played_game WHERE played_game_id = ?;";
+
+        Integer groupId = jdbcTemplate.queryForObject(sql, Integer.class, playedGameId);
+
+        if (groupId == null) {
+            return -1;
+        }
+
+        return groupId;
+    }
+
     private GameRecordResponse mapPlayedGame(ResultSet rs) throws SQLException {
         int playedGameId = rs.getInt("played_game_id");
         int gameId = rs.getInt("game_id");

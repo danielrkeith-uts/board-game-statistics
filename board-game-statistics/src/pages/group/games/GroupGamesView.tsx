@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import type { Group, GameRecordDto } from '../../../utils/types';
 import RecordGameModal from './RecordGameModal.tsx';
@@ -6,6 +6,7 @@ import AlertMessage from '../AlertMessage';
 import { apiGetGroupGames } from '../../../utils/api/games-api-utils';
 import Spinner from 'react-bootstrap/Spinner';
 import EditRecordedGameModal from './EditRecordedGameModal';
+import { PermissionsContext } from '../../../context/PermissionsContext.tsx';
 
 interface GroupGamesViewProps {
 	group: Group;
@@ -19,6 +20,11 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 	const [records, setRecords] = useState<GameRecordDto[]>([]);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [selected, setSelected] = useState<GameRecordDto | null>(null);
+
+	const { permissions } = useContext(PermissionsContext);
+	const thisGroupsPermissions = permissions?.find(
+		(groupPermissions) => groupPermissions.groupId === group.id
+	)?.permissions;
 
 	const handleOpenRecordModal = () => setShowRecordModal(true);
 	const handleCloseRecordModal = () => setShowRecordModal(false);
@@ -82,14 +88,18 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 		<div className='container vstack gap-3'>
 			<div className='d-flex justify-content-between align-items-center mt-2'>
 				<h5 className='mb-0'>Games</h5>
-				<Button variant='success' onClick={handleOpenRecordModal}>
-					Record game
-				</Button>
+				{thisGroupsPermissions?.includes('MANAGE_GAMES_PLAYED') && (
+					<Button variant='success' onClick={handleOpenRecordModal}>
+						Record game
+					</Button>
+				)}
 			</div>
 
-			<div className='text-muted'>
-				Use the button to record a game played in {group.groupName}.
-			</div>
+			{thisGroupsPermissions?.includes('MANAGE_GAMES_PLAYED') && (
+				<div className='text-muted'>
+					Use the button to record a game played in {group.groupName}.
+				</div>
+			)}
 
 			<div className='mt-2'>
 				<h6 className='mb-2'>Recorded games</h6>
