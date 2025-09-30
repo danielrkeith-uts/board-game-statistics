@@ -20,20 +20,18 @@ const MembersSection = (props: MembersSectionProps) => {
 		useState<GroupMember>(group.members[0]);
 	const [showEditPermissions, setShowEditPermissions] = useState(false);
 
-	const { permissions } = useContext(PermissionsContext);
-
 	useEffect(() => {
 		apiGetGroupOwner(group.id).then((email) => setOwnerEmail(email));
 	}, [group.id]);
 
-	const groupPermissions = permissions?.find(
-		(p) => p.groupId === group.id
-	)?.permissions;
+	const { getGroupPermissions } = useContext(PermissionsContext);
 
-	const canEditPermissions = groupPermissions?.includes(
+	const thisGroupsPermissions = getGroupPermissions(group.id);
+
+	const canEditPermissions = thisGroupsPermissions?.includes(
 		'MANAGE_MEMBER_PERMISSIONS'
 	);
-	const canRemoveMembers = groupPermissions?.includes('MANAGE_MEMBERS');
+	const canRemoveMembers = thisGroupsPermissions?.includes('MANAGE_MEMBERS');
 
 	const editPermissions = (member: GroupMember) => {
 		setEditPermissionsModalMember(member);

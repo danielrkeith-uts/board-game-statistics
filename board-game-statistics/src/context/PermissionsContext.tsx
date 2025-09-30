@@ -5,7 +5,7 @@ import {
 	useState,
 	type ReactNode,
 } from 'react';
-import type { GroupPermissions } from '../utils/types';
+import type { GroupPermissions, Permission } from '../utils/types';
 import { apiGetPermissions } from '../utils/api/permissions-api-utils';
 import { AccountContext } from './AccountContext';
 
@@ -16,11 +16,13 @@ interface PermissionsContextProviderProps {
 interface PermissionsContextType {
 	permissions: GroupPermissions[] | null;
 	loading: boolean;
+	getGroupPermissions: (groupId: number) => Permission[] | undefined;
 }
 
 const PermissionsContext = createContext<PermissionsContextType>({
 	permissions: null,
 	loading: true,
+	getGroupPermissions: () => [],
 });
 
 const PermissionsContextProvider = ({
@@ -32,6 +34,11 @@ const PermissionsContextProvider = ({
 		null
 	);
 	const [loading, setLoading] = useState(true);
+
+	const getGroupPermissions = (groupId: number) =>
+		permissions?.find(
+			(groupPermission) => groupPermission.groupId === groupId
+		)?.permissions;
 
 	useEffect(() => {
 		if (!account) {
@@ -54,6 +61,7 @@ const PermissionsContextProvider = ({
 	const contextValue: PermissionsContextType = {
 		permissions,
 		loading,
+		getGroupPermissions,
 	};
 
 	return (

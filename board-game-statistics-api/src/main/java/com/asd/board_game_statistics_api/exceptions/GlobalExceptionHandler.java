@@ -20,4 +20,11 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    @ExceptionHandler(InvalidPermissionsException.class)
+    public ResponseEntity<?> handleInvalidPermissionsException(InvalidPermissionsException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(ex.getMessage());
+    }
+
 }
