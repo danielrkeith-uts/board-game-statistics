@@ -35,7 +35,7 @@ public class InvitationController {
 
         invitationService.createInvitation(invitationRequest.email(), invitationRequest.group());
         Invitation invite = invitationService.getInvitationByEmailAndGroup(invitationRequest.email(), invitationRequest.group());
-        emailService.sendEmail(invite.user_email(), "t5337271@gmail.com", "Invitation Code", String.valueOf(invite.invite_code()));
+        emailService.sendEmail(invite.user_email(), "Invitation Code", String.valueOf(invite.invite_code()));
         return ResponseEntity.ok("Invite Sent");
     }
 

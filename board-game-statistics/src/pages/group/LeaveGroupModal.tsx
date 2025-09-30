@@ -12,18 +12,19 @@ interface LeaveGroupModalProps {
 const LeaveGroupModal = (props: LeaveGroupModalProps) => {
 	return (
 		<Modal show={props.show} onHide={props.handleClose}>
-			<form id="newGroupForm" onSubmit={props.handleSubmit}>
+			<form id='newGroupForm' onSubmit={props.handleSubmit}>
 				<Modal.Header closeButton>
 					<Modal.Title>Leave group</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					Are you sure you want to leave {props.currentGroup?.groupName}?
+					Are you sure you want to leave{' '}
+					{props.currentGroup?.groupName}?
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant="secondary" onClick={props.handleClose}>
+					<Button variant='secondary' onClick={props.handleClose}>
 						Cancel
 					</Button>
-					<Button variant="danger" type="submit">
+					<Button variant='danger' type='submit'>
 						Leave
 					</Button>
 				</Modal.Footer>
