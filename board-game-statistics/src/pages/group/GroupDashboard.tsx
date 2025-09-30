@@ -52,7 +52,7 @@ const GroupDashboard = (props: GroupDashboardProps) => {
 						<GroupHomeView currentGroup={currentGroup} />
 					</Tab>
 					<Tab eventKey='leaderboard' title='Leaderboard'>
-						<GameLeaderboardView />
+						<GameLeaderboardView currentGroup={currentGroup} />
 					</Tab>
 					<Tab eventKey='games' title='Games'>
 						<GroupGamesView group={currentGroup} />

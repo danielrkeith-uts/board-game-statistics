@@ -1,7 +1,7 @@
 package com.asd.board_game_statistics_api.leaderboards;
 
 import com.asd.board_game_statistics_api.leaderboards.dto.GameResponse;
-import com.asd.board_game_statistics_api.leaderboards.dto.LeaderboardsResponse;
+import com.asd.board_game_statistics_api.leaderboards.dto.LeaderboardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class LeaderboardService implements ILeaderboardService {
     }
 
     @Override
-    public List<LeaderboardsResponse> getLeaderboardsForGame(int groupId, int gameId) {
-        return List.of();
+    public List<LeaderboardResponse> getLeaderboardsForGame(int groupId, int gameId) {
+        return leaderboardRepository.getLeaderboard(groupId, gameId);
     }
 }

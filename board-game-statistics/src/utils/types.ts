@@ -67,6 +67,13 @@ interface OwnedGame {
 	gameName: string;
 }
 
+interface LeaderboardRow {
+	accountId: number;
+	firstName: string;
+	lastName: string;
+	points: number;
+}
+
 export type {
 	Account,
 	Permission,
@@ -79,4 +86,5 @@ export type {
 	Player,
 	Game,
 	OwnedGame,
+	LeaderboardRow,
 };
