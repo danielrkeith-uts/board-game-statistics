@@ -61,6 +61,19 @@ interface Game {
 	name: string;
 }
 
+interface OwnedGame {
+	gameId: number;
+	groupId: number;
+	gameName: string;
+}
+
+interface LeaderboardRow {
+	accountId: number;
+	firstName: string;
+	lastName: string;
+	points: number;
+}
+
 interface PlayerStatistic {
 	numOfGamesPlayed: number;
 	wins: number;
@@ -78,5 +91,7 @@ export type {
 	WinCondition,
 	Player,
 	Game,
+	OwnedGame,
+	LeaderboardRow,
 	PlayerStatistic,
 };

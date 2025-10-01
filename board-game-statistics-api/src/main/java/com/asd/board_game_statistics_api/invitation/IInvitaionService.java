@@ -10,4 +10,5 @@ public interface IInvitaionService {
     boolean checkInvitationExistsByCode(String code);
     boolean checkInvitationExistsByEmailAndGroup(String email, String group_id);
     boolean joinGroup(String inviteCodes);
+    boolean joinGroup(int userId, int groupId);
 }

@@ -6,6 +6,7 @@ import GroupManagementHeader from './GroupManagementHeader';
 import InviteMemberView from './InviteMemberView';
 import { PermissionsContext } from '../../context/PermissionsContext';
 import GroupGamesView from './games/GroupGamesView';
+import GameLeaderboardView from './leaderboard/GameLeaderboardView.tsx';
 
 interface GroupDashboardProps {
 	groups: Group[];
@@ -55,7 +56,7 @@ const GroupDashboard = (props: GroupDashboardProps) => {
 						<GroupHomeView currentGroup={currentGroup} />
 					</Tab>
 					<Tab eventKey='leaderboard' title='Leaderboard'>
-						Leaderboard
+						<GameLeaderboardView currentGroup={currentGroup} />
 					</Tab>
 					<Tab eventKey='games' title='Games'>
 						<GroupGamesView group={currentGroup} />
