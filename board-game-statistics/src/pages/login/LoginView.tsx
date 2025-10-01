@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 import { apiLogin } from '../../utils/api/account-api-utils';
+import { Link } from 'react-router-dom';
+import { FORGOT_PASSWORD_PAGE_URL } from '../../utils/constants';
 
 const LoginView = () => {
 	const [email, setEmail] = useState('');
@@ -51,6 +53,7 @@ const LoginView = () => {
 							setHasInvalidCredentials(false);
 						}}
 					/>
+					<Link to={FORGOT_PASSWORD_PAGE_URL}>Forgot password?</Link>
 				</Form.Group>
 				{hasInvalidCredentials && (
 					<p className='text-danger'>Invalid login credentials</p>
