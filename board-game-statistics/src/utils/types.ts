@@ -28,4 +28,25 @@ interface Group {
 	members: GroupMember[];
 }
 
-export type { Account, Permission, GroupPermissions, GroupMember, Group };
+interface Game {
+	id: number;
+	name: string;
+	publisher?: string | null;
+}
+
+type WinCondition =
+	| 'HIGH_SCORE'
+	| 'LOW_SCORE'
+	| 'FIRST_TO_FINISH'
+	| 'COOPERATIVE'
+	| 'CUSTOM';
+
+export type {
+	Account,
+	Permission,
+	GroupPermissions,
+	GroupMember,
+	Group,
+	Game,
+	WinCondition,
+};
