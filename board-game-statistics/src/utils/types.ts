@@ -80,18 +80,24 @@ interface PlayerStatistic {
 	losses: number;
 }
 
+interface BarChartData {
+	winData: number[];
+	lossData: number[];
+}
+
 export type {
 	Account,
-	Permission,
-	GroupPermissions,
-	GroupMember,
-	Group,
-	RecordGamePayload,
-	GameRecordDto,
-	WinCondition,
-	Player,
+	BarChartData,
 	Game,
-	OwnedGame,
+	GameRecordDto,
+	Group,
+	GroupMember,
+	GroupPermissions,
 	LeaderboardRow,
+	OwnedGame,
+	Permission,
+	Player,
 	PlayerStatistic,
+	RecordGamePayload,
+	WinCondition,
 };

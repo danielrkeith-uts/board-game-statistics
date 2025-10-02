@@ -20,7 +20,7 @@ const PieChart = () => {
 		plugins: {
 			title: {
 				display: true,
-				text: 'Global Win Loss Stats',
+				text: 'Your Favourite Board Games',
 			},
 			legend: {
 				display: false,

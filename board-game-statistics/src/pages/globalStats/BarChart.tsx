@@ -1,7 +1,14 @@
 import type { ChartData, ChartOptions, TooltipItem } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import type { BarChartData } from '../../utils/types';
 
-const BarChart = () => {
+interface BarChartProps {
+	barChartData: BarChartData;
+}
+
+const BarChart = (props: BarChartProps) => {
+	const { winData, lossData } = props.barChartData;
+
 	const maxBarThickness = 200;
 
 	const chartData: ChartData<'bar', number[], string> = {
@@ -9,7 +16,7 @@ const BarChart = () => {
 		datasets: [
 			{
 				label: 'Wins',
-				data: [3, 0, 1],
+				data: winData,
 				order: 2,
 				borderColor: '#3dd078ff',
 				backgroundColor: '#4eec8dff',
@@ -17,7 +24,7 @@ const BarChart = () => {
 			},
 			{
 				label: 'Losses',
-				data: [2, 1, 3],
+				data: lossData,
 				order: 1,
 				borderColor: '#e14e6eff',
 				backgroundColor: '#FF6285',
@@ -30,7 +37,7 @@ const BarChart = () => {
 		plugins: {
 			title: {
 				display: true,
-				text: 'Global Win Loss Stats',
+				text: 'Global Win Loss Data',
 			},
 			legend: {
 				display: true,
@@ -72,7 +79,7 @@ const BarChart = () => {
 		},
 	};
 
-	return <Bar options={chartOptions} data={chartData} />;
+	return <Bar className='w-100' options={chartOptions} data={chartData} />;
 };
 
 export default BarChart;

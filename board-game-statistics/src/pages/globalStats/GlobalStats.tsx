@@ -13,9 +13,36 @@ import BarChart from './BarChart';
 import PieChart from './PieChart';
 import { useContext } from 'react';
 import { AccountContext } from '../../context/AccountContext';
+import tempData from './temp.json';
+import type { BarChartData } from '../../utils/types';
 
 const GlobalStats = () => {
 	const { account } = useContext(AccountContext);
+
+	const winData = tempData.map((gameData) => gameData.wins);
+	const lossData = tempData.map((gameData) => gameData.losses);
+	const numOfGamesPlayed = tempData.reduce(
+		(sum, currentValue) =>
+			sum +
+			currentValue.games.reduce(
+				(sum, currentValue) => sum + currentValue.numOfGamesPlayed,
+				0
+			),
+		0
+	);
+
+	const barChartData: BarChartData = { winData, lossData };
+
+	// const pieChartData = {};
+
+	const tableData = {
+		numOfGamesPlayed,
+		winRate: (
+			(winData.reduce((sum, currentValue) => sum + currentValue, 0) /
+				numOfGamesPlayed) *
+			100
+		).toFixed(1),
+	};
 
 	ChartJS.register(
 		ArcElement,
@@ -34,41 +61,32 @@ const GlobalStats = () => {
 				{account ? (
 					<>
 						<h1>{`${account.firstName} ${account.lastName}`}</h1>
-						<div className='overflow-y-auto overflow-x-hidden'>
-							<div className='row'>
-								<div className='col'>
-									<div
-										style={{
-											position: 'relative',
-										}}
-									>
-										<BarChart />
-									</div>
-									<table className='table'>
-										<tbody>
-											<tr>
-												<td>Games Played</td>
-												<td>1</td>
-											</tr>
-											<tr>
-												<td>Win Rate</td>
-												<td>1</td>
-											</tr>
-										</tbody>
-									</table>
+						<div className='d-flex flex-wrap justify-content-center overflow-y-auto overflow-x-hidden'>
+							<div className='flex-shrink-1 flex-fill flex-column d-flex'>
+								<div className='flex-grow-1'>
+									<BarChart barChartData={barChartData} />
 								</div>
-								<div className='col justify-center'>
-									<div
-										style={{
-											position: 'relative',
-											width: '90%',
-										}}
-									>
-										<PieChart />
-									</div>
-								</div>
+								<table className='table'>
+									<tbody>
+										<tr>
+											<td>Games Played</td>
+											<td className='text-end'>
+												{tableData.numOfGamesPlayed}
+											</td>
+										</tr>
+										<tr>
+											<td>Win Rate</td>
+											<td className='text-end'>
+												{tableData.winRate}%
+											</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
-						</div>{' '}
+							<div className='flex-lg-fill'>
+								<PieChart />
+							</div>
+						</div>
 					</>
 				) : (
 					<>Yo ass ain't logged in</>
