@@ -34,19 +34,11 @@ interface Game {
 	publisher?: string | null;
 }
 
-type WinCondition =
+export type WinCondition =
 	| 'HIGH_SCORE'
 	| 'LOW_SCORE'
 	| 'FIRST_TO_FINISH'
 	| 'COOPERATIVE'
 	| 'CUSTOM';
 
-export type {
-	Account,
-	Permission,
-	GroupPermissions,
-	GroupMember,
-	Group,
-	Game,
-	WinCondition,
-};
+export type { Account, Permission, GroupPermissions, GroupMember, Group, Game };

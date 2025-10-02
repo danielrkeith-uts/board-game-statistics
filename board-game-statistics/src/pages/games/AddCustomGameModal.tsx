@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import {
-	apiCreateOrAddOwnedCustom,
-	type WinCondition,
-} from '../../utils/api/games-api-utils';
-import type { Game } from '../../utils/types';
+import { apiCreateOrAddOwnedCustom } from '../../utils/api/games-api-utils';
+import type { Game, WinCondition } from '../../utils/types';
 
 interface Props {
 	show: boolean;
@@ -13,8 +10,12 @@ interface Props {
 }
 
 function getErrorMessage(err: unknown): string {
-	if (err instanceof Error) {return err.message;}
-	if (typeof err === 'string') {return err;}
+	if (err instanceof Error) {
+		return err.message;
+	}
+	if (typeof err === 'string') {
+		return err;
+	}
 	return 'Failed to add game.';
 }
 
