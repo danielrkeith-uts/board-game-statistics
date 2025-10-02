@@ -17,7 +17,7 @@ public class LeaderboardRepository implements ILeaderboardRepository {
 
     @Override
     public List<GameResponse> getOwnedGames(int groupId) {
-        String sql = "SELECT * FROM bgs.owned_game WHERE group_id = ?;";
+        String sql = "SELECT * FROM bgs.temp_owned_game WHERE group_id = ?;";
 
         return jdbcTemplate.query(sql, GameResponse::fromRow, groupId);
     }

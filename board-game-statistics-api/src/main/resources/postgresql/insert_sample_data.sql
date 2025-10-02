@@ -92,7 +92,8 @@ INSERT INTO bgs.group_membership (group_id, account_id, permissions_mask, join_t
 (6, 17, 0, NOW() - INTERVAL '1 day'),
 (6, 18, 0, NOW() - INTERVAL '2 days'),
 (6, 19, 0, NOW() - INTERVAL '6 hours'),
-(6, 20, 0, NOW() - INTERVAL '3 hours');
+(6, 20, 0, NOW() - INTERVAL '3 hours'),
+(6, 22, 0, NOW() - INTERVAL '3 hours');
 
 -- Sample owned games
 INSERT INTO bgs.owned_game (game_id, group_id, game_name) VALUES
