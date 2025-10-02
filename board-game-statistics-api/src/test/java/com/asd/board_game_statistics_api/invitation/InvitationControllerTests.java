@@ -29,4 +29,14 @@ public class InvitationControllerTests extends TestsWithMockedDatabase {
         invitationService.joinGroup(userId, groupId);
         Assertions.assertTrue(groupService.belongsToGroup(userId, groupId));
     }
+
+    @Test
+    public void isInvitationDeleted() {
+        String testEmail = "aaron.falco2@gmail.com";
+        String testGroupId = "1";
+        invitationService.createInvitation(testEmail, testGroupId);
+        String inviteCode = String.valueOf(invitationService.getInvitationByEmailAndGroup(testEmail, testGroupId).invite_code());
+        invitationService.joinGroup(inviteCode);
+        Assertions.assertFalse(invitationService.checkInvitationExistsByCode(inviteCode));
+    }
 }

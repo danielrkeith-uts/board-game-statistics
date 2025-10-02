@@ -101,7 +101,8 @@ INSERT INTO bgs.owned_game (game_id, group_id, game_name) VALUES
 (101, 1, 'Chess 2.0'),
 (300, 1, 'One'),
 (777, 1, 'Dice'),
-(999, 1, 'Duopoly');
+(999, 1, 'Duopoly'),
+(123, 2, 'Game Board');
 
 -- Sample played games
 INSERT INTO bgs.played_game (game_id, group_id, date_played)
