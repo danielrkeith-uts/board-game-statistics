@@ -69,11 +69,6 @@ interface Player {
 	name: string;
 }
 
-interface Game {
-	id: string;
-	name: string;
-}
-
 interface OwnedGame {
 	gameId: number;
 	groupId: number;
