@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { apiCreateOrAddOwnedCustom } from '../../utils/api/games-api-utils';
-import type { Game, WinCondition } from '../../utils/types';
+import type { Game, TempWinCondition } from '../../utils/types';
 
 interface Props {
 	show: boolean;
@@ -23,7 +23,7 @@ export default function AddCustomGameModal({ show, onClose, onAdded }: Props) {
 	const [name, setName] = useState('');
 	const [publisher, setPublisher] = useState('');
 	const [winCondition, setWinCondition] =
-		useState<WinCondition>('HIGH_SCORE');
+		useState<TempWinCondition>('HIGH_SCORE');
 	const [customWinCondition, setCustomWinCondition] = useState('');
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -111,7 +111,9 @@ export default function AddCustomGameModal({ show, onClose, onAdded }: Props) {
 						<Form.Select
 							value={winCondition}
 							onChange={(e) =>
-								setWinCondition(e.target.value as WinCondition)
+								setWinCondition(
+									e.target.value as TempWinCondition
+								)
 							}
 						>
 							<option value='HIGH_SCORE'>

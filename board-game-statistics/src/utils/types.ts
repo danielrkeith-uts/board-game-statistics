@@ -34,7 +34,7 @@ interface Game {
 	publisher?: string | null;
 }
 
-export type WinCondition =
+export type TempWinCondition =
 	| 'HIGH_SCORE'
 	| 'LOW_SCORE'
 	| 'FIRST_TO_FINISH'
@@ -99,7 +99,6 @@ export type {
 	GroupPermissions,
 	GroupMember,
 	Group,
-	Game,
 	RecordGamePayload,
 	GameRecordDto,
 	WinCondition,

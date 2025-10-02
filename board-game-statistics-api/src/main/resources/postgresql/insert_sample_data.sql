@@ -154,4 +154,3 @@ SELECT played_game_id, 2, 85, 1, FALSE FROM last3 UNION ALL
 SELECT played_game_id, 5, 160, 2, TRUE  FROM last3 UNION ALL
 SELECT played_game_id, 7, 155, 2, TRUE  FROM last3 UNION ALL
 SELECT played_game_id, 9, 100, 3, FALSE FROM last3;
->>>>>>> group-leaderboards
