@@ -73,6 +73,54 @@ export const apiDeleteAccount = (): Promise<boolean> =>
 		throw new Error(`Error deleting account: ${res.statusText}`);
 	});
 
+export const apiSendPasswordReset = (
+	email: string
+): Promise<{ ok: boolean; message?: string }> =>
+	apiPost('/account/send-password-reset', { email }).then((res) => {
+		if (res.ok) {
+			return { ok: true };
+		}
+
+		if (res.status === 400) {
+			return res.json();
+		}
+
+		throw new Error(
+			`Error sending password reset: ${res.status} ${res.statusText}`
+		);
+	});
+
+export const apiCheckPasswordResetCode = (
+	code: number,
+	email: string
+): Promise<boolean> =>
+	apiPut('/account/check-password-reset-code', { code, email })
+		.then((res) => {
+			if (res.ok) {
+				return res.json();
+			}
+
+			throw new Error(`Error checking code: ${res.statusText}`);
+		})
+		.then((data) => data as boolean);
+
+export const apiResetPassword = (
+	code: number,
+	email: string,
+	password: string
+): Promise<{ ok: boolean; message?: string }> =>
+	apiPut('/account/reset-password', { code, email, password }).then((res) => {
+		if (res.ok) {
+			return { ok: true };
+		}
+
+		if (res.status === 400) {
+			return res.json();
+		}
+
+		throw new Error(`Error resetting password: ${res.statusText}`);
+	});
+
 export const apiCreateAccount = async (
 	email: string,
 	firstName: string,
@@ -86,7 +134,9 @@ export const apiCreateAccount = async (
 		password,
 	});
 
-	if (res.ok) return { ok: true };
+	if (res.ok) {
+		return { ok: true };
+	}
 
 	if (res.status === 400) {
 		try {

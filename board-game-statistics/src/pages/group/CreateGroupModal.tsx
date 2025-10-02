@@ -10,28 +10,28 @@ interface CreateGroupModalProps {
 const CreateGroupModal = (props: CreateGroupModalProps) => {
 	return (
 		<Modal show={props.show} onHide={props.handleClose}>
-			<form id="newGroupForm" onSubmit={props.handleSubmit}>
+			<form id='newGroupForm' onSubmit={props.handleSubmit}>
 				<Modal.Header closeButton>
 					<Modal.Title>Create new group</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<div className="form-floating">
+					<div className='form-floating'>
 						<input
-							type="text"
-							className="form-control"
-							id="groupNameInput"
-							name="groupNameInput"
-							placeholder="Group Name"
+							type='text'
+							className='form-control'
+							id='groupNameInput'
+							name='groupNameInput'
+							placeholder='Group Name'
 							required
 						/>
-						<label htmlFor="groupNameInput">Group name</label>
+						<label htmlFor='groupNameInput'>Group name</label>
 					</div>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant="secondary" onClick={props.handleClose}>
+					<Button variant='secondary' onClick={props.handleClose}>
 						Cancel
 					</Button>
-					<Button variant="success" type="submit">
+					<Button variant='success' type='submit'>
 						Create
 					</Button>
 				</Modal.Footer>

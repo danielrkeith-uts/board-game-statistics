@@ -4,6 +4,7 @@ import {
 	CREATE_ACCOUNT_PAGE_URL,
 	GAMES_PAGE_URL,
 	GLOBAL_STATS_PAGE_URL,
+	FORGOT_PASSWORD_PAGE_URL,
 	GROUPS_PAGE_URL,
 	HOME_PAGE_URL,
 	LOGIN_PAGE_URL,
@@ -14,6 +15,7 @@ import GroupView from './pages/group/GroupView';
 import { AccountContextProvider } from './context/AccountContext';
 import GamesView from './pages/games/GamesView';
 import LoginView from './pages/login/LoginView';
+import ForgotPasswordView from './pages/login/ForgotPasswordView';
 import ManageAccountView from './pages/account/ManageAccountView';
 import SignupView from './pages/signup/SignupView';
 import { AlertContextProvider } from './context/AlertContext';
@@ -43,6 +45,14 @@ function App() {
 						<Route
 							path={GLOBAL_STATS_PAGE_URL}
 							element={<GlobalStats />}
+						/>
+						<Route
+							path={FORGOT_PASSWORD_PAGE_URL}
+							element={<ForgotPasswordView />}
+						/>
+						<Route
+							path={CREATE_ACCOUNT_PAGE_URL}
+							element={<SignupView />}
 						/>
 					</Routes>
 
