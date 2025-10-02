@@ -92,7 +92,8 @@ INSERT INTO bgs.group_membership (group_id, account_id, permissions_mask, join_t
 (6, 17, 0, NOW() - INTERVAL '1 day'),
 (6, 18, 0, NOW() - INTERVAL '2 days'),
 (6, 19, 0, NOW() - INTERVAL '6 hours'),
-(6, 20, 0, NOW() - INTERVAL '3 hours');
+(6, 20, 0, NOW() - INTERVAL '3 hours'),
+(6, 22, 0, NOW() - INTERVAL '3 hours');
 
 -- Seed board games (catalog)
 INSERT INTO bgs.board_game (name, publisher) VALUES
@@ -109,3 +110,48 @@ FROM bgs.account a
 JOIN bgs.board_game g ON g.name IN ('Catan','Carcassonne')
 WHERE a.email = 'alice@example.com'
 ON CONFLICT DO NOTHING;
+
+-- Sample owned games
+INSERT INTO bgs.temp_owned_game (game_id, group_id, game_name) VALUES
+(100, 1, 'Jails and Jaberwocks'),
+(200, 1, 'Worms and Walkways'),
+(101, 1, 'Chess 2.0'),
+(300, 1, 'One'),
+(777, 1, 'Dice'),
+(999, 1, 'Duopoly'),
+(123, 2, 'Game Board');
+
+-- Sample played games
+INSERT INTO bgs.played_game (game_id, group_id, date_played)
+VALUES (100, 1, CURRENT_DATE - INTERVAL '1 day');
+
+INSERT INTO bgs.player_result (played_game_id, account_id, points, player_team, has_won)
+SELECT played_game_id, 1, 150, NULL, TRUE FROM bgs.played_game ORDER BY played_game_id DESC LIMIT 1;
+
+INSERT INTO bgs.played_game (game_id, group_id, date_played)
+VALUES (200, 1, CURRENT_DATE - INTERVAL '12 hours');
+
+WITH last AS (SELECT played_game_id FROM bgs.played_game ORDER BY played_game_id DESC LIMIT 1)
+INSERT INTO bgs.player_result (played_game_id, account_id, points, player_team, has_won)
+SELECT played_game_id, 1, 120, 1, FALSE FROM last UNION ALL
+SELECT played_game_id, 2, 110, 1, FALSE FROM last UNION ALL
+SELECT played_game_id, 5, 180, 2, TRUE  FROM last UNION ALL
+SELECT played_game_id, 7, 175, 2, TRUE  FROM last;
+
+INSERT INTO bgs.played_game (game_id, group_id, date_played)
+VALUES (101, 1, CURRENT_DATE - INTERVAL '2 hours');
+
+INSERT INTO bgs.player_result (played_game_id, account_id, points, player_team, has_won)
+SELECT played_game_id, 2, 200, NULL, TRUE FROM bgs.played_game ORDER BY played_game_id DESC LIMIT 1;
+
+INSERT INTO bgs.played_game (game_id, group_id, date_played)
+VALUES (300, 1, CURRENT_DATE - INTERVAL '6 hours');
+
+WITH last3 AS (SELECT played_game_id FROM bgs.played_game ORDER BY played_game_id DESC LIMIT 1)
+INSERT INTO bgs.player_result (played_game_id, account_id, points, player_team, has_won)
+SELECT played_game_id, 1, 90, 1, FALSE FROM last3 UNION ALL
+SELECT played_game_id, 2, 85, 1, FALSE FROM last3 UNION ALL
+SELECT played_game_id, 5, 160, 2, TRUE  FROM last3 UNION ALL
+SELECT played_game_id, 7, 155, 2, TRUE  FROM last3 UNION ALL
+SELECT played_game_id, 9, 100, 3, FALSE FROM last3;
+>>>>>>> group-leaderboards

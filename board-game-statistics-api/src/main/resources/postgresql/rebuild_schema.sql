@@ -10,6 +10,13 @@ CREATE TABLE bgs.account (
     last_name VARCHAR(100)
 );
 
+CREATE TABLE bgs.reset_password_code (
+    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    account_id INT REFERENCES bgs.account(id),
+    code INT UNIQUE NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE bgs.invitation
 (
     invite_id   INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
@@ -55,4 +62,27 @@ CREATE TABLE IF NOT EXISTS bgs.user_game_profile (
     CHECK (win_condition IN ('HIGH_SCORE','LOW_SCORE','FIRST_TO_FINISH','COOPERATIVE','CUSTOM')),
   custom_win_condition TEXT,
   PRIMARY KEY (account_id, game_id)
+);
+CREATE TABLE bgs.temp_owned_game(
+    game_id INT PRIMARY KEY,
+    group_id INT NOT NULL,
+    game_name VARCHAR(100),
+    FOREIGN KEY (group_id) REFERENCES bgs.game_group(id)
+);
+
+CREATE TABLE bgs.played_game (
+    played_game_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    game_id INT NOT NULL,
+    group_id INT NOT NULL REFERENCES bgs.game_group(id) ON DELETE CASCADE,
+    date_played DATE NOT NULL DEFAULT CURRENT_DATE,
+    FOREIGN KEY (game_id) REFERENCES bgs.temp_owned_game(game_id)
+);
+
+CREATE TABLE bgs.player_result (
+    player_result_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    played_game_id INT NOT NULL REFERENCES bgs.played_game(played_game_id) ON DELETE CASCADE,
+    account_id INT NOT NULL REFERENCES bgs.account(id) ON DELETE CASCADE,
+    points INT,
+    player_team INT,
+    has_won BOOLEAN NOT NULL DEFAULT FALSE
 );

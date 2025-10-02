@@ -1,6 +1,5 @@
-package com.asd.board_game_statistics_api.invitation;
+package com.asd.board_game_statistics_api.test_utils;
 
-import com.asd.board_game_statistics_api.test_utils.TestsWithMockedDatabase;
 import com.asd.board_game_statistics_api.util.EmailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
@@ -13,7 +12,7 @@ public class EmailServiceTests extends TestsWithMockedDatabase {
     @Test
     public void emailServiceTests() {
         Assertions.assertDoesNotThrow(() -> {
-            emailService.sendEmail("test@example.com", "t5337271@gmail.com", "Test Send Email", "Test test");
+            emailService.sendEmail("test@example.com", "Test Send Email", "Test test");
         });
     }
 }

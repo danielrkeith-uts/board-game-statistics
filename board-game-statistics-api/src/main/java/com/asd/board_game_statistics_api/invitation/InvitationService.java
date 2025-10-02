@@ -68,4 +68,11 @@ public class InvitationService implements IInvitaionService{
         }
         return false;
     }
+
+    @Override
+    public boolean joinGroup(int userId, int groupId) {
+        //  Add row to group membership table
+        groupService.addGroupMember(userId, groupId);
+        return true;
+    }
 }

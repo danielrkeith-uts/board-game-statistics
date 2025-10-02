@@ -1,4 +1,4 @@
-package com.asd.board_game_statistics_api;
+package com.asd.board_game_statistics_api.account;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

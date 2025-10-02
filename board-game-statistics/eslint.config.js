@@ -29,6 +29,7 @@ export default tseslint.config([
 			'default-case': 'warn',
 			'default-case-last': 'warn',
 			eqeqeq: 'error',
+			'react-hooks/exhaustive-deps': 'off',
 			'@typescript-eslint/no-unused-vars': [
 				'error',
 				{
