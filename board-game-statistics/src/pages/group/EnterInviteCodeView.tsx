@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type SetStateAction } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Button, Modal, ModalBody } from 'react-bootstrap';
 import { apiJoinGroup } from '../../utils/api/invitation-api-utils.ts';
 
@@ -6,6 +6,9 @@ export default function EnterInviteCodeView() {
 	const [showInviteCodeEntryModal, setShowInviteCodeEntryModal] =
 		useState(false);
 	const [inviteCode, setInviteCode] = useState('');
+	const [validCode, setValidCode] = useState(false);
+
+	const validationRegex: RegExp = /^[0-9]{6}$/;
 
 	const handleOpenInviteCodeEntryModal = () =>
 		setShowInviteCodeEntryModal(true);
@@ -14,10 +17,10 @@ export default function EnterInviteCodeView() {
 		setShowInviteCodeEntryModal(false);
 	};
 
-	function onInviteCodeUpdate(event: {
-		target: { value: SetStateAction<string> };
-	}) {
+	function onInviteCodeUpdate(event: { target: { value: string } }) {
+		//const value: string = event.target.value;
 		setInviteCode(event.target.value);
+		setValidCode(validationRegex.test(event.target.value));
 	}
 
 	const handleInviteCodeEntered = (e: FormEvent<HTMLFormElement>) => {
@@ -77,7 +80,11 @@ export default function EnterInviteCodeView() {
 						>
 							Cancel
 						</Button>
-						<Button variant={'success'} type={'submit'}>
+						<Button
+							variant={'success'}
+							type={'submit'}
+							disabled={!validCode}
+						>
 							Join
 						</Button>
 					</Modal.Footer>

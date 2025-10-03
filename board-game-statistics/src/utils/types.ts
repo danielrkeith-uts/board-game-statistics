@@ -28,6 +28,19 @@ interface Group {
 	members: GroupMember[];
 }
 
+interface Game {
+	id: number;
+	name: string;
+	publisher?: string | null;
+}
+
+export type TempWinCondition =
+	| 'HIGH_SCORE'
+	| 'LOW_SCORE'
+	| 'FIRST_TO_FINISH'
+	| 'COOPERATIVE'
+	| 'CUSTOM';
+
 interface RecordGamePayload {
 	groupId: number;
 	gameId: number;
@@ -53,11 +66,6 @@ type WinCondition = 'single' | 'team' | 'coop';
 
 interface Player {
 	id: number;
-	name: string;
-}
-
-interface Game {
-	id: string;
 	name: string;
 }
 
