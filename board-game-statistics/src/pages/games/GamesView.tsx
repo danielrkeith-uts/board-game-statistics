@@ -10,8 +10,12 @@ import type { Game } from '../../utils/types';
 import AddCustomGameModal from './AddCustomGameModal';
 
 function getErrorMessage(err: unknown): string {
-	if (err instanceof Error) {return err.message;}
-	if (typeof err === 'string') {return err;}
+	if (err instanceof Error) {
+		return err.message;
+	}
+	if (typeof err === 'string') {
+		return err;
+	}
 	return 'Something went wrong.';
 }
 
@@ -49,7 +53,9 @@ const GamesView = () => {
 
 	const filteredCatalog = useMemo(() => {
 		const q = query.trim().toLowerCase();
-		if (!q) {return catalog;}
+		if (!q) {
+			return catalog;
+		}
 		return catalog.filter(
 			(g) =>
 				g.name.toLowerCase().includes(q) ||

@@ -15,7 +15,7 @@ public class StatisticsService implements IStatisticsService {
     @Autowired
     private GroupService groupService;
     @Autowired
-    private PostgreSqlGameRecordRepository gameRecordRepository;
+    private IStatisticsRepository statisticsRepository;
 
     @Override
     public PlayerStatisticResponse getPlayerStatsByGroupId(Integer accountId, Integer groupId) {
@@ -23,7 +23,7 @@ public class StatisticsService implements IStatisticsService {
             throw new GroupException("Account does not belong to group.");
         }
 
-        List<PlayerResult> playerResults = gameRecordRepository.getPlayerResultsByGroup(accountId, groupId);
+        List<PlayerResult> playerResults = statisticsRepository.getPlayerResultsByGroup(accountId, groupId);
 
         int wins = 0;
         int losses = 0;
