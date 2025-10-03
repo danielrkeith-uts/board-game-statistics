@@ -32,6 +32,22 @@ This feature uses the following major folders and files (along with other minor 
 - `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/permissions`
 - `board-game-statistics-api/src/test/java/com/asd/board_game_statistics_api/permissions`
 
+### Aaron Falco
+Feature 1: Group Invitations
+This feature allows for group members to invite other users to join their groups by sending an invite code via email:
+- `board-game-statistics/src/pages/group/InviteMemberView.tsx`
+- `board-game-statistics/src/pages/group/EnterInviteCodeView.tsx`
+- `board-game-statistics/src/utils/api/invitation-api-utils.ts`
+- `board-game-statistics-api/src/main/java/com/board-game-statistics-api/invitation`
+- `board-game-statistics-api/src/test/java/com/board-game-statistics-api/invitation`
+- `board-game-statistics-api/src/main/java/com/board-game-statistics-api/util/EmailService`
+- `board-game-statistics-api/src/main/java/com/board-game-statistics-api/test_utils/EmailServiceTests.java`
+
+Feature 2: Group Leaderboards
+This feature allows for group members to see leaderboards for each game in their group, across all recorded games played:
+- `board-game-statistics/src/pages/group/leaderboard`
+- `board-game-statistics/src/utils/api/leaderboard-api-utils.ts`
+- `board-game-statistics-api/src/main/java/com/board-game-statistics-api/leaderboards`
 
 ## Setup environment variables
 Environment variables can be set in multiple ways; pick one of the below.
