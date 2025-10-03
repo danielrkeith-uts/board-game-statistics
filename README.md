@@ -1,6 +1,37 @@
 # Board Game Statistics
 Project for 41026 Advanced Software Development
 
+## Project structure and responsibilities
+This project is divided into a frontend folder `board-game-statistics` and a backend folder `board-game-statistics-api`.
+Each of these components have parts relevant to each feature.
+
+The frontend is divided into a few key pages, each located in `board-game-statistics/src/pages`.
+Each file and subfolder in these page folders contain further components relevant to those pages.
+
+The backend is divided into multiple packages, each located in `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api`.
+Each package operates as its own unit, containing the relevant controllers, services, and repositories related to that feature.
+There are also a few general packages such as `config` and `util` which are for shared use between the features.
+
+### Group member responsibilities
+
+#### Daniel Keith
+Feature 1: Account login & forgot password system
+This feature uses the following major folders and files (along with other minor ones not mentioned):
+- `board-game-statistics/src/pages/login`
+- `board-game-statistics/src/context/AlertContext.tsx`
+- `board-game-statistics/src/utils/api/account-api-utils.ts`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/account`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/config`
+- `board-game-statistics-api/src/test/java/com/asd/board_game_statistics_api/account`
+
+Feature 2: Group member permissions
+This feature uses the following major folders and files (along with other minor ones not mentioned):
+- `board-game-statistics/src/pages/group/home/EditPermissionsModal.tsx`
+- `board-game-statistics/src/context/PermissionsContext.tsx`
+- `board-game-statistics/src/utils/api/permissions-api-utils.ts`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/permissions`
+- `board-game-statistics-api/src/test/java/com/asd/board_game_statistics_api/permissions`
+
 
 ## Setup environment variables
 Environment variables can be set in multiple ways; pick one of the below.
