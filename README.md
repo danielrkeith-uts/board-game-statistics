@@ -49,6 +49,7 @@ This feature allows for group members to see leaderboards for each game in their
 - `board-game-statistics/src/utils/api/leaderboard-api-utils.ts`
 - `board-game-statistics-api/src/main/java/com/board-game-statistics-api/leaderboards`
 
+### Ray Kinjo
 
 Feature 1: Account creation
 This feature allows for Users to create a new account to use the website and its features:
@@ -56,8 +57,10 @@ This feature allows for Users to create a new account to use the website and its
 - board-game-statistics/src/pages/signup/SignupView.tsx
 - board-game-statistics/src/utils/api/account-api-utils.ts
 
+Feature 2: Owned Games List
 This feature allows for Users to add board games to an owned list, including stats and win conditions on a user basis
 
+- board-game-statistics/src/utils/api/games-api-utils.ts
 - board-game-statistics/src/pages/games/GamesView.tsx
 - board-game-statistics/src/pages/games/AddCustomGameModal.tsx
 - board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/model/Game.java
