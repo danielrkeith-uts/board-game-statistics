@@ -154,3 +154,34 @@ SELECT played_game_id, 2, 85, 1, FALSE FROM last3 UNION ALL
 SELECT played_game_id, 5, 160, 2, TRUE  FROM last3 UNION ALL
 SELECT played_game_id, 7, 155, 2, TRUE  FROM last3 UNION ALL
 SELECT played_game_id, 9, 100, 3, FALSE FROM last3;
+
+INSERT INTO bgs.reset_password_code (account_id, code) VALUES
+(1, 123456),  -- Alice has a pending password reset code
+(3, 789012),  -- Carol has a pending password reset code  
+(5, 456789);  -- Eve has a pending password reset code
+
+INSERT INTO bgs.invitation (user_email, group_id, inviteCode) VALUES
+('newuser1@example.com', 1, 555001),  -- Invitation to Board Gamers group
+('newuser2@example.com', 2, 555002),  -- Invitation to Strategy Masters group
+('newuser3@example.com', 3, 555003),  -- Invitation to Casual Players group
+('friend@example.com', 1, 555004),    -- Another invitation to Board Gamers
+('colleague@example.com', 4, 555005), -- Invitation to Weekend Warriors
+('family@example.com', 5, 555006);    -- Invitation to Family Fun group
+
+INSERT INTO bgs.user_game_profile (account_id, game_id, win_condition, custom_win_condition) VALUES
+(1, 1, 'HIGH_SCORE', NULL),      -- Catan with high score wins
+(1, 2, 'LOW_SCORE', NULL),       -- Carcassonne with low score wins
+(1, 3, 'FIRST_TO_FINISH', NULL), -- Terraforming Mars first to finish
+(1, 4, 'CUSTOM', 'Most cities built'), -- 7 Wonders with custom win condition
+(2, 1, 'HIGH_SCORE', NULL),      -- Catan with high score wins
+(2, 2, 'HIGH_SCORE', NULL),      -- Carcassonne with high score wins
+(2, 3, 'COOPERATIVE', NULL),     -- Terraforming Mars as cooperative
+(3, 1, 'FIRST_TO_FINISH', NULL), -- Catan first to finish
+(3, 4, 'CUSTOM', 'Most wonder stages completed'), -- 7 Wonders custom
+(4, 2, 'LOW_SCORE', NULL),       -- Carcassonne with low score wins
+(4, 3, 'HIGH_SCORE', NULL),      -- Terraforming Mars with high score
+(5, 1, 'COOPERATIVE', NULL),     -- Catan as cooperative game
+(5, 3, 'CUSTOM', 'Most green cards'), -- Terraforming Mars custom condition
+(6, 4, 'HIGH_SCORE', NULL),      -- 7 Wonders with high score wins
+(7, 1, 'HIGH_SCORE', NULL),      -- Catan with high score wins
+(7, 2, 'CUSTOM', 'Most completed features'); -- Carcassonne custom
