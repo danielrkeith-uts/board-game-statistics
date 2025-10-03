@@ -49,6 +49,28 @@ This feature allows for group members to see leaderboards for each game in their
 - `board-game-statistics/src/utils/api/leaderboard-api-utils.ts`
 - `board-game-statistics-api/src/main/java/com/board-game-statistics-api/leaderboards`
 
+
+Feature 1: Account creation
+This feature allows for Users to create a new account to use the website and its features:
+
+- board-game-statistics/src/pages/signup/SignupView.tsx
+- board-game-statistics/src/utils/api/account-api-utils.ts
+
+This feature allows for Users to add board games to an owned list, including stats and win conditions on a user basis
+
+- board-game-statistics/src/pages/games/GamesView.tsx
+- board-game-statistics/src/pages/games/AddCustomGameModal.tsx
+- board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/model/Game.java
+- board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/PostgreSqlUserGameProfileRepository.java
+- board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/PostgreSqlOwnedGameRepository.java
+- board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/PostgreSqlGameRepository.java
+- board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/IUserGameProfileRepository.java
+- board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/IOwnedGameRepository.java
+- board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/IGameService.java
+- board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/IGameRepository.java
+- board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/GamesController.java
+- board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/GameService.java
+
 ## Setup environment variables
 Environment variables can be set in multiple ways; pick one of the below.
 
