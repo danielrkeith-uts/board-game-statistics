@@ -104,6 +104,46 @@ This feature allows group members to record the results of a game.
 - `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/dto/GameRecordRequest.java`
 - `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/dto/GameRecordResponse.java`
 
+### Matthew Adler
+
+Feature 4: Board Game Groups
+This feature allows users to create groups, and view a dashboard of information for their currently selected group, including a list of all the members. Users can also leave their currently selected group.
+
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/group/**`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/model/Group.java`
+- `board-game-statistics-api/src/main/resources/postgresql/insert_sample_data.sql`
+- `board-game-statistics-api/src/test/java/com/asd/board_game_statistics_api/test_utils/TestResourceReaderConfig`
+- `board-game-statistics-api/src/test/java/com/asd/board_game_statistics_api/test_utils/TestsWithMockedDatabase`
+- `board-game-statistics-api/src/test/java/com/asd/board_game_statistics_api/group/**`
+- `board-game-statistics/eslint.config.js`
+- `board-game-statistics/.prettierrc`
+- `board-game-statistics/src/App.tsx` - Setting up routes
+- `board-game-statistics/src/components/AlertMessage.tsx`
+- `board-game-statistics/src/components/Alerts.tsx`
+- `board-game-statistics/src/components/Header.tsx`
+- `board-game-statistics/src/context/AlertContext.tsx`
+- `board-game-statistics/src/scss/custom.scss`
+- `board-game-statistics/src/pages/group/CreateGroupButton.tsx`
+- `board-game-statistics/src/pages/group/CreateGroupModal.tsx`
+- `board-game-statistics/src/pages/group/GroupDashboard.tsx`
+- `board-game-statistics/src/pages/group/GroupDropDown.tsx`
+- `board-game-statistics/src/pages/group/GroupManagementHeader.tsx`
+- `board-game-statistics/src/pages/group/GroupView.tsx`
+- `board-game-statistics/src/pages/group/LeaveGroupModal.tsx`
+- `board-game-statistics/src/pages/group/home/GroupHomeView.tsx`
+- `board-game-statistics/src/pages/group/home/MembersSection.tsx`
+- `board-game-statistics/src/utils/api/group-api-utils.ts`
+
+Feature 10: Player statistics
+This feature allows users to view their personal statistics in the currently selected group, as well as a global view of their statistics collated from all groups, and displayed as graphs.
+
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/statistics/**`
+- `board-game-statistics-api/src/test/java/com/asd/board_game_statistics_api/statistics/**`
+- `board-game-statistics/src/components/ProfileMenu.tsx`
+- `board-game-statistics/src/pages/globalStats/**`
+- `board-game-statistics/src/pages/group/home/StatsSection.tsx`
+- `board-game-statistics/src/utils/api/stats-api-utils.ts`
+
 ## Setup environment variables
 Environment variables can be set in multiple ways; pick one of the below.
 
