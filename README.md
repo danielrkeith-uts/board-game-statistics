@@ -74,6 +74,36 @@ This feature allows for Users to add board games to an owned list, including sta
 - board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/GamesController.java
 - board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/GameService.java
 
+### Noah Bondoc
+
+Feature 1: Manage Account
+This feature allows users to view and manage their account details, update profile information and delete their account:
+- `board-game-statistics/src/pages/account/ManageAccountView.tsx`
+- `board-game-statistics/src/pages/account/UpdateProfileModal.tsx`
+- `board-game-statistics/src/pages/account/DeleteAccountModal.tsx`
+- `board-game-statistics/src/utils/api/account-api-utils.ts`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/account/AccountController.java`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/account/AccountService.java`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/account/IAccountRepository.java`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/account/IAccountService.java`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/account/PostgreSqlAccountRepository.java`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/account/dto/ChangePasswordRequest.java`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/account/dto/UpdateAccountRequest.java`
+
+Feature 2: Record Played Game
+This feature allows group members to record the results of a game.
+- `board-game-statistics/src/pages/group/games/RecordGameModal.tsx`
+- `board-game-statistics/src/pages/group/games/steps/GameSelectionStep.tsx`
+- `board-game-statistics/src/pages/group/games/steps/PlayersStep.tsx`
+- `board-game-statistics/src/pages/group/games/steps/WinConditionStep.tsx`
+- `board-game-statistics/src/pages/group/games/GroupGamesView.tsx`
+- `board-game-statistics/src/utils/api/games-api-utils.ts`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/GameRecordController.java`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/GameRecordService.java`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/PostgreSqlGameRecordRepository.java`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/dto/GameRecordRequest.java`
+- `board-game-statistics-api/src/main/java/com/asd/board_game_statistics_api/games/dto/GameRecordResponse.java`
+
 ## Setup environment variables
 Environment variables can be set in multiple ways; pick one of the below.
 
