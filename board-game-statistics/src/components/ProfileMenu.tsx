@@ -11,23 +11,30 @@ interface ProfileMenuProps {
 	logout: () => void;
 }
 
-const CustomToggle = forwardRef(({ children, onClick }, ref) => (
-	<a
-		href=''
-		ref={ref}
-		onClick={(e) => {
-			e.preventDefault();
-			onClick(e);
-		}}
-	>
-		{children}
-		<Image
-			src='photo.png'
-			roundedCircle
-			style={{ maxWidth: '2.4rem', cursor: 'pointer' }}
-		/>
-	</a>
-));
+interface CustomToggleProps {
+	children?: React.ReactNode;
+	onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+}
+
+const CustomToggle = forwardRef<HTMLAnchorElement, CustomToggleProps>(
+	({ children, onClick }, ref) => (
+		<a
+			href=''
+			ref={ref}
+			onClick={(e) => {
+				e.preventDefault();
+				onClick(e);
+			}}
+		>
+			{children}
+			<Image
+				src='photo.png'
+				roundedCircle
+				style={{ maxWidth: '2.4rem', cursor: 'pointer' }}
+			/>
+		</a>
+	)
+);
 
 const ProfileMenu = (props: ProfileMenuProps) => {
 	const { logout } = props;
