@@ -96,7 +96,7 @@ INSERT INTO bgs.group_membership (group_id, account_id, permissions_mask, join_t
 (6, 22, 0, NOW() - INTERVAL '3 hours');
 
 -- Sample owned games
-INSERT INTO bgs.owned_game (game_id, group_id, game_name) VALUES
+INSERT INTO bgs.temp_owned_game (game_id, group_id, game_name) VALUES
 (100, 1, 'Jails and Jaberwocks'),
 (200, 1, 'Worms and Walkways'),
 (101, 1, 'Chess 2.0'),
