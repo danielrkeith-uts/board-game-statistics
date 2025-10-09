@@ -18,7 +18,6 @@ const PermissionNames: PermissionName[] = [
 		permission: 'MANAGE_MEMBER_PERMISSIONS',
 		name: 'Manage member permissions',
 	},
-	{ permission: 'MANAGE_BOARD_GAMES', name: 'Manage board games' },
 	{ permission: 'MANAGE_GAMES_PLAYED', name: 'Manage games played' },
 ];
 
