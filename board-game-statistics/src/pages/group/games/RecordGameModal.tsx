@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import type {
 	Group,
 	RecordGamePayload,
 	WinCondition,
+	Game,
 } from '../../../utils/types';
-import { apiRecordGame } from '../../../utils/api/games-api-utils';
+import {
+	apiRecordGame,
+	apiGetOwnedGames,
+} from '../../../utils/api/games-api-utils';
 import GameSelectionStep from './steps/GameSelectionStep';
 import WinConditionStep from './steps/WinConditionStep';
 import PlayersStep from './steps/PlayersStep';
@@ -25,6 +29,11 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	// Step management
 	const [step, setStep] = useState<number>(1);
 
+	// Games state
+	const [ownedGames, setOwnedGames] = useState<Game[]>([]);
+	const [gamesLoading, setGamesLoading] = useState<boolean>(false);
+	const [gamesError, setGamesError] = useState<string | null>(null);
+
 	const [selectedGameId, setSelectedGameId] = useState<string>('');
 	const [selectedPlayerIds, setSelectedPlayerIds] = useState<number[]>([]);
 	const [winCondition, setWinCondition] = useState<WinCondition>('single');
@@ -40,6 +49,33 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	const [coopWinner, setCoopWinner] = useState<boolean | undefined>(
 		undefined
 	);
+
+	// Load owned games when modal opens
+	useEffect(() => {
+		if (show) {
+			loadOwnedGames();
+		}
+	}, [show]);
+
+	const loadOwnedGames = async () => {
+		setGamesLoading(true);
+		setGamesError(null);
+		try {
+			const games = await apiGetOwnedGames();
+			setOwnedGames(games);
+		} catch (error) {
+			const message =
+				error instanceof Error
+					? error.message
+					: 'Failed to load owned games';
+			setGamesError(message);
+			if (onError) {
+				onError(message);
+			}
+		} finally {
+			setGamesLoading(false);
+		}
+	};
 
 	const handleNext = () =>
 		setStep((currentStep) => Math.min(currentStep + 1, 3));
@@ -72,6 +108,8 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		setSingleWinnerId(null);
 		setTeamWinner('');
 		setCoopWinner(undefined);
+		setOwnedGames([]);
+		setGamesError(null);
 		handleClose();
 	};
 
@@ -97,25 +135,33 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		setSingleWinnerId((prev) => (prev === id ? null : prev));
 	};
 
-	// Placeholder games list; TODO: replace with owned games
-	const placeholderGames = [
-		{ id: 1, name: 'Sample game 1' },
-		{ id: 2, name: 'Sample game 2' },
-	];
-
 	// Use members from group as selectable players
 	const groupPlayers = group.members.map((member) => ({
 		id: member.id,
 		name: `${member.firstName} ${member.lastName}`.trim(),
 	}));
 
-	const renderGameStep = () => (
-		<GameSelectionStep
-			selectedGameId={selectedGameId}
-			onGameChange={setSelectedGameId}
-			games={placeholderGames}
-		/>
-	);
+	const renderGameStep = () => {
+		if (gamesLoading) {
+			return <div>Loading games...</div>;
+		}
+
+		if (gamesError) {
+			return (
+				<div className='text-danger'>
+					Error loading games: {gamesError}
+				</div>
+			);
+		}
+
+		return (
+			<GameSelectionStep
+				selectedGameId={selectedGameId}
+				onGameChange={setSelectedGameId}
+				games={ownedGames}
+			/>
+		);
+	};
 
 	const renderPlayersStep = () => (
 		<PlayersStep
