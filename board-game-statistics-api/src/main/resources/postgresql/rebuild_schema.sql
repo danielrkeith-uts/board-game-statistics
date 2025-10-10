@@ -45,7 +45,10 @@ CREATE TABLE bgs.group_membership (
 CREATE TABLE bgs.board_game (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name TEXT NOT NULL UNIQUE,
-    publisher TEXT
+    publisher TEXT,
+    win_condition TEXT NOT NULL DEFAULT 'HIGH_SCORE'
+        CHECK (win_condition IN ('HIGH_SCORE','LOW_SCORE','FIRST_TO_FINISH','COOPERATIVE','CUSTOM')),
+    custom_win_condition TEXT
 );
 
 CREATE TABLE bgs.owned_game (
@@ -55,14 +58,6 @@ CREATE TABLE bgs.owned_game (
     CONSTRAINT owned_pk PRIMARY KEY (account_id, game_id)
 );
 
-CREATE TABLE IF NOT EXISTS bgs.user_game_profile (
-  account_id INT NOT NULL REFERENCES bgs.account(id) ON DELETE CASCADE,
-  game_id    INT NOT NULL REFERENCES bgs.board_game(id) ON DELETE CASCADE,
-  win_condition TEXT NOT NULL DEFAULT 'HIGH_SCORE'
-    CHECK (win_condition IN ('HIGH_SCORE','LOW_SCORE','FIRST_TO_FINISH','COOPERATIVE','CUSTOM')),
-  custom_win_condition TEXT,
-  PRIMARY KEY (account_id, game_id)
-);
 CREATE TABLE bgs.temp_owned_game(
     game_id INT PRIMARY KEY,
     group_id INT NOT NULL,
