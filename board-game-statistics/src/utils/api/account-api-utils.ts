@@ -134,7 +134,9 @@ export const apiCreateAccount = async (
 		password,
 	});
 
-	if (res.ok) {return { ok: true };}
+	if (res.ok) {
+		return { ok: true };
+	}
 
 	if (res.status === 400) {
 		try {

@@ -93,7 +93,25 @@ INSERT INTO bgs.group_membership (group_id, account_id, permissions_mask, join_t
 (6, 18, 0, NOW() - INTERVAL '2 days'),
 (6, 19, 0, NOW() - INTERVAL '6 hours'),
 (6, 20, 0, NOW() - INTERVAL '3 hours'),
+(6, 22, 0, NOW() - INTERVAL '3 hours'),
+(6, 20, 0, NOW() - INTERVAL '3 hours'),
 (6, 22, 0, NOW() - INTERVAL '3 hours');
+
+-- Seed board games (catalog)
+INSERT INTO bgs.board_game (name, publisher) VALUES
+('Catan', 'Kosmos'),
+('Carcassonne', 'Hans im Glück'),
+('Terraforming Mars', 'FryxGames'),
+('7 Wonders', 'Repos Production')
+ON CONFLICT (name) DO NOTHING;
+
+-- Give Alice a couple of owned games as a demo
+INSERT INTO bgs.owned_game (account_id, game_id)
+SELECT a.id, g.id
+FROM bgs.account a
+JOIN bgs.board_game g ON g.name IN ('Catan','Carcassonne')
+WHERE a.email = 'alice@example.com'
+ON CONFLICT DO NOTHING;
 
 -- Sample owned games
 INSERT INTO bgs.temp_owned_game (game_id, group_id, game_name) VALUES

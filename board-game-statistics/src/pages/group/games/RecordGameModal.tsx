@@ -99,8 +99,8 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 
 	// Placeholder games list; TODO: replace with owned games
 	const placeholderGames = [
-		{ id: String(1), name: 'Sample game 1' },
-		{ id: String(2), name: 'Sample game 2' },
+		{ id: 1, name: 'Sample game 1' },
+		{ id: 2, name: 'Sample game 2' },
 	];
 
 	// Use members from group as selectable players

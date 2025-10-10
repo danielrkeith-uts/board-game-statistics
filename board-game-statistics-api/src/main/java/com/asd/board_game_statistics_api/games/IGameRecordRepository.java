@@ -9,7 +9,6 @@ import java.util.List;
 public interface IGameRecordRepository {
     GameRecordResponse createGameRecord(GameRecordRequest request);
     List<GameRecordResponse> getGameRecordsByGroup(int groupId);
-    List<PlayerResult> getPlayerResultsByGroup(Integer accountId, Integer groupId);
     void deleteGameRecord(int playedGameId);
     int getGroupOf(int playedGameId);
 }

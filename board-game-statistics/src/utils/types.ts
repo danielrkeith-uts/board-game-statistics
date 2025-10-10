@@ -9,7 +9,6 @@ type Permission =
 	| 'OWNERSHIP_AND_GROUP_SETTINGS'
 	| 'MANAGE_MEMBERS'
 	| 'MANAGE_MEMBER_PERMISSIONS'
-	| 'MANAGE_BOARD_GAMES'
 	| 'MANAGE_GAMES_PLAYED';
 
 interface GroupPermissions {
@@ -27,6 +26,19 @@ interface Group {
 	creationTime: Date;
 	members: GroupMember[];
 }
+
+interface Game {
+	id: number;
+	name: string;
+	publisher?: string | null;
+}
+
+export type TempWinCondition =
+	| 'HIGH_SCORE'
+	| 'LOW_SCORE'
+	| 'FIRST_TO_FINISH'
+	| 'COOPERATIVE'
+	| 'CUSTOM';
 
 interface RecordGamePayload {
 	groupId: number;
@@ -56,11 +68,6 @@ interface Player {
 	name: string;
 }
 
-interface Game {
-	id: string;
-	name: string;
-}
-
 interface OwnedGame {
 	gameId: number;
 	groupId: number;
@@ -80,18 +87,24 @@ interface PlayerStatistic {
 	losses: number;
 }
 
+interface BarChartData {
+	winData: number[];
+	lossData: number[];
+}
+
 export type {
 	Account,
-	Permission,
-	GroupPermissions,
-	GroupMember,
-	Group,
-	RecordGamePayload,
-	GameRecordDto,
-	WinCondition,
-	Player,
+	BarChartData,
 	Game,
-	OwnedGame,
+	GameRecordDto,
+	Group,
+	GroupMember,
+	GroupPermissions,
 	LeaderboardRow,
+	OwnedGame,
+	Permission,
+	Player,
 	PlayerStatistic,
+	RecordGamePayload,
+	WinCondition,
 };

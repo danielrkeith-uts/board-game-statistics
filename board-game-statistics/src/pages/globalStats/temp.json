@@ -1,0 +1,55 @@
+[
+	{
+		"gameType": "singlePlayer",
+		"wins": 8,
+		"losses": 12,
+		"games": [
+			{
+				"name": "Game 1",
+				"numOfGamesPlayed": 10
+			},
+			{
+				"name": "Game 2",
+				"numOfGamesPlayed": 4
+			},
+			{
+				"name": "Game 3",
+				"numOfGamesPlayed": 6
+			}
+		]
+	},
+	{
+		"gameType": "teamBased",
+		"wins": 16,
+		"losses": 7,
+		"games": [
+			{
+				"name": "Game 4",
+				"numOfGamesPlayed": 9
+			},
+			{
+				"name": "Game 5",
+				"numOfGamesPlayed": 11
+			},
+			{
+				"name": "Game 6",
+				"numOfGamesPlayed": 3
+			}
+		]
+	},
+	{
+		"gameType": "coop",
+		"wins": 6,
+		"losses": 6,
+		"games": [
+			{
+				"name": "Game 7",
+				"numOfGamesPlayed": 2
+			},
+			{
+				"name": "Game 8",
+				"numOfGamesPlayed": 10
+			}
+		]
+	}
+]

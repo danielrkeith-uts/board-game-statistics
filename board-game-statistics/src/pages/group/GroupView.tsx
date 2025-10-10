@@ -40,7 +40,7 @@ const GroupView = () => {
 	const handleOpenLeaveGroupModal = () => setShowLeaveGroupModal(true);
 	const handleCloseLeaveGroupModal = () => setShowLeaveGroupModal(false);
 
-	const minPageLoadTime: number = 700;
+	const minPageLoadTime: number = 700; // Milliseconds
 
 	// On page load, get groups for current user
 	useEffect(() => {
