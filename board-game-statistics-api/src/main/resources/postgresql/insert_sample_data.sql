@@ -33,7 +33,7 @@ INSERT INTO bgs.game_group (group_name, creation_time) VALUES
 
 -- Group Memberships
 INSERT INTO bgs.group_membership (group_id, account_id, permissions_mask, join_timestamp) VALUES
-(1, 1, 31, NOW() - INTERVAL '9 days'),
+(1, 1, 15, NOW() - INTERVAL '9 days'),
 (1, 2, 0, NOW() - INTERVAL '8 days'),
 (1, 5, 0, NOW() - INTERVAL '6 days'),
 (1, 7, 0, NOW() - INTERVAL '6 days'),
