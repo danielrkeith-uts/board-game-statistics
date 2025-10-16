@@ -3,7 +3,7 @@ package com.asd.board_game_statistics_api.model;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public record Game(int id, String name, String publisher) {
+public record Game(int id, String name, String publisher, String winCondition) {
 
     public static Game fromResultSet(ResultSet rs) throws SQLException {
         if (!rs.next()) return null;
@@ -14,7 +14,8 @@ public record Game(int id, String name, String publisher) {
         return new Game(
             rs.getInt("id"),
             rs.getString("name"),
-            rs.getString("publisher")
+            rs.getString("publisher"),
+            rs.getString("win_condition")
         );
     }
 }

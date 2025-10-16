@@ -19,25 +19,25 @@ public class PostgreSqlGameRepository implements IGameRepository {
 
     @Override
     public List<Game> getAll() {
-        String sql = "SELECT id, name, publisher FROM bgs.board_game ORDER BY name ASC;";
+        String sql = "SELECT id, name, publisher, win_condition FROM bgs.board_game ORDER BY name ASC;";
         return jdbcTemplate.query(sql, Game::fromRow);
     }
 
     @Override
     public Game getById(int id) {
-        String sql = "SELECT id, name, publisher FROM bgs.board_game WHERE id = ?;";
+        String sql = "SELECT id, name, publisher, win_condition FROM bgs.board_game WHERE id = ?;";
         return jdbcTemplate.query(sql, Game::fromResultSet, id);
     }
 
     @Override
     public Game getByName(String name) {
-        String sql = "SELECT id, name, publisher FROM bgs.board_game WHERE LOWER(name) = LOWER(TRIM(?));";
+        String sql = "SELECT id, name, publisher, win_condition FROM bgs.board_game WHERE LOWER(name) = LOWER(TRIM(?));";
         return jdbcTemplate.query(sql, Game::fromResultSet, name);
     }
 
     @Override
-    public Game create(String name, String publisher) {
-        String sql = "INSERT INTO bgs.board_game (name, publisher) VALUES (TRIM(?), ?)";
+    public Game create(String name, String publisher, String winCondition) {
+        String sql = "INSERT INTO bgs.board_game (name, publisher, win_condition) VALUES (TRIM(?), ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         try {
@@ -45,6 +45,7 @@ public class PostgreSqlGameRepository implements IGameRepository {
                 PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
                 ps.setString(1, name);
                 ps.setString(2, publisher);
+                ps.setString(3, winCondition);
                 return ps;
             }, keyHolder);
         } catch (DataIntegrityViolationException dup) {

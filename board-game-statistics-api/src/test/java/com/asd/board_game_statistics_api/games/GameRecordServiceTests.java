@@ -23,7 +23,7 @@ public class GameRecordServiceTests extends TestsWithMockedDatabase {
     void createSingleWinner() {
         GameRecordRequest req = new GameRecordRequest(
                 1, // groupId
-                999, // gameId
+                5, // gameId
                 "2024-01-15", // datePlayed
                 List.of(1, 2, 5), // playerIds
                 List.of(150, 120, 180), // points
@@ -44,7 +44,7 @@ public class GameRecordServiceTests extends TestsWithMockedDatabase {
     @Test
     void createTeamMatch() {
         GameRecordRequest bad = new GameRecordRequest(
-                1, 100, "2024-01-15", List.of(1, 2), List.of(150, 120), List.of(1, 2), List.of(true, false)
+                1, 5, "2024-01-15", List.of(1, 2), List.of(150, 120), List.of(1, 2), List.of(true, false)
         );
 
         GameRecordResponse created = gameRecordService.recordGame(dummyAccount, bad);
@@ -56,7 +56,7 @@ public class GameRecordServiceTests extends TestsWithMockedDatabase {
     void DeleteRecord() {
         // create
         GameRecordRequest req = new GameRecordRequest(
-                1, 777, "2024-01-15", List.of(1, 2), List.of(150, 120), Arrays.asList((Integer) null, (Integer) null), List.of(true, false)
+                1, 5, "2024-01-15", List.of(1, 2), List.of(150, 120), Arrays.asList((Integer) null, (Integer) null), List.of(true, false)
         );
         GameRecordResponse created = gameRecordService.recordGame(dummyAccount, req);
 

@@ -9,14 +9,12 @@ import java.util.Set;
 
 @Service
 public class GameService implements IGameService {
-
     private static final Set<String> ALLOWED_WIN_CONDITIONS = Set.of(
-            "HIGH_SCORE", "LOW_SCORE", "FIRST_TO_FINISH", "COOPERATIVE", "CUSTOM"
+            "HIGH_SCORE", "LOW_SCORE", "FIRST_TO_FINISH", "COOPERATIVE"
     );
 
     @Autowired private IGameRepository gameRepository;
     @Autowired private IOwnedGameRepository ownedRepository;
-    @Autowired private IUserGameProfileRepository userGameProfileRepository;
 
     @Override
     public List<Game> allGames() {
@@ -37,7 +35,6 @@ public class GameService implements IGameService {
     @Override
     public void removeOwned(int accountId, int gameId) {
         ownedRepository.removeOwned(accountId, gameId);
-        userGameProfileRepository.deleteProfile(accountId, gameId);
     }
 
     @Override
@@ -51,6 +48,7 @@ public class GameService implements IGameService {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Game name is required");
         }
+
         String normalized = (winCondition == null ? "HIGH_SCORE" : winCondition.trim().toUpperCase());
         if (!ALLOWED_WIN_CONDITIONS.contains(normalized)) {
             throw new IllegalArgumentException("Invalid win condition: " + winCondition);
@@ -65,14 +63,13 @@ public class GameService implements IGameService {
 
         Game game = gameRepository.getByName(name);
         if (game == null) {
-            game = gameRepository.create(name, publisher);
+            game = gameRepository.create(name, publisher, winCondition);
         }
 
         if (!ownedRepository.exists(accountId, game.id())) {
             ownedRepository.addOwned(accountId, game.id());
         }
 
-        userGameProfileRepository.upsertProfile(accountId, game.id(), normalized, customWinCondition);
         return game;
     }
 }

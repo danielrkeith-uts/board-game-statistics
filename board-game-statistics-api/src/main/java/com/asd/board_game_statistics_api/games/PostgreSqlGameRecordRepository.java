@@ -2,7 +2,6 @@ package com.asd.board_game_statistics_api.games;
 
 import com.asd.board_game_statistics_api.games.dto.GameRecordRequest;
 import com.asd.board_game_statistics_api.games.dto.GameRecordResponse;
-import com.asd.board_game_statistics_api.model.PlayerResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

@@ -16,7 +16,7 @@ public class PostgreSqlOwnedGameRepository implements IOwnedGameRepository {
     @Override
     public List<Game> getOwnedByAccount(int accountId) {
         String sql = """
-            SELECT g.id, g.name, g.publisher
+            SELECT g.id, g.name, g.publisher, g.win_condition
             FROM bgs.owned_game og
             JOIN bgs.board_game g ON g.id = og.game_id
             WHERE og.account_id = ?
