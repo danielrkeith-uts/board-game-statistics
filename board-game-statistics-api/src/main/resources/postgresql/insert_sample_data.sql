@@ -92,44 +92,53 @@ INSERT INTO bgs.group_membership (group_id, account_id, permissions_mask, join_t
 (6, 17, 0, NOW() - INTERVAL '1 day'),
 (6, 18, 0, NOW() - INTERVAL '2 days'),
 (6, 19, 0, NOW() - INTERVAL '6 hours'),
-(6, 20, 0, NOW() - INTERVAL '3 hours'),
-(6, 22, 0, NOW() - INTERVAL '3 hours');
+(6, 20, 0, NOW() - INTERVAL '3 hours');
 
 -- Seed board games (catalog)
 INSERT INTO bgs.board_game (name, publisher) VALUES
 ('Catan', 'Kosmos'),
 ('Carcassonne', 'Hans im Glück'),
 ('Terraforming Mars', 'FryxGames'),
-('7 Wonders', 'Repos Production')
+('7 Wonders', 'Repos Production'),
+('Jails and Jaberwocks', 'Unknown Publisher'),
+('Worms and Walkways', 'Unknown Publisher'),
+('Chess 2.0', 'Unknown Publisher'),
+('One', 'Unknown Publisher'),
+('Dice', 'Unknown Publisher'),
+('Duopoly', 'Unknown Publisher'),
+('Game Board', 'Unknown Publisher')
 ON CONFLICT (name) DO NOTHING;
 
--- Give Alice a couple of owned games as a demo
-INSERT INTO bgs.owned_game (account_id, game_id)
-SELECT a.id, g.id
-FROM bgs.account a
-JOIN bgs.board_game g ON g.name IN ('Catan','Carcassonne')
-WHERE a.email = 'alice@example.com'
-ON CONFLICT DO NOTHING;
+INSERT INTO bgs.owned_game (account_id, game_id) VALUES
+(1, 1), -- Alice owns Catan
+(1, 2), -- Alice owns Carcassonne
+(2, 1), -- Bob owns Catan
+(2, 3), -- Bob owns Terraforming Mars
+(3, 4), -- Carol owns 7 Wonders
+(4, 2), -- Dave owns Carcassonne
+(5, 3), -- Eve owns Terraforming Mars
+(6, 1), -- Frank owns Catan
+(7, 4); -- Grace owns 7 Wonders
 
 -- Sample owned games
 INSERT INTO bgs.temp_owned_game (game_id, group_id, game_name) VALUES
-(100, 1, 'Jails and Jaberwocks'),
-(200, 1, 'Worms and Walkways'),
-(101, 1, 'Chess 2.0'),
-(300, 1, 'One'),
-(777, 1, 'Dice'),
-(999, 1, 'Duopoly'),
-(123, 2, 'Game Board');
+(5, 1, 'Jails and Jaberwocks'),
+(6, 1, 'Worms and Walkways'),
+(7, 1, 'Chess 2.0'),
+(8, 1, 'One'),
+(9, 1, 'Dice'),
+(10, 1, 'Duopoly'),
+(11, 2, 'Game Board');
 
 -- Sample played games
 INSERT INTO bgs.played_game (game_id, group_id, date_played)
-VALUES (100, 1, CURRENT_DATE - INTERVAL '1 day');
+VALUES (5, 1, CURRENT_DATE - INTERVAL '1 day');
 
 INSERT INTO bgs.player_result (played_game_id, account_id, points, player_team, has_won)
 SELECT played_game_id, 1, 150, NULL, TRUE FROM bgs.played_game ORDER BY played_game_id DESC LIMIT 1;
 
 INSERT INTO bgs.played_game (game_id, group_id, date_played)
-VALUES (200, 1, CURRENT_DATE - INTERVAL '12 hours');
+VALUES (6, 1, CURRENT_DATE - INTERVAL '12 hours');
 
 WITH last AS (SELECT played_game_id FROM bgs.played_game ORDER BY played_game_id DESC LIMIT 1)
 INSERT INTO bgs.player_result (played_game_id, account_id, points, player_team, has_won)
@@ -139,13 +148,13 @@ SELECT played_game_id, 5, 180, 2, TRUE  FROM last UNION ALL
 SELECT played_game_id, 7, 175, 2, TRUE  FROM last;
 
 INSERT INTO bgs.played_game (game_id, group_id, date_played)
-VALUES (101, 1, CURRENT_DATE - INTERVAL '2 hours');
+VALUES (7, 1, CURRENT_DATE - INTERVAL '2 hours');
 
 INSERT INTO bgs.player_result (played_game_id, account_id, points, player_team, has_won)
 SELECT played_game_id, 2, 200, NULL, TRUE FROM bgs.played_game ORDER BY played_game_id DESC LIMIT 1;
 
 INSERT INTO bgs.played_game (game_id, group_id, date_played)
-VALUES (300, 1, CURRENT_DATE - INTERVAL '6 hours');
+VALUES (8, 1, CURRENT_DATE - INTERVAL '6 hours');
 
 WITH last3 AS (SELECT played_game_id FROM bgs.played_game ORDER BY played_game_id DESC LIMIT 1)
 INSERT INTO bgs.player_result (played_game_id, account_id, points, player_team, has_won)
@@ -167,21 +176,3 @@ INSERT INTO bgs.invitation (user_email, group_id, inviteCode) VALUES
 ('friend@example.com', 1, 555004),    -- Another invitation to Board Gamers
 ('colleague@example.com', 4, 555005), -- Invitation to Weekend Warriors
 ('family@example.com', 5, 555006);    -- Invitation to Family Fun group
-
-INSERT INTO bgs.user_game_profile (account_id, game_id, win_condition, custom_win_condition) VALUES
-(1, 1, 'HIGH_SCORE', NULL),      -- Catan with high score wins
-(1, 2, 'LOW_SCORE', NULL),       -- Carcassonne with low score wins
-(1, 3, 'FIRST_TO_FINISH', NULL), -- Terraforming Mars first to finish
-(1, 4, 'CUSTOM', 'Most cities built'), -- 7 Wonders with custom win condition
-(2, 1, 'HIGH_SCORE', NULL),      -- Catan with high score wins
-(2, 2, 'HIGH_SCORE', NULL),      -- Carcassonne with high score wins
-(2, 3, 'COOPERATIVE', NULL),     -- Terraforming Mars as cooperative
-(3, 1, 'FIRST_TO_FINISH', NULL), -- Catan first to finish
-(3, 4, 'CUSTOM', 'Most wonder stages completed'), -- 7 Wonders custom
-(4, 2, 'LOW_SCORE', NULL),       -- Carcassonne with low score wins
-(4, 3, 'HIGH_SCORE', NULL),      -- Terraforming Mars with high score
-(5, 1, 'COOPERATIVE', NULL),     -- Catan as cooperative game
-(5, 3, 'CUSTOM', 'Most green cards'), -- Terraforming Mars custom condition
-(6, 4, 'HIGH_SCORE', NULL),      -- 7 Wonders with high score wins
-(7, 1, 'HIGH_SCORE', NULL),      -- Catan with high score wins
-(7, 2, 'CUSTOM', 'Most completed features'); -- Carcassonne custom
