@@ -7,7 +7,7 @@ public interface IGameRepository {
     List<Game> getAll();
     Game getById(int id);
     Game getByName(String name);
-    Game create(String name, String publisher);
+    Game create(String name, String publisher, String winCondition);
 }
 
 
