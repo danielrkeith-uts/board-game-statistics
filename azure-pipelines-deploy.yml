@@ -30,6 +30,13 @@ stages:
       vmImage: $(vmImageName)
 
     steps:
+    - task: JavaToolInstaller@1
+      displayName: 'Install Java 21'
+      inputs:
+        versionSpec: '21'
+        jdkArchitectureOption: 'x64'
+        jdkSourceOption: 'PreInstalled'
+
     - task: Maven@4
       displayName: 'Maven Package'
       inputs:
