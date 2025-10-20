@@ -32,6 +32,12 @@ stages:
     steps:
     - task: Maven@4
       displayName: 'Maven Package'
+      env:
+        BGS_DB_USERNAME: ""
+        BGS_DB_PASSWORD: ""
+        BGS_ADMIN_PASSWORD: ""
+        BGS_MAIL_USERNAME: $(MAIL_USERNAME)
+        BGS_MAIL_PASSWORD: $(MAIL_PASSWORD)
       inputs:
         mavenPomFile: 'board-game-statistics-api/pom.xml'
         mavenOptions: '-Xmx3072m'
