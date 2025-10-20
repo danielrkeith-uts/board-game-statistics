@@ -33,6 +33,7 @@ stages:
     - task: Maven@4
       displayName: 'Maven Package'
       env:
+        BGS_DB_URL: ""
         BGS_DB_USERNAME: ""
         BGS_DB_PASSWORD: ""
         BGS_ADMIN_PASSWORD: ""
