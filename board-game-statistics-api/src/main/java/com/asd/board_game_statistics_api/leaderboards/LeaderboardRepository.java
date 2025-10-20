@@ -17,7 +17,19 @@ public class LeaderboardRepository implements ILeaderboardRepository {
 
     @Override
     public List<GameResponse> getOwnedGames(int groupId) {
-        String sql = "SELECT * FROM bgs.temp_owned_game WHERE group_id = ?;";
+        // Get the account id's for members of the group
+
+        // Get all unique games owned by those group members
+
+        String sql = """
+                SELECT bgs.board_game.name, bgs.group_membership.group_id, bgs.board_game.id FROM bgs.group_membership
+                INNER JOIN bgs.owned_game
+                ON bgs.group_membership.account_id = bgs.owned_game.account_id
+                INNER JOIN bgs.board_game
+                ON bgs.board_game.id = bgs.owned_game.game_id
+                WHERE bgs.group_membership.group_id = ?
+                GROUP BY bgs.board_game.name, bgs.group_membership.group_id, bgs.board_game.id;
+                """;
 
         return jdbcTemplate.query(sql, GameResponse::fromRow, groupId);
     }
