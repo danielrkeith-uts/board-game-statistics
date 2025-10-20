@@ -31,6 +31,7 @@ public class WebSecurityConfig {
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(
                             "/api/admin/**",
+                            "/api/hello-world",
                             "/api/account/login",
                             "/api/account/create",
                             "/api/account/send-password-reset",
