@@ -149,8 +149,7 @@ Environment variables can be set in multiple ways; pick one of the below.
 
 These environment variables must be set to a value of your choice:
 - BGS_DB_URL (The url for the postgresql database being used)
-  - This will begin with `jdbc:postgresql://`
-  - If following the below local setup instructions, this will be `jdbc:postgresql://localhost:5432/board_game_statistics_local`
+  - If following the below local setup instructions, this will be `localhost:5432/board_game_statistics_local`
 - BGS_DB_USERNAME (A username of your choosing)
 - BGS_DB_PASSWORD (A password of your choosing)
 - BGS_ADMIN_PASSWORD (A password of your choosing)
