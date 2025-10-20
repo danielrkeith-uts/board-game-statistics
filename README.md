@@ -147,8 +147,9 @@ This feature allows users to view their personal statistics in the currently sel
 ## Setup environment variables
 Environment variables can be set in multiple ways; pick one of the below.
 
-These environment variables must be set to a password of your choice:
-- BGS_DB_PASSWORD (The password for the bgs_admin_local account)
+These environment variables must be set to a value of your choice:
+- BGS_DB_USERNAME (A username of your choosing)
+- BGS_DB_PASSWORD (A password of your choosing)
 - BGS_ADMIN_PASSWORD (A password of your choosing)
 - BGS_MAIL_USERNAME (See pinned messages in discord for username)
 - BGS_MAIL_PASSWORD (See pinned messages in discord for password)
@@ -172,9 +173,11 @@ Make sure you have postgres installed and can access the `psql` command-line too
 To log in with the admin user: `psql -U <username>`  
 *(username is* `postgres` *by default)*
 
-1. Run `CREATE USER bgs_admin_local WITH PASSWORD '<BGS_DB_PASSWORD>';`
+1. Run `CREATE USER <BGS_DB_USERNAME> WITH PASSWORD '<BGS_DB_PASSWORD>';`
+   * Replace `<BGS_DB_USERNAME>` with the username used for the corresponding environment variable
    * Replace `<BGS_DB_PASSWORD>` with the password used for the corresponding environment variable
-2. Run `CREATE DATABASE board_game_statistics_local OWNER bgs_admin_local;`
+2. Run `CREATE DATABASE board_game_statistics_local OWNER <BGS_DB_USERNAME>;`
+   * Replace `<BGS_DB_USERNAME>` with the username used for the corresponding environment variable
 
 Now run the backend API, and use Postman (or some other tool) to rebuild the schema using the API:
 1. Create a `POST` request to one of the following endpoints:
