@@ -49,13 +49,6 @@ jobs:
 - job: BuildAndTestBackend
   displayName: Build and Test Backend
   steps:
-  - task: JavaToolInstaller@1
-    inputs:
-      versionSpec: '21'
-      jdkArchitectureOption: 'x64'
-      jdkSourceOption: 'PreInstalled'
-    displayName: 'Install Java 21'
-
   - task: Maven@4
     env:
       BGS_DB_PASSWORD: $(DB_PASSWORD)
@@ -67,8 +60,10 @@ jobs:
       publishJUnitResults: true
       testResultsFiles: '**/surefire-reports/TEST-*.xml'
       javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.21'
       mavenVersionOption: 'Default'
       mavenAuthenticateFeed: false
       effectivePomSkip: false
       sonarQubeRunAnalysis: false
-    displayName: 'Package'
+      goals: 'test'
+    displayName: 'Build and test'
