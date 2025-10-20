@@ -5,8 +5,6 @@ import com.asd.board_game_statistics_api.leaderboards.dto.LeaderboardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,10 +15,6 @@ public class LeaderboardRepository implements ILeaderboardRepository {
 
     @Override
     public List<GameResponse> getOwnedGames(int groupId) {
-        // Get the account id's for members of the group
-
-        // Get all unique games owned by those group members
-
         String sql = """
                 SELECT bgs.board_game.name, bgs.group_membership.group_id, bgs.board_game.id FROM bgs.group_membership
                 INNER JOIN bgs.owned_game
@@ -37,14 +31,18 @@ public class LeaderboardRepository implements ILeaderboardRepository {
     @Override
     public List<LeaderboardResponse> getLeaderboard(int groupId, int gameId) {
         String sql = """
-                SELECT bgs.player_result.account_id, bgs.account.first_name, bgs.account.last_name, SUM(bgs.player_result.points)
-                FROM bgs.player_result INNER JOIN bgs.played_game
-                ON bgs.played_game.played_game_id = bgs.player_result.played_game_id
+                SELECT bgs.player_result.account_id, bgs.account.first_name, bgs.account.last_name, count(bgs.player_result.has_won = TRUE) AS Wins
+                FROM bgs.group_membership
                 INNER JOIN bgs.account
-                ON account.id = player_result.account_id
-                WHERE bgs.played_game.group_id = ? AND bgs.played_game.game_id = ?
-                GROUP BY bgs.player_result.account_id, bgs.account.first_name, bgs.account.last_name
-                ORDER BY SUM(bgs.player_result.points) DESC;
+                ON bgs.account.id = bgs.group_membership.account_id
+                INNER JOIN bgs.player_result
+                ON bgs.account.id = bgs.player_result.account_id
+                INNER JOIN bgs.played_game
+                ON bgs.player_result.played_game_id = bgs.played_game.played_game_id
+                WHERE bgs.group_membership.group_id = ?
+                AND bgs.played_game.game_id = ?
+                GROUP BY bgs.player_result.account_id, bgs.player_result.account_id, bgs.account.first_name, bgs.account.last_name
+                ORDER BY Wins DESC;
         """;
         return jdbcTemplate.query(sql, LeaderboardResponse::fromRow, groupId, gameId);
     }

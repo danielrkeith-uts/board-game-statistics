@@ -118,7 +118,9 @@ INSERT INTO bgs.owned_game (account_id, game_id) VALUES
 (4, 2), -- Dave owns Carcassonne
 (5, 3), -- Eve owns Terraforming Mars
 (6, 1), -- Frank owns Catan
-(7, 4); -- Grace owns 7 Wonders
+(7, 4), -- Grace owns 7 Wonders
+(8, 4),
+(8, 7);
 
 -- Sample owned games
 INSERT INTO bgs.temp_owned_game (game_id, group_id, game_name) VALUES
