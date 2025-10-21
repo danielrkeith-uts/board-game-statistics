@@ -8,6 +8,7 @@ interface PlayersStepProps {
 	onTogglePlayer: (playerId: number) => void;
 	winCondition: WinCondition;
 	numTeams: number | null;
+	onNumTeamsChange: (numTeams: number) => void;
 	playerIdToTeam: Record<number, string>;
 	onPlayerTeamChange: (playerId: number, team: string) => void;
 	playerPoints: Record<number, number>;
@@ -25,6 +26,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 		onTogglePlayer,
 		winCondition,
 		numTeams,
+		onNumTeamsChange,
 		playerIdToTeam,
 		onPlayerTeamChange,
 		playerPoints,
@@ -128,11 +130,12 @@ const PlayersStep = (props: PlayersStepProps) => {
 						aria-label='Select team'
 						size='sm'
 						className='w-auto'
-						value={playerIdToTeam[playerId] ?? '1'}
+						value={playerIdToTeam[playerId] ?? 'unassigned'}
 						onChange={(event) =>
 							onPlayerTeamChange(playerId, event.target.value)
 						}
 					>
+						<option value='unassigned'>Unassigned</option>
 						{(numTeams ?? 0) >= 2
 							? Array.from(
 									{ length: numTeams ?? 0 },
@@ -358,6 +361,24 @@ const PlayersStep = (props: PlayersStepProps) => {
 						placeholder='Select players...'
 						className='mb-3'
 					/>
+
+					{winCondition === 'COOPERATIVE' && (
+						<Form.Group className='mb-3'>
+							<Form.Label>Number of teams</Form.Label>
+							<Form.Select
+								value={numTeams || 2}
+								onChange={(event) =>
+									onNumTeamsChange(Number(event.target.value))
+								}
+							>
+								{Array.from({ length: 9 }, (_, index) => (
+									<option key={index + 2} value={index + 2}>
+										{index + 2} teams
+									</option>
+								))}
+							</Form.Select>
+						</Form.Group>
+					)}
 
 					<SelectedPlayersList />
 				</Form.Group>

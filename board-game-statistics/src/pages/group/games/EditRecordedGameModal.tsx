@@ -88,7 +88,10 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 											const points =
 												visibleRecord.points[index] ||
 												0;
-											const team = `Team ${visibleRecord.playerTeams[index] || 1}`;
+											const team = visibleRecord
+												.playerTeams[index]
+												? `Team ${visibleRecord.playerTeams[index]}`
+												: 'Unassigned';
 											const isWinner =
 												visibleRecord.hasWon[index];
 											return (
@@ -97,7 +100,9 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 													{visibleRecord.winCondition !==
 														'FIRST_TO_FINISH' &&
 														` - ${points} points`}
-													{` (${team})`}
+													{visibleRecord.winCondition ===
+														'COOPERATIVE' &&
+														` (${team})`}
 													{isWinner ? ' 🏆' : ''}
 												</li>
 											);

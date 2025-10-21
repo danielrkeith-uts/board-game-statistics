@@ -191,6 +191,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			onTogglePlayer={togglePlayer}
 			winCondition={winCondition}
 			numTeams={numTeams}
+			onNumTeamsChange={setNumTeams}
 			playerIdToTeam={playerIdToTeam}
 			onPlayerTeamChange={handlePlayerTeamChange}
 			playerPoints={playerPoints}
@@ -226,8 +227,15 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			const points = selectedPlayerIds.map(
 				(playerId) => playerPoints[playerId] || 0
 			);
-			const playerTeams = selectedPlayerIds.map(() => {
-				return null;
+			const playerTeams = selectedPlayerIds.map((playerId) => {
+				if (winCondition === 'COOPERATIVE') {
+					const teamValue = playerIdToTeam[playerId];
+					return teamValue === 'unassigned'
+						? null
+						: Number(teamValue || '1');
+				} else {
+					return null; // Solo games
+				}
 			});
 
 			let getSingleWinnerId: number | null = singleWinnerId;
@@ -257,8 +265,10 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 
 			const hasWon = selectedPlayerIds.map((playerId) => {
 				if (winCondition === 'COOPERATIVE') {
+					const teamValue = playerIdToTeam[playerId];
 					return (
-						String(playerIdToTeam[playerId] || '1') === teamWinner
+						teamValue !== 'unassigned' &&
+						String(teamValue || '1') === teamWinner
 					);
 				} else {
 					return playerId === getSingleWinnerId;
