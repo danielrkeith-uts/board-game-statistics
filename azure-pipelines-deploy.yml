@@ -142,7 +142,7 @@ stages:
           - task: AzureStaticWebApp@0
             displayName: 'Azure Static Web App Deploy: board-game-statistics'
             inputs:
-              app_location: '$(Pipeline.Workspace)/frontend/**/dist'
+              app_location: '$(Pipeline.Workspace)/frontend/board-game-statistics/dist'
               skip_app_build: true
               skip_api_build: true
               azure_static_web_apps_api_token: '$(azureStaticDeploymentToken)'
