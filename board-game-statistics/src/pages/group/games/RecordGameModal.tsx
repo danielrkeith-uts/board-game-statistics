@@ -223,6 +223,15 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 
 	const handleSave = async () => {
 		try {
+			// Validate required fields
+			if (!selectedGameId || selectedGameId === '') {
+				throw new Error('Please select a game');
+			}
+
+			if (selectedPlayerIds.length === 0) {
+				throw new Error('Please select at least one player');
+			}
+
 			const playerIds = selectedPlayerIds;
 			const points = selectedPlayerIds.map(
 				(playerId) => playerPoints[playerId] || 0

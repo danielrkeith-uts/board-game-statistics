@@ -1,6 +1,9 @@
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select';
+import Button from 'react-bootstrap/Button';
+import { useState } from 'react';
 import type { WinCondition, Player } from '../../../../utils/types';
+import RecordPointsModal from './RecordPointsModal';
 
 interface PlayersStepProps {
 	groupPlayers: Player[];
@@ -36,6 +39,30 @@ const PlayersStep = (props: PlayersStepProps) => {
 		teamWinner,
 		onTeamWinnerChange,
 	} = props;
+
+	// State for points modal
+	const [pointsModalShow, setPointsModalShow] = useState(false);
+	const [selectedPlayerForPoints, setSelectedPlayerForPoints] = useState<{
+		id: number;
+		name: string;
+	} | null>(null);
+
+	// Handler functions for points modal
+	const handleOpenPointsModal = (playerId: number, playerName: string) => {
+		setSelectedPlayerForPoints({ id: playerId, name: playerName });
+		setPointsModalShow(true);
+	};
+
+	const handleClosePointsModal = () => {
+		setPointsModalShow(false);
+		setSelectedPlayerForPoints(null);
+	};
+
+	const handleSavePoints = (points: number) => {
+		if (selectedPlayerForPoints) {
+			onPlayerPointsChange(selectedPlayerForPoints.id, points);
+		}
+	};
 
 	// Helper function to format win condition display text
 	const getWinConditionText = (condition: WinCondition): string => {
@@ -102,7 +129,6 @@ const PlayersStep = (props: PlayersStepProps) => {
 		playerIdToTeam: Record<number, string>;
 		onPlayerTeamChange: (playerId: number, team: string) => void;
 		playerPoints: Record<number, number>;
-		onPlayerPointsChange: (playerId: number, points: number) => void;
 		isCurrentWinner: boolean;
 	}) => {
 		const {
@@ -113,7 +139,6 @@ const PlayersStep = (props: PlayersStepProps) => {
 			playerIdToTeam,
 			onPlayerTeamChange,
 			playerPoints,
-			onPlayerPointsChange,
 			isCurrentWinner,
 		} = args;
 		return (
@@ -156,19 +181,16 @@ const PlayersStep = (props: PlayersStepProps) => {
 					</Form.Select>
 				)}
 				{winCondition !== 'FIRST_TO_FINISH' && (
-					<Form.Control
-						type='number'
+					<Button
+						variant='outline-secondary'
 						size='sm'
 						className='w-auto'
-						placeholder='Points'
-						value={playerPoints[playerId] || ''}
-						onChange={(event) =>
-							onPlayerPointsChange(
-								playerId,
-								Number(event.target.value) || 0
-							)
-						}
-					/>
+						onClick={() => handleOpenPointsModal(playerId, name)}
+					>
+						{playerPoints[playerId]
+							? `${playerPoints[playerId]} pts`
+							: 'Set Points'}
+					</Button>
 				)}
 			</div>
 		);
@@ -198,7 +220,6 @@ const PlayersStep = (props: PlayersStepProps) => {
 							playerIdToTeam={playerIdToTeam}
 							onPlayerTeamChange={onPlayerTeamChange}
 							playerPoints={playerPoints}
-							onPlayerPointsChange={onPlayerPointsChange}
 							isCurrentWinner={playerId === currentWinnerId}
 						/>
 					);
@@ -402,6 +423,19 @@ const PlayersStep = (props: PlayersStepProps) => {
 						</div>
 					)}
 			</Form>
+
+			{/* Points Modal */}
+			<RecordPointsModal
+				show={pointsModalShow}
+				onHide={handleClosePointsModal}
+				playerName={selectedPlayerForPoints?.name || ''}
+				currentPoints={
+					selectedPlayerForPoints
+						? playerPoints[selectedPlayerForPoints.id] || 0
+						: 0
+				}
+				onSave={handleSavePoints}
+			/>
 		</div>
 	);
 };
