@@ -57,9 +57,6 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	);
 	const [singleWinnerId, setSingleWinnerId] = useState<number | null>(null);
 	const [teamWinner, setTeamWinner] = useState<string>('');
-	const [coopWinner, setCoopWinner] = useState<boolean | undefined>(
-		undefined
-	);
 
 	// Load owned games when modal opens
 	useEffect(() => {
@@ -134,7 +131,6 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		setPlayerPoints({});
 		setSingleWinnerId(null);
 		setTeamWinner('');
-		setCoopWinner(undefined);
 		setOwnedGames([]);
 		setGamesError(null);
 		handleClose();
@@ -203,8 +199,6 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			onSingleWinnerChange={setSingleWinnerId}
 			teamWinner={teamWinner}
 			onTeamWinnerChange={setTeamWinner}
-			coopWinner={coopWinner}
-			onCoopWinnerChange={setCoopWinner}
 		/>
 	);
 
@@ -221,7 +215,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 
 	const isWinnerSelected =
 		winCondition === 'COOPERATIVE'
-			? coopWinner !== undefined
+			? teamWinner !== ''
 			: winCondition === 'FIRST_TO_FINISH'
 				? singleWinnerId !== null
 				: selectedPlayerIds.length > 0; // HIGH/LOW score only need players and points
@@ -263,7 +257,9 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 
 			const hasWon = selectedPlayerIds.map((playerId) => {
 				if (winCondition === 'COOPERATIVE') {
-					return coopWinner === true;
+					return (
+						String(playerIdToTeam[playerId] || '1') === teamWinner
+					);
 				} else {
 					return playerId === getSingleWinnerId;
 				}

@@ -16,8 +16,6 @@ interface PlayersStepProps {
 	onSingleWinnerChange: (playerId: number) => void;
 	teamWinner: string;
 	onTeamWinnerChange: (team: string) => void;
-	coopWinner: boolean | undefined;
-	onCoopWinnerChange: (won: boolean) => void;
 }
 
 const PlayersStep = (props: PlayersStepProps) => {
@@ -35,8 +33,6 @@ const PlayersStep = (props: PlayersStepProps) => {
 		onSingleWinnerChange,
 		teamWinner,
 		onTeamWinnerChange,
-		coopWinner,
-		onCoopWinnerChange,
 	} = props;
 
 	// Helper function to format win condition display text
@@ -313,36 +309,6 @@ const PlayersStep = (props: PlayersStepProps) => {
 		</>
 	);
 
-	const CoopOutcomeGroup = () => (
-		<>
-			{winCondition === 'COOPERATIVE' && selectedPlayerIds.length > 0 && (
-				<Form.Group className='mt-2'>
-					<Form.Label>Game outcome</Form.Label>
-					<div>
-						<Form.Check
-							inline
-							type='radio'
-							label='Win'
-							name='coopWinner'
-							id='coopWinner-true'
-							checked={coopWinner === true}
-							onChange={() => onCoopWinnerChange(true)}
-						/>
-						<Form.Check
-							inline
-							type='radio'
-							label='Lose'
-							name='coopWinner'
-							id='coopWinner-false'
-							checked={coopWinner === false}
-							onChange={() => onCoopWinnerChange(false)}
-						/>
-					</div>
-				</Form.Group>
-			)}
-		</>
-	);
-
 	return (
 		<div className='vstack gap-2'>
 			<Form>
@@ -398,7 +364,6 @@ const PlayersStep = (props: PlayersStepProps) => {
 				<TeamEmptinessWarning />
 				<SingleWinnerGroup />
 				<TeamWinnerGroup />
-				<CoopOutcomeGroup />
 				{winCondition === 'FIRST_TO_FINISH' &&
 					selectedPlayerIds.length > 0 &&
 					singleWinnerId === null && (
@@ -411,13 +376,6 @@ const PlayersStep = (props: PlayersStepProps) => {
 					teamWinner === '' && (
 						<div className='text-danger small mt-1'>
 							Select a winning team.
-						</div>
-					)}
-				{winCondition === 'COOPERATIVE' &&
-					selectedPlayerIds.length > 0 &&
-					coopWinner === undefined && (
-						<div className='text-danger small mt-1'>
-							Select whether the team won or lost.
 						</div>
 					)}
 			</Form>
