@@ -58,10 +58,8 @@ stages:
         Contents: '**/target/*.?(war|jar)'
         TargetFolder: $(Build.ArtifactStagingDirectory)/backend
 
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: $(Build.ArtifactStagingDirectory)/backend
-        artifactName: Backend
+    - publish: $(Build.ArtifactStagingDirectory)/backend
+      artifact: backend
 
   - job: NpmBuildAndPublishArtifacts
     displayName: Npm Build and Publish Artifacts
@@ -94,10 +92,8 @@ stages:
         Contents: 'board-game-statistics/dist/*'
         TargetFolder: $(Build.ArtifactStagingDirectory)/frontend
 
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: $(Build.ArtifactStagingDirectory)/frontend
-        artifactName: Frontend
+    - publish: $(Build.ArtifactStagingDirectory)/frontend
+      artifact: frontend
 
 - stage: Deploy
   displayName: Deploy stage
@@ -113,10 +109,8 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-                artifactName: 'backend'
-                downloadPath: '$(Pipeline.Workspace)/backend'
+          - download: current
+            artifact: backend
 
           - task: AzureWebApp@1
             displayName: 'Azure Web App Deploy: board-game-statistics'
@@ -135,10 +129,8 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-                artifactName: 'Frontend'
-                downloadPath: '$(Build.SourcesDirectory)/frontend'
+          - download: current
+            artifact: frontend
 
           - script: |
               echo "Workspace:"
@@ -150,7 +142,7 @@ stages:
           - task: AzureStaticWebApp@0
             displayName: 'Azure Static Web App Deploy: board-game-statistics'
             inputs:
-              app_location: 'frontend'
+              app_location: '$(Pipeline.Workspace)/frontend/**/dist'
               skip_app_build: true
               skip_api_build: true
               azure_static_web_apps_api_token: '$(azureStaticDeploymentToken)'
