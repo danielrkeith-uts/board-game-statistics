@@ -33,12 +33,15 @@ interface Game {
 	publisher?: string | null;
 }
 
-export type TempWinCondition =
-	| 'HIGH_SCORE'
-	| 'LOW_SCORE'
-	| 'FIRST_TO_FINISH'
-	| 'COOPERATIVE'
-	| 'CUSTOM';
+export const WinConditionValues = {
+	HIGH_SCORE: 'HIGH_SCORE',
+	LOW_SCORE: 'LOW_SCORE',
+	FIRST_TO_FINISH: 'FIRST_TO_FINISH',
+	COOPERATIVE: 'COOPERATIVE',
+} as const;
+
+type WinCondition =
+	(typeof WinConditionValues)[keyof typeof WinConditionValues];
 
 interface RecordGamePayload {
 	groupId: number;
@@ -60,8 +63,6 @@ interface GameRecordDto {
 	playerTeams: (number | null)[];
 	hasWon: boolean[];
 }
-
-type WinCondition = 'single' | 'team' | 'coop';
 
 interface Player {
 	id: number;
@@ -88,8 +89,24 @@ interface PlayerStatistic {
 }
 
 interface BarChartData {
-	winData: number[];
-	lossData: number[];
+	wins: number[];
+	losses: number[];
+}
+
+interface PieChartData {
+	gameNames: string[];
+	numOfGames: number[];
+}
+
+interface TableData {
+	numOfGamesPlayed: number;
+	winRate: number;
+}
+
+interface GlobalPlayerStats {
+	barChartData: BarChartData;
+	pieChartData: PieChartData;
+	tableData: TableData;
 }
 
 export type {
@@ -97,14 +114,17 @@ export type {
 	BarChartData,
 	Game,
 	GameRecordDto,
+	GlobalPlayerStats,
 	Group,
 	GroupMember,
 	GroupPermissions,
 	LeaderboardRow,
 	OwnedGame,
 	Permission,
+	PieChartData,
 	Player,
 	PlayerStatistic,
 	RecordGamePayload,
 	WinCondition,
+	TableData,
 };
