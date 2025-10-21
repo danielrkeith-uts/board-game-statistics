@@ -54,15 +54,15 @@ stages:
     - task: CopyFiles@2
       displayName: 'Copy Files to artifact staging directory'
       inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)'
+        SourceFolder: '$(System.DefaultWorkingDirectory)/board-game-statistics-api'
         Contents: '**/target/*.?(war|jar)'
-        TargetFolder: $(Build.ArtifactStagingDirectory)
+        TargetFolder: $(Build.ArtifactStagingDirectory)/backend
 
-    - upload: $(Build.ArtifactStagingDirectory)
-      artifact: drop
+    - publish: $(Build.ArtifactStagingDirectory)/backend
+      artifact: backend
   
-  - job: NpmInstallAndBuild
-    displayName: Npm Install and Build
+  - job: NpmBuildAndPublishArtifacts
+    displayName: Npm Build and Publish Artifacts
     pool:
       vmImage: $(vmImageName)
     
@@ -77,6 +77,15 @@ stages:
         npm install
         npm run build
       displayName: 'Build React App'
+    
+    - task: CopyFiles@2
+      displayName: 'Copy Files to artifact staging directory'
+      inputs:
+        SourceFolder: '$(System.DefaultWorkingDirectory)/board-game-statistics/dist'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)/frontend'
+
+    - publish: $(Build.ArtifactStagingDirectory)/frontend
+      artifact: frontend
 
 - stage: Deploy
   displayName: Deploy stage
@@ -98,7 +107,7 @@ stages:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
               appName: $(webAppName)
-              package: '$(Pipeline.Workspace)/drop/**/target/*.?(war|jar)'
+              package: '$(Pipeline.Workspace)/backend/**/target/*.?(war|jar)'
   
   - deployment: DeployReactWebApp
     displayName: Deploy React Web App
@@ -111,8 +120,8 @@ stages:
           steps:
           - task: AzureStaticWebApp@0
             inputs:
-              app_location: 'board-game-statistics'
-              output_location: 'board-game-statistics/dist'
+              app_location: '$(Pipeline.Workspace)/frontend'
+              output_location: '(Pipeline.Workspace)/frontend'
               skip_api_build: true
               is_static_export: false
               azure_static_web_apps_api_token: $(azureStaticDeploymentToken)
