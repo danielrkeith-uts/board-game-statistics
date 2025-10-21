@@ -60,6 +60,40 @@ stages:
 
     - publish: $(Build.ArtifactStagingDirectory)/backend
       artifact: backend
+    
+  - job: NpmBuildAndPublishArtifacts
+    displayName: Npm Build and Publish Artifacts
+    pool:
+        vmImage: $(vmImageName)
+    
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.x'
+      displayName: 'Install Node.js'
+
+    - task: Npm@1
+      inputs:
+        command: 'install'
+        workingDir: 'board-game-statistics'
+      displayName: 'Npm Install'
+    
+    - task: Npm@1
+      inputs:
+        command: 'custom'
+        workingDir: 'board-game-statistics'
+        customCommand: 'run build'
+      displayName: 'Build'
+    
+    - task: CopyFiles@2
+      displayName: 'Copy Files to artifact staging directory'
+      inputs:
+        SourceFolder: '$(System.DefaultWorkingDirectory)'
+        Contents: 'board-game-statistics/dist/*'
+        TargetFolder: $(Build.ArtifactStagingDirectory)/frontend
+
+    - publish: $(Build.ArtifactStagingDirectory)/frontend
+      artifact: frontend
 
 - stage: Deploy
   displayName: Deploy stage
@@ -83,4 +117,23 @@ stages:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
               appName: $(webAppName)
-              package: '$(Pipeline.Workspace)/backend/**/target/*.?(war|jar)'
+              package: '$(Pipeline.Workspace)/backend/*.?(war|jar)'
+
+  - deployment: DeployReactWebApp
+    displayName: Deploy React Web App
+    environment: $(environmentName)
+    pool:
+      vmImage: $(vmImageName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: frontend
+          - task: AzureStaticWebApp@0
+            displayName: 'Azure Static Web App Deploy: board-game-statistics'
+            inputs:
+              output_location: '$(Pipeline.Workspace)/frontend'
+              skip_app_build: true
+              skip_api_build: true
+              azure_static_web_apps_api_token: '$(azureStaticDeploymentToken)'
