@@ -22,7 +22,8 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 		null
 	);
 
-	const { getGroupPermissions } = useContext(PermissionsContext);
+	const { getGroupPermissions, loading: permissionsLoading } =
+		useContext(PermissionsContext);
 	const thisGroupsPermissions = getGroupPermissions(group.id);
 
 	useEffect(() => {
@@ -87,10 +88,7 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 											const points =
 												visibleRecord.points[index] ||
 												0;
-											const team = visibleRecord
-												.playerTeams[index]
-												? `Team ${visibleRecord.playerTeams[index]}`
-												: 'Solo/Co-op';
+											const team = `Team ${visibleRecord.playerTeams[index] || 1}`;
 											const isWinner =
 												visibleRecord.hasWon[index];
 											return (
@@ -111,7 +109,10 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 					<Button variant='secondary' onClick={onClose}>
 						Close
 					</Button>
-					{thisGroupsPermissions?.includes('MANAGE_GAMES_PLAYED') && (
+					{(permissionsLoading ||
+						thisGroupsPermissions?.includes(
+							'MANAGE_GAMES_PLAYED'
+						)) && (
 						<Button variant='danger' onClick={handleDelete}>
 							Delete
 						</Button>
