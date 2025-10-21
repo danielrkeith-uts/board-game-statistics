@@ -152,19 +152,21 @@ const PlayersStep = (props: PlayersStepProps) => {
 								]}
 					</Form.Select>
 				)}
-				<Form.Control
-					type='number'
-					size='sm'
-					className='w-auto'
-					placeholder='Points'
-					value={playerPoints[playerId] || ''}
-					onChange={(event) =>
-						onPlayerPointsChange(
-							playerId,
-							Number(event.target.value) || 0
-						)
-					}
-				/>
+				{winCondition !== 'FIRST_TO_FINISH' && (
+					<Form.Control
+						type='number'
+						size='sm'
+						className='w-auto'
+						placeholder='Points'
+						value={playerPoints[playerId] || ''}
+						onChange={(event) =>
+							onPlayerPointsChange(
+								playerId,
+								Number(event.target.value) || 0
+							)
+						}
+					/>
+				)}
 			</div>
 		);
 	};

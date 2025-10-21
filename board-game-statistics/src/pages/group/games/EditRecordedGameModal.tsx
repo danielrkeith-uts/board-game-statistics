@@ -93,9 +93,12 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 												visibleRecord.hasWon[index];
 											return (
 												<li key={playerId}>
-													{playerName} - {points}{' '}
-													points ({team}){' '}
-													{isWinner ? '🏆' : ''}
+													{playerName}
+													{visibleRecord.winCondition !==
+														'FIRST_TO_FINISH' &&
+														` - ${points} points`}
+													{` (${team})`}
+													{isWinner ? ' 🏆' : ''}
 												</li>
 											);
 										}

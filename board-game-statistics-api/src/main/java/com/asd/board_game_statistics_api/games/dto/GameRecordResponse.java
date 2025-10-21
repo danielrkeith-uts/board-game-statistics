@@ -7,6 +7,7 @@ public record GameRecordResponse(
         int groupId,
         int gameId,
         String gameName,
+        String winCondition,
         String datePlayed,
         List<Integer> playerIds,
         List<Integer> points,

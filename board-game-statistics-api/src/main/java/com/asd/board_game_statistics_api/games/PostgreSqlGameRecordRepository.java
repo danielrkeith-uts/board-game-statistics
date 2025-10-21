@@ -30,9 +30,15 @@ public class PostgreSqlGameRecordRepository implements IGameRecordRepository {
         int playedGameId = (int) playedGame[0];
         LocalDate datePlayed = (LocalDate) playedGame[1];
 
-        // Get game name
+        // Get game name and win condition
         String gameName = jdbcTemplate.queryForObject(
             "SELECT name FROM bgs.board_game WHERE id = ?", 
+            String.class, 
+            request.gameId()
+        );
+        
+        String winCondition = jdbcTemplate.queryForObject(
+            "SELECT win_condition FROM bgs.board_game WHERE id = ?", 
             String.class, 
             request.gameId()
         );
@@ -55,6 +61,7 @@ public class PostgreSqlGameRecordRepository implements IGameRecordRepository {
             request.groupId(),
             request.gameId(),
             gameName,
+            winCondition,
             datePlayed.format(DateTimeFormatter.ISO_LOCAL_DATE),
             request.playerIds(),
             request.points(),
@@ -66,7 +73,7 @@ public class PostgreSqlGameRecordRepository implements IGameRecordRepository {
     @Override
     public List<GameRecordResponse> getGameRecordsByGroup(int groupId) {
         String sql = """
-            SELECT pg.played_game_id, pg.game_id, pg.group_id, pg.date_played, bg.name as game_name 
+            SELECT pg.played_game_id, pg.game_id, pg.group_id, pg.date_played, bg.name as game_name, bg.win_condition
             FROM bgs.played_game pg 
             INNER JOIN bgs.board_game bg ON pg.game_id = bg.id 
             WHERE pg.group_id = ? 
@@ -98,6 +105,7 @@ public class PostgreSqlGameRecordRepository implements IGameRecordRepository {
         int gameId = rs.getInt("game_id");
         int groupId = rs.getInt("group_id");
         String gameName = rs.getString("game_name");
+        String winCondition = rs.getString("win_condition");
         String datePlayed = rs.getDate("date_played").toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
 
         // Fetch player results for this played game
@@ -118,6 +126,7 @@ public class PostgreSqlGameRecordRepository implements IGameRecordRepository {
             groupId,
             gameId,
             gameName,
+            winCondition,
             datePlayed,
             playerIds,
             points,

@@ -59,6 +59,7 @@ interface GameRecordDto {
 	groupId: number;
 	gameId: number;
 	gameName: string;
+	winCondition: string;
 	datePlayed: string;
 	playerIds: number[];
 	points: number[];
