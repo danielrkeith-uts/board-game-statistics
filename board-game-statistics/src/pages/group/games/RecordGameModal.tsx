@@ -6,7 +6,6 @@ import type {
 	RecordGamePayload,
 	WinCondition,
 	Game,
-	TempWinCondition,
 } from '../../../utils/types';
 import {
 	apiRecordGame,
@@ -23,19 +22,15 @@ interface RecordGameModalProps {
 	onError?: (message: string) => void;
 }
 
-// Helper function to map backend win conditions to frontend win conditions
-const mapWinCondition = (
-	backendWinCondition: TempWinCondition
-): WinCondition => {
-	switch (backendWinCondition) {
+const mapWinCondition = (winCondition: WinCondition): WinCondition => {
+	switch (winCondition) {
 		case 'COOPERATIVE':
-			return 'coop';
+			return 'COOPERATIVE';
 		case 'HIGH_SCORE':
 		case 'LOW_SCORE':
 		case 'FIRST_TO_FINISH':
-		case 'CUSTOM':
 		default:
-			return 'single';
+			return 'HIGH_SCORE';
 	}
 };
 
@@ -52,7 +47,8 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 
 	const [selectedGameId, setSelectedGameId] = useState<string>('');
 	const [selectedPlayerIds, setSelectedPlayerIds] = useState<number[]>([]);
-	const [winCondition, setWinCondition] = useState<WinCondition>('single');
+	const [winCondition, setWinCondition] =
+		useState<WinCondition>('HIGH_SCORE');
 	const [numTeams, setNumTeams] = useState<number | null>(2);
 	const [playerIdToTeam, setPlayerIdToTeam] = useState<
 		Record<number, string>
@@ -107,7 +103,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			);
 			if (selectedGame) {
 				const mappedWinCondition = mapWinCondition(
-					selectedGame.winCondition as TempWinCondition
+					selectedGame.winCondition
 				);
 				setWinCondition(mappedWinCondition);
 			}
@@ -133,7 +129,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		setStep(1);
 		setSelectedGameId('');
 		setSelectedPlayerIds([]);
-		setWinCondition('single');
+		setWinCondition('HIGH_SCORE');
 		setNumTeams(2);
 		setPlayerIdToTeam({});
 		setPlayerPoints({});
@@ -152,13 +148,11 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 				: [...previousSelected, id]
 		);
 
-		// If enabling player in team mode, default to Team 1
+		// Clear team assignments when deselecting players
 		setPlayerIdToTeam((prev) => {
 			const newMap = { ...prev };
 			if (selectedPlayerIds.includes(id)) {
 				delete newMap[id];
-			} else if (winCondition === 'team') {
-				newMap[id] = newMap[id] ?? '1';
 			}
 			return newMap;
 		});
@@ -227,11 +221,9 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	};
 
 	const isWinnerSelected =
-		winCondition === 'single'
-			? singleWinnerId !== null
-			: winCondition === 'team'
-				? teamWinner !== ''
-				: coopWinner !== undefined;
+		winCondition === 'COOPERATIVE'
+			? coopWinner !== undefined
+			: singleWinnerId !== null;
 
 	const handleSave = async () => {
 		try {
@@ -239,23 +231,16 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			const points = selectedPlayerIds.map(
 				(playerId) => playerPoints[playerId] || 0
 			);
-			const playerTeams = selectedPlayerIds.map((playerId) => {
-				if (winCondition === 'team') {
-					return Number(playerIdToTeam[playerId] || '1');
-				} else {
-					return null; // Solo or cooperative games
-				}
+			const playerTeams = selectedPlayerIds.map(() => {
+				return null;
 			});
 			const hasWon = selectedPlayerIds.map((playerId) => {
-				if (winCondition === 'single') {
-					return playerId === singleWinnerId;
-				} else if (winCondition === 'team') {
-					return (
-						String(playerIdToTeam[playerId] || '1') === teamWinner
-					);
-				} else {
+				if (winCondition === 'COOPERATIVE') {
 					// coop: all players have the same win status
 					return coopWinner === true;
+				} else {
+					// For HIGH_SCORE, LOW_SCORE, FIRST_TO_FINISH: single winner
+					return playerId === singleWinnerId;
 				}
 			});
 

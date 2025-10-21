@@ -31,7 +31,7 @@ interface Game {
 	id: number;
 	name: string;
 	publisher?: string | null;
-	winCondition: TempWinCondition;
+	winCondition: WinCondition;
 }
 
 export const WinConditionValues = {

@@ -42,12 +42,14 @@ const PlayersStep = (props: PlayersStepProps) => {
 	// Helper function to format win condition display text
 	const getWinConditionText = (condition: WinCondition): string => {
 		switch (condition) {
-			case 'single':
-				return 'Single Winner';
-			case 'team':
-				return 'Team-based';
-			case 'coop':
+			case 'COOPERATIVE':
 				return 'Cooperative';
+			case 'HIGH_SCORE':
+				return 'High Score';
+			case 'LOW_SCORE':
+				return 'Low Score';
+			case 'FIRST_TO_FINISH':
+				return 'First to Finish';
 			default:
 				return 'Unknown';
 		}
@@ -79,7 +81,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 				className='d-flex align-items-center gap-2 p-2 border rounded'
 			>
 				<span className='fw-medium'>{name}</span>
-				{winCondition === 'team' && (
+				{winCondition === 'COOPERATIVE' && (
 					<Form.Select
 						aria-label='Select team'
 						size='sm'
@@ -158,17 +160,18 @@ const PlayersStep = (props: PlayersStepProps) => {
 
 	const TeamCountWarning = () => (
 		<>
-			{winCondition === 'team' && (numTeams === null || numTeams < 2) && (
-				<div className='text-danger small mt-1'>
-					Enter number of teams (2 or more).
-				</div>
-			)}
+			{winCondition === 'COOPERATIVE' &&
+				(numTeams === null || numTeams < 2) && (
+					<div className='text-danger small mt-1'>
+						Enter number of teams (2 or more).
+					</div>
+				)}
 		</>
 	);
 
 	const TeamAssignmentWarning = () => (
 		<>
-			{winCondition === 'team' &&
+			{winCondition === 'COOPERATIVE' &&
 				(numTeams ?? 0) >= 2 &&
 				selectedPlayerIds.length > 0 &&
 				selectedPlayerIds.some(
@@ -182,7 +185,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 	);
 
 	const TeamEmptinessWarning = () => {
-		if (winCondition !== 'team' || (numTeams ?? 0) < 2) {
+		if (winCondition !== 'COOPERATIVE' || (numTeams ?? 0) < 2) {
 			return null;
 		}
 		const teamPlayerCounts = new Array(numTeams ?? 0).fill(0);
@@ -204,7 +207,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 
 	const SingleWinnerGroup = () => (
 		<>
-			{winCondition === 'single' && selectedPlayerIds.length > 0 && (
+			{winCondition !== 'COOPERATIVE' && selectedPlayerIds.length > 0 && (
 				<Form.Group className='mt-2'>
 					<Form.Label>Winning player</Form.Label>
 					<div>
@@ -234,7 +237,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 
 	const TeamWinnerGroup = () => (
 		<>
-			{winCondition === 'team' && selectedPlayerIds.length > 0 && (
+			{winCondition === 'COOPERATIVE' && selectedPlayerIds.length > 0 && (
 				<Form.Group className='mt-2'>
 					<Form.Label>Winning team</Form.Label>
 					<div>
@@ -262,7 +265,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 
 	const CoopOutcomeGroup = () => (
 		<>
-			{winCondition === 'coop' && selectedPlayerIds.length > 0 && (
+			{winCondition === 'COOPERATIVE' && selectedPlayerIds.length > 0 && (
 				<Form.Group className='mt-2'>
 					<Form.Label>Game outcome</Form.Label>
 					<div>
@@ -345,21 +348,21 @@ const PlayersStep = (props: PlayersStepProps) => {
 				<SingleWinnerGroup />
 				<TeamWinnerGroup />
 				<CoopOutcomeGroup />
-				{winCondition === 'single' &&
+				{winCondition !== 'COOPERATIVE' &&
 					selectedPlayerIds.length > 0 &&
 					singleWinnerId === null && (
 						<div className='text-danger small mt-1'>
 							Select a winning player.
 						</div>
 					)}
-				{winCondition === 'team' &&
+				{winCondition === 'COOPERATIVE' &&
 					selectedPlayerIds.length > 0 &&
 					teamWinner === '' && (
 						<div className='text-danger small mt-1'>
 							Select a winning team.
 						</div>
 					)}
-				{winCondition === 'coop' &&
+				{winCondition === 'COOPERATIVE' &&
 					selectedPlayerIds.length > 0 &&
 					coopWinner === undefined && (
 						<div className='text-danger small mt-1'>
