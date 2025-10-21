@@ -13,7 +13,7 @@ export const apiCreateNewGroup = (groupName: string): Promise<Group> =>
 				});
 			}
 
-			throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+			throw new Error(`Error creating new group.`);
 		})
 		.then((data) => {
 			return data as Group;
@@ -30,7 +30,7 @@ export const apiGetGroupsByAccountId = (): Promise<Group[]> =>
 					throw new Error(err);
 				});
 			}
-			throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+			throw new Error(`Error fetching groups.`);
 		})
 		.then((data) => {
 			return data as Group[];
@@ -47,5 +47,5 @@ export const apiLeaveGroup = (groupId: number): Promise<boolean> =>
 			});
 		}
 
-		throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+		throw new Error(`Error leaving group.`);
 	});

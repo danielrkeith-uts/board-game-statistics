@@ -1,22 +1,28 @@
 import type { ChartData, ChartOptions, TooltipItem } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import type { BarChartData } from '../../utils/types';
+import { WinConditionValues, type BarChartData } from '../../utils/types';
 
 interface BarChartProps {
 	barChartData: BarChartData;
 }
 
 const BarChart = (props: BarChartProps) => {
-	const { winData, lossData } = props.barChartData;
+	const { wins, losses } = props.barChartData;
 
 	const maxBarThickness = 200;
 
+	const labels = Object.values(WinConditionValues).map((winCon) =>
+		winCon.replaceAll('_', ' ').toLocaleUpperCase()
+	);
+
+	console.log(props.barChartData);
+
 	const chartData: ChartData<'bar', number[], string> = {
-		labels: ['Single Player', 'Team Based', 'Co-op'],
+		labels: labels,
 		datasets: [
 			{
 				label: 'Wins',
-				data: winData,
+				data: wins,
 				order: 2,
 				borderColor: '#3dd078ff',
 				backgroundColor: '#4eec8dff',
@@ -24,7 +30,7 @@ const BarChart = (props: BarChartProps) => {
 			},
 			{
 				label: 'Losses',
-				data: lossData,
+				data: losses,
 				order: 1,
 				borderColor: '#e14e6eff',
 				backgroundColor: '#FF6285',

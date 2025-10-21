@@ -1,17 +1,30 @@
 import type { ChartData, ChartOptions, TooltipItem } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
+import type { PieChartData } from '../../utils/types';
 
-const PieChart = () => {
+interface PieChartProps {
+	pieChartData: PieChartData;
+}
+
+const PieChart = (props: PieChartProps) => {
+	const { pieChartData } = props;
+
+	const getRandomColour = () => {
+		return '#000000'.replace(/0/g, () =>
+			(~~(Math.random() * 16)).toString(16)
+		);
+	};
+
+	const colors = Array.from(Array(pieChartData.gameNames.length)).map(() =>
+		getRandomColour()
+	);
+
 	const chartData: ChartData<'pie', number[], string> = {
-		labels: [
-			'Name of board game 1',
-			'Name of board game 2',
-			'Name of board game 3',
-		],
+		labels: pieChartData.gameNames,
 		datasets: [
 			{
-				data: [1, 3, 2],
-				backgroundColor: ['#ff0000ff', '#00ff1eff', '#1100ffff'],
+				data: pieChartData.numOfGames,
+				backgroundColor: colors,
 			},
 		],
 	};

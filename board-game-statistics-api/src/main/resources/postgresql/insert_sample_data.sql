@@ -97,16 +97,16 @@ INSERT INTO bgs.group_membership (group_id, account_id, permissions_mask, join_t
 -- Seed board games (catalog)
 INSERT INTO bgs.board_game (name, publisher, win_condition) VALUES
 ('Catan', 'Kosmos', 'HIGH_SCORE'),
-('Carcassonne', 'Hans im Glück', 'HIGH_SCORE'),
+('Carcassonne', 'Hans im Glück', 'LOW_SCORE'),
 ('Terraforming Mars', 'FryxGames', 'HIGH_SCORE'),
-('7 Wonders', 'Repos Production', 'HIGH_SCORE'),
+('7 Wonders', 'Repos Production', 'LOW_SCORE'),
 ('Jails and Jaberwocks', 'Unknown Publisher', 'FIRST_TO_FINISH'),
 ('Worms and Walkways', 'Unknown Publisher', 'COOPERATIVE'),
 ('Chess 2.0', 'Unknown Publisher', 'FIRST_TO_FINISH'),
-('One', 'Unknown Publisher', 'LOW_SCORE'),
-('Dice', 'Unknown Publisher', 'HIGH_SCORE'),
-('Duopoly', 'Unknown Publisher', 'COOPERATIVE'),
-('Game Board', 'Unknown Publisher', 'FIRST_TO_FINISH')
+('One', 'Unknown Publisher', 'FIRST_TO_FINISH'),
+('Dice', 'Unknown Publisher', 'LOW_SCORE'),
+('Duopoly', 'Unknown Publisher', 'HIGH_SCORE'),
+('Game Board', 'Unknown Publisher', 'COOPERATIVE')
 ON CONFLICT (name) DO NOTHING;
 
 INSERT INTO bgs.owned_game (account_id, game_id) VALUES
@@ -163,6 +163,70 @@ SELECT played_game_id, 2, 85, 1, FALSE FROM last3 UNION ALL
 SELECT played_game_id, 5, 160, 2, TRUE  FROM last3 UNION ALL
 SELECT played_game_id, 7, 155, 2, TRUE  FROM last3 UNION ALL
 SELECT played_game_id, 9, 100, 3, FALSE FROM last3;
+
+INSERT INTO bgs.played_game (game_id, group_id, date_played) VALUES
+(1, 1, CURRENT_DATE - INTERVAL '1 day'),
+(2, 2, CURRENT_DATE - INTERVAL '2 days'),
+(3, 3, CURRENT_DATE - INTERVAL '3 days'),
+(1, 1, CURRENT_DATE - INTERVAL '4 days'),
+(2, 2, CURRENT_DATE - INTERVAL '5 days'),
+(3, 3, CURRENT_DATE - INTERVAL '6 days'),
+(1, 1, CURRENT_DATE - INTERVAL '7 days'),
+(2, 2, CURRENT_DATE - INTERVAL '8 days'),
+(3, 3, CURRENT_DATE - INTERVAL '9 days'),
+(1, 1, CURRENT_DATE - INTERVAL '10 days'),
+(2, 2, CURRENT_DATE - INTERVAL '1 day'),
+(3, 3, CURRENT_DATE - INTERVAL '2 days'),
+(4, 4, CURRENT_DATE - INTERVAL '3 days'),
+(2, 2, CURRENT_DATE - INTERVAL '4 days'),
+(3, 3, CURRENT_DATE - INTERVAL '5 days'),
+(4, 4, CURRENT_DATE - INTERVAL '6 days'),
+(2, 2, CURRENT_DATE - INTERVAL '7 days'),
+(3, 3, CURRENT_DATE - INTERVAL '8 days'),
+(4, 4, CURRENT_DATE - INTERVAL '9 days'),
+(2, 2, CURRENT_DATE - INTERVAL '10 days'),
+(3, 3, CURRENT_DATE - INTERVAL '1 day'),
+(4, 4, CURRENT_DATE - INTERVAL '2 days'),
+(5, 5, CURRENT_DATE - INTERVAL '3 days'),
+(3, 3, CURRENT_DATE - INTERVAL '4 days'),
+(4, 4, CURRENT_DATE - INTERVAL '5 days'),
+(5, 5, CURRENT_DATE - INTERVAL '6 days'),
+(3, 3, CURRENT_DATE - INTERVAL '7 days'),
+(4, 4, CURRENT_DATE - INTERVAL '8 days'),
+(5, 5, CURRENT_DATE - INTERVAL '9 days'),
+(3, 3, CURRENT_DATE - INTERVAL '10 days');
+
+INSERT INTO bgs.player_result (played_game_id, account_id, points, player_team, has_won) VALUES
+(1, 1, 120, 1, TRUE),
+(2, 1, 95, 2, FALSE),
+(3, 1, 110, 1, TRUE),
+(4, 1, 130, 2, TRUE),
+(5, 1, 80, 1, FALSE),
+(6, 1, 105, 2, TRUE),
+(7, 1, 115, 1, TRUE),
+(8, 1, 90, 2, FALSE),
+(9, 1, 125, 1, TRUE),
+(10, 1, 100, 2, FALSE),
+(11, 2, 140, 2, TRUE),
+(12, 2, 100, 1, FALSE),
+(13, 2, 115, 2, TRUE),
+(14, 2, 135, 1, TRUE),
+(15, 2, 85, 2, FALSE),
+(16, 2, 110, 1, TRUE),
+(17, 2, 120, 2, TRUE),
+(18, 2, 95, 1, FALSE),
+(19, 2, 130, 2, TRUE),
+(20, 2, 105, 1, FALSE),
+(21, 3, 150, 1, TRUE),
+(22, 3, 105, 2, FALSE),
+(23, 3, 120, 1, TRUE),
+(24, 3, 140, 2, TRUE),
+(25, 3, 90, 1, FALSE),
+(26, 3, 115, 2, TRUE),
+(27, 3, 125, 1, TRUE),
+(28, 3, 100, 2, FALSE),
+(29, 3, 135, 1, TRUE),
+(30, 3, 110, 2, FALSE);
 
 INSERT INTO bgs.reset_password_code (account_id, code) VALUES
 (1, 123456),  -- Alice has a pending password reset code
