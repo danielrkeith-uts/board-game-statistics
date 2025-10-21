@@ -58,7 +58,8 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 				<Modal.Header closeButton>
 					<Modal.Title>
 						{visibleRecord
-							? `Game #${visibleRecord.gameId}`
+							? visibleRecord.gameName ||
+								`Game #${visibleRecord.gameId}`
 							: 'Game details'}
 					</Modal.Title>
 				</Modal.Header>

@@ -50,7 +50,7 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 
 	const renderRecordItem = (record: GameRecordDto) => {
 		const displayDate = new Date(record.datePlayed).toLocaleDateString();
-		const gameName = `Game #${record.gameId}`; // TODO: replace with real name
+		const gameName = record.gameName || `Game #${record.gameId}`;
 
 		// Find winners
 		const winners = record.playerIds

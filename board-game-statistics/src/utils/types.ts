@@ -58,6 +58,7 @@ interface GameRecordDto {
 	playedGameId: number;
 	groupId: number;
 	gameId: number;
+	gameName: string;
 	datePlayed: string;
 	playerIds: number[];
 	points: number[];

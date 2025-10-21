@@ -24,13 +24,12 @@ interface RecordGameModalProps {
 
 const mapWinCondition = (winCondition: WinCondition): WinCondition => {
 	switch (winCondition) {
-		case 'COOPERATIVE':
-			return 'COOPERATIVE';
 		case 'HIGH_SCORE':
 		case 'LOW_SCORE':
 		case 'FIRST_TO_FINISH':
+		case 'COOPERATIVE':
 		default:
-			return 'HIGH_SCORE';
+			return winCondition;
 	}
 };
 
