@@ -22,7 +22,8 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [selected, setSelected] = useState<GameRecordDto | null>(null);
 
-	const { getGroupPermissions } = useContext(PermissionsContext);
+	const { getGroupPermissions, loading: permissionsLoading } =
+		useContext(PermissionsContext);
 	const thisGroupsPermissions = getGroupPermissions(group.id);
 
 	const handleOpenRecordModal = () => setShowRecordModal(true);
@@ -87,14 +88,16 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 		<div className='container vstack gap-3'>
 			<div className='d-flex justify-content-between align-items-center mt-2'>
 				<h5 className='mb-0'>Games</h5>
-				{thisGroupsPermissions?.includes('MANAGE_GAMES_PLAYED') && (
+				{(permissionsLoading ||
+					thisGroupsPermissions?.includes('MANAGE_GAMES_PLAYED')) && (
 					<Button variant='success' onClick={handleOpenRecordModal}>
 						Record game
 					</Button>
 				)}
 			</div>
 
-			{thisGroupsPermissions?.includes('MANAGE_GAMES_PLAYED') && (
+			{(permissionsLoading ||
+				thisGroupsPermissions?.includes('MANAGE_GAMES_PLAYED')) && (
 				<div className='text-muted'>
 					Use the button to record a game played in {group.groupName}.
 				</div>
@@ -121,7 +124,7 @@ const GroupGamesView = (props: GroupGamesViewProps) => {
 				group={group}
 				onSuccess={(msg) => {
 					setSuccess(msg);
-					fetchRecords();
+					window.location.reload();
 				}}
 				onError={(msg) => setError(msg)}
 			/>
