@@ -78,7 +78,7 @@ interface LeaderboardRow {
 	accountId: number;
 	firstName: string;
 	lastName: string;
-	points: number;
+	wins: number;
 }
 
 interface PlayerStatistic {
