@@ -138,12 +138,19 @@ stages:
           - task: DownloadPipelineArtifact@2
             inputs:
                 artifactName: 'Frontend'
-                downloadPath: '$(Pipeline.Workspace)/frontend'
+                downloadPath: '$(Build.SourcesDirectory)/frontend'
+
+          - script: |
+              echo "Workspace:"
+              ls -R $(Pipeline.Workspace)
+              echo "Sources:"
+              ls -R $(Build.SourcesDirectory)
+            displayName: 'List workspace contents'
 
           - task: AzureStaticWebApp@0
             displayName: 'Azure Static Web App Deploy: board-game-statistics'
             inputs:
-              app_location: '$(Pipeline.Workspace)/frontend'
+              app_location: 'frontend'
               skip_app_build: true
               skip_api_build: true
               azure_static_web_apps_api_token: '$(azureStaticDeploymentToken)'
