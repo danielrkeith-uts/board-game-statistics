@@ -76,7 +76,7 @@ stages:
         deploy:
           steps:
           - download: current
-            artifact: BackendArtifact
+            artifact: backend
           - task: AzureWebApp@1
             displayName: 'Azure Web App Deploy: board-game-statistics'
             inputs:
