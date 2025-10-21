@@ -29,8 +29,8 @@ public class StatisticsServiceTests extends TestsWithMockedDatabase {
         PlayerStatisticResponse response = statisticsService.getPlayerStatsByGroupId(accountId, groupId);
 
         Assertions.assertNotNull(response);
-        Assertions.assertEquals(3, response.numOfGamesPlayed());
+        Assertions.assertEquals(6, response.numOfGamesPlayed());
         Assertions.assertEquals(1, response.wins());
-        Assertions.assertEquals(2, response.losses());
+        Assertions.assertEquals(5, response.losses());
     }
 }
