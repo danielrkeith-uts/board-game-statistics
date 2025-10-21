@@ -59,7 +59,7 @@ stages:
         TargetFolder: $(Build.ArtifactStagingDirectory)/backend
 
     - publish: $(Build.ArtifactStagingDirectory)/backend
-      artifact: BackendArtifact
+      artifact: backend
 
 - stage: Deploy
   displayName: Deploy stage
