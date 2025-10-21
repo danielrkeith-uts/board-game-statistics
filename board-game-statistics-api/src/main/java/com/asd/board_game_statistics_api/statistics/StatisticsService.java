@@ -1,9 +1,9 @@
 package com.asd.board_game_statistics_api.statistics;
 
-import com.asd.board_game_statistics_api.games.PostgreSqlGameRecordRepository;
 import com.asd.board_game_statistics_api.group.GroupService;
 import com.asd.board_game_statistics_api.group.exceptions.GroupException;
 import com.asd.board_game_statistics_api.model.PlayerResult;
+import com.asd.board_game_statistics_api.statistics.dto.GlobalStatisticResponse;
 import com.asd.board_game_statistics_api.statistics.dto.PlayerStatisticResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,5 +41,11 @@ public class StatisticsService implements IStatisticsService {
                 wins,
                 losses
         );
+    }
+
+    @Override
+    public GlobalStatisticResponse getGlobalStatisticsByAccount(Integer accountId) {
+        
+        return null;
     }
 }
