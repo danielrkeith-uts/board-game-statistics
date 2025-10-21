@@ -55,6 +55,47 @@ const PlayersStep = (props: PlayersStepProps) => {
 		}
 	};
 
+	const getCurrentWinnerId = (): number | null => {
+		if (selectedPlayerIds.length === 0) {
+			return null;
+		}
+
+		if (winCondition === 'COOPERATIVE') {
+			return null; // No single winner for cooperative games
+		}
+
+		if (winCondition === 'FIRST_TO_FINISH') {
+			return singleWinnerId;
+		}
+
+		// For HIGH_SCORE and LOW_SCORE, calculate based on points
+		const playersWithPoints = selectedPlayerIds
+			.map((playerId) => ({
+				id: playerId,
+				points: playerPoints[playerId] || 0,
+			}))
+			.filter((player) => player.points > 0);
+
+		if (playersWithPoints.length === 0) {
+			return null;
+		}
+
+		const winner =
+			winCondition === 'HIGH_SCORE'
+				? playersWithPoints.reduce((bestPlayer, currentPlayer) =>
+						currentPlayer.points > bestPlayer.points
+							? currentPlayer
+							: bestPlayer
+					)
+				: playersWithPoints.reduce((bestPlayer, currentPlayer) =>
+						currentPlayer.points < bestPlayer.points
+							? currentPlayer
+							: bestPlayer
+					);
+
+		return winner.id;
+	};
+
 	const PlayerRow = (args: {
 		playerId: number;
 		name: string;
@@ -64,6 +105,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 		onPlayerTeamChange: (playerId: number, team: string) => void;
 		playerPoints: Record<number, number>;
 		onPlayerPointsChange: (playerId: number, points: number) => void;
+		isCurrentWinner: boolean;
 	}) => {
 		const {
 			playerId,
@@ -74,13 +116,17 @@ const PlayersStep = (props: PlayersStepProps) => {
 			onPlayerTeamChange,
 			playerPoints,
 			onPlayerPointsChange,
+			isCurrentWinner,
 		} = args;
 		return (
 			<div
 				key={playerId}
 				className='d-flex align-items-center gap-2 p-2 border rounded'
 			>
-				<span className='fw-medium'>{name}</span>
+				<span className='fw-medium'>
+					{isCurrentWinner && '🏆 '}
+					{name}
+				</span>
 				{winCondition === 'COOPERATIVE' && (
 					<Form.Select
 						aria-label='Select team'
@@ -131,6 +177,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 		if (selectedPlayerIds.length === 0) {
 			return null;
 		}
+		const currentWinnerId = getCurrentWinnerId();
 		return (
 			<div className='vstack gap-2'>
 				{selectedPlayerIds.map((playerId) => {
@@ -151,6 +198,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 							onPlayerTeamChange={onPlayerTeamChange}
 							playerPoints={playerPoints}
 							onPlayerPointsChange={onPlayerPointsChange}
+							isCurrentWinner={playerId === currentWinnerId}
 						/>
 					);
 				})}
@@ -207,31 +255,33 @@ const PlayersStep = (props: PlayersStepProps) => {
 
 	const SingleWinnerGroup = () => (
 		<>
-			{winCondition !== 'COOPERATIVE' && selectedPlayerIds.length > 0 && (
-				<Form.Group className='mt-2'>
-					<Form.Label>Winning player</Form.Label>
-					<div>
-						{selectedPlayerIds.map((playerIdOption) => (
-							<Form.Check
-								key={`singleWinner-${playerIdOption}`}
-								inline
-								type='radio'
-								label={
-									groupPlayers.find(
-										(player) => player.id === playerIdOption
-									)?.name || `Player ${playerIdOption}`
-								}
-								name='singleWinner'
-								id={`singleWinner-${playerIdOption}`}
-								checked={singleWinnerId === playerIdOption}
-								onChange={() =>
-									onSingleWinnerChange(playerIdOption)
-								}
-							/>
-						))}
-					</div>
-				</Form.Group>
-			)}
+			{winCondition === 'FIRST_TO_FINISH' &&
+				selectedPlayerIds.length > 0 && (
+					<Form.Group className='mt-2'>
+						<Form.Label>Winning player</Form.Label>
+						<div>
+							{selectedPlayerIds.map((playerIdOption) => (
+								<Form.Check
+									key={`singleWinner-${playerIdOption}`}
+									inline
+									type='radio'
+									label={
+										groupPlayers.find(
+											(player) =>
+												player.id === playerIdOption
+										)?.name || `Player ${playerIdOption}`
+									}
+									name='singleWinner'
+									id={`singleWinner-${playerIdOption}`}
+									checked={singleWinnerId === playerIdOption}
+									onChange={() =>
+										onSingleWinnerChange(playerIdOption)
+									}
+								/>
+							))}
+						</div>
+					</Form.Group>
+				)}
 		</>
 	);
 
@@ -326,14 +376,15 @@ const PlayersStep = (props: PlayersStepProps) => {
 								: [];
 
 							const addedPlayers = newSelectedIds.filter(
-								(id) => !selectedPlayerIds.includes(id)
+								(playerId) =>
+									!selectedPlayerIds.includes(playerId)
 							);
 							const removedPlayers = selectedPlayerIds.filter(
-								(id) => !newSelectedIds.includes(id)
+								(playerId) => !newSelectedIds.includes(playerId)
 							);
 
-							[...addedPlayers, ...removedPlayers].forEach((id) =>
-								onTogglePlayer(id)
+							[...addedPlayers, ...removedPlayers].forEach(
+								(playerId) => onTogglePlayer(playerId)
 							);
 						}}
 						placeholder='Select players...'
@@ -348,7 +399,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 				<SingleWinnerGroup />
 				<TeamWinnerGroup />
 				<CoopOutcomeGroup />
-				{winCondition !== 'COOPERATIVE' &&
+				{winCondition === 'FIRST_TO_FINISH' &&
 					selectedPlayerIds.length > 0 &&
 					singleWinnerId === null && (
 						<div className='text-danger small mt-1'>

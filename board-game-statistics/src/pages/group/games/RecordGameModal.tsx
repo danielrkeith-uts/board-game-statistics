@@ -223,7 +223,9 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	const isWinnerSelected =
 		winCondition === 'COOPERATIVE'
 			? coopWinner !== undefined
-			: singleWinnerId !== null;
+			: winCondition === 'FIRST_TO_FINISH'
+				? singleWinnerId !== null
+				: selectedPlayerIds.length > 0; // HIGH/LOW score only need players and points
 
 	const handleSave = async () => {
 		try {
@@ -234,13 +236,37 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			const playerTeams = selectedPlayerIds.map(() => {
 				return null;
 			});
+
+			let getSingleWinnerId: number | null = singleWinnerId;
+
+			if (winCondition === 'HIGH_SCORE' && selectedPlayerIds.length > 0) {
+				getSingleWinnerId = selectedPlayerIds.reduce(
+					(bestId, playerId) => {
+						const currentBest = playerPoints[bestId] || 0;
+						const candidate = playerPoints[playerId] || 0;
+						return candidate > currentBest ? playerId : bestId;
+					},
+					selectedPlayerIds[0]
+				);
+			} else if (
+				winCondition === 'LOW_SCORE' &&
+				selectedPlayerIds.length > 0
+			) {
+				getSingleWinnerId = selectedPlayerIds.reduce(
+					(bestId, playerId) => {
+						const currentBest = playerPoints[bestId] || 0;
+						const candidate = playerPoints[playerId] || 0;
+						return candidate < currentBest ? playerId : bestId;
+					},
+					selectedPlayerIds[0]
+				);
+			}
+
 			const hasWon = selectedPlayerIds.map((playerId) => {
 				if (winCondition === 'COOPERATIVE') {
-					// coop: all players have the same win status
 					return coopWinner === true;
 				} else {
-					// For HIGH_SCORE, LOW_SCORE, FIRST_TO_FINISH: single winner
-					return playerId === singleWinnerId;
+					return playerId === getSingleWinnerId;
 				}
 			});
 
