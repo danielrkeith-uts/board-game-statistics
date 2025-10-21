@@ -64,7 +64,7 @@ public class PostgreSqlStatisticsRepository implements IStatisticsRepository {
 
     private void createResultsView() {
         String createViewSql = """
-                DROP VIEW Results;
+                DROP VIEW IF EXISTS Results;
 
                 CREATE VIEW Results AS
                 SELECT bg.id, pr.account_id, bg.name, bg.win_condition, pg.date_played, pr.has_won FROM bgs.board_game bg
