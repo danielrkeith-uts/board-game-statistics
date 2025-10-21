@@ -39,6 +39,20 @@ const PlayersStep = (props: PlayersStepProps) => {
 		onCoopWinnerChange,
 	} = props;
 
+	// Helper function to format win condition display text
+	const getWinConditionText = (condition: WinCondition): string => {
+		switch (condition) {
+			case 'single':
+				return 'Single Winner';
+			case 'team':
+				return 'Team-based';
+			case 'coop':
+				return 'Cooperative';
+			default:
+				return 'Unknown';
+		}
+	};
+
 	const PlayerRow = (args: {
 		playerId: number;
 		name: string;
@@ -281,6 +295,12 @@ const PlayersStep = (props: PlayersStepProps) => {
 			<Form>
 				<Form.Group>
 					<Form.Label>Select players</Form.Label>
+					<div className='mb-2'>
+						<small className='text-muted'>
+							<strong>Win Condition:</strong>{' '}
+							{getWinConditionText(winCondition)}
+						</small>
+					</div>
 					<Select
 						isMulti
 						options={groupPlayers.map((player) => ({

@@ -6,13 +6,13 @@ import type {
 	RecordGamePayload,
 	WinCondition,
 	Game,
+	TempWinCondition,
 } from '../../../utils/types';
 import {
 	apiRecordGame,
 	apiGetOwnedGames,
 } from '../../../utils/api/games-api-utils';
 import GameSelectionStep from './steps/GameSelectionStep';
-import WinConditionStep from './steps/WinConditionStep';
 import PlayersStep from './steps/PlayersStep';
 
 interface RecordGameModalProps {
@@ -22,6 +22,22 @@ interface RecordGameModalProps {
 	onSuccess?: (message: string) => void;
 	onError?: (message: string) => void;
 }
+
+// Helper function to map backend win conditions to frontend win conditions
+const mapWinCondition = (
+	backendWinCondition: TempWinCondition
+): WinCondition => {
+	switch (backendWinCondition) {
+		case 'COOPERATIVE':
+			return 'coop';
+		case 'HIGH_SCORE':
+		case 'LOW_SCORE':
+		case 'FIRST_TO_FINISH':
+		case 'CUSTOM':
+		default:
+			return 'single';
+	}
+};
 
 const RecordGameModal = (props: RecordGameModalProps) => {
 	const { show, handleClose, group, onSuccess, onError } = props;
@@ -78,9 +94,25 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	};
 
 	const handleNext = () =>
-		setStep((currentStep) => Math.min(currentStep + 1, 3));
+		setStep((currentStep) => Math.min(currentStep + 1, 2));
 	const handleBack = () =>
 		setStep((currentStep) => Math.max(currentStep - 1, 1));
+
+	// Handler for game selection - automatically set win condition
+	const handleGameChange = (gameId: string) => {
+		setSelectedGameId(gameId);
+		if (gameId) {
+			const selectedGame = ownedGames.find(
+				(game) => game.id === Number(gameId)
+			);
+			if (selectedGame) {
+				const mappedWinCondition = mapWinCondition(
+					selectedGame.winCondition as TempWinCondition
+				);
+				setWinCondition(mappedWinCondition);
+			}
+		}
+	};
 
 	// Handler functions for PlayersStep
 	const handlePlayerTeamChange = (playerId: number, team: string) => {
@@ -157,7 +189,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		return (
 			<GameSelectionStep
 				selectedGameId={selectedGameId}
-				onGameChange={setSelectedGameId}
+				onGameChange={handleGameChange}
 				games={ownedGames}
 			/>
 		);
@@ -183,57 +215,16 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		/>
 	);
 
-	const renderWinConditionStep = () => (
-		<WinConditionStep
-			winCondition={winCondition}
-			onWinConditionChange={setWinCondition}
-			numTeams={numTeams}
-			onNumTeamsChange={setNumTeams}
-		/>
-	);
-
 	const renderStepContent = () => {
 		switch (step) {
 			case 1:
 				return renderGameStep();
 			case 2:
-				return renderWinConditionStep();
-			case 3:
 				return renderPlayersStep();
 			default:
 				return null;
 		}
 	};
-
-	const isNumTeamsValid =
-		winCondition !== 'team' || (numTeams !== null && numTeams >= 2);
-
-	const doAllPlayersHaveTeam =
-		winCondition !== 'team' ||
-		(selectedPlayerIds.length > 0 &&
-			selectedPlayerIds.every((playerId) => {
-				const teamNumber = Number(playerIdToTeam[playerId] || '0');
-				return (
-					teamNumber >= 1 &&
-					(numTeams === null ? true : teamNumber <= numTeams)
-				);
-			}));
-
-	const areAllTeamsNonEmpty =
-		winCondition !== 'team' ||
-		(() => {
-			if (!isNumTeamsValid) {
-				return false;
-			}
-			const teamPlayerCounts = new Array(numTeams ?? 0).fill(0);
-			selectedPlayerIds.forEach((playerId) => {
-				const teamNumber = Number(playerIdToTeam[playerId] || '0');
-				if (teamNumber >= 1 && teamNumber <= (numTeams ?? 0)) {
-					teamPlayerCounts[teamNumber - 1]++;
-				}
-			});
-			return teamPlayerCounts.every((playerCount) => playerCount > 0);
-		})();
 
 	const isWinnerSelected =
 		winCondition === 'single'
@@ -297,7 +288,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 				<Modal.Title>Record game</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<div className='mb-3'>Step {step} of 3</div>
+				<div className='mb-3'>Step {step} of 2</div>
 				{renderStepContent()}
 			</Modal.Body>
 			<Modal.Footer>
@@ -306,16 +297,11 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 						Back
 					</Button>
 				)}
-				{step < 3 ? (
+				{step < 2 ? (
 					<Button
 						variant='primary'
 						onClick={handleNext}
-						disabled={
-							(step === 1 && !selectedGameId) ||
-							(step === 2 &&
-								winCondition === 'team' &&
-								!isNumTeamsValid)
-						}
+						disabled={step === 1 && !selectedGameId}
 					>
 						Next
 					</Button>
@@ -323,13 +309,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 					<Button
 						variant='success'
 						onClick={handleSave}
-						disabled={
-							(winCondition === 'team' &&
-								(!isNumTeamsValid ||
-									!doAllPlayersHaveTeam ||
-									!areAllTeamsNonEmpty)) ||
-							!isWinnerSelected
-						}
+						disabled={!isWinnerSelected}
 					>
 						Save
 					</Button>
