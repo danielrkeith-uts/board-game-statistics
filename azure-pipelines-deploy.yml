@@ -58,8 +58,8 @@ stages:
         Contents: '**/target/*.?(war|jar)'
         TargetFolder: $(Build.ArtifactStagingDirectory)
 
-    - publish: $(Build.ArtifactStagingDirectory)
-      artifact: drop
+    - publish: $(Build.ArtifactStagingDirectory)/backend
+      artifact: BackendArtifact
 
 - stage: Deploy
   displayName: Deploy stage
@@ -75,10 +75,12 @@ stages:
       runOnce:
         deploy:
           steps:
+          - download: current
+            artifact: BackendArtifact
           - task: AzureWebApp@1
             displayName: 'Azure Web App Deploy: board-game-statistics'
             inputs:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
               appName: $(webAppName)
-              package: '$(Pipeline.Workspace)/drop/**/target/*.?(war|jar)'
+              package: '$(Pipeline.Workspace)/backend/**/target/*.?(war|jar)'
