@@ -101,13 +101,16 @@ stages:
       runOnce:
         deploy:
           steps:
+          - download: current
+            artifact: backend
+
           - task: AzureWebApp@1
             displayName: 'Azure Web App Deploy: board-game-statistics'
             inputs:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
               appName: $(webAppName)
-              package: '$(Pipeline.Workspace)/backend/**/target/*.?(war|jar)'
+              package: '$(Pipeline.Workspace)/backend/*.?(war|jar)'
   
   - deployment: DeployReactWebApp
     displayName: Deploy React Web App
@@ -118,10 +121,13 @@ stages:
       runOnce:
         deploy:
           steps:
+          - download: current
+            artifact: frontend
+
           - task: AzureStaticWebApp@0
             inputs:
               app_location: '$(Pipeline.Workspace)/frontend'
-              output_location: '(Pipeline.Workspace)/frontend'
+              output_location: '$(Pipeline.Workspace)/frontend'
               skip_api_build: true
               is_static_export: false
               azure_static_web_apps_api_token: $(azureStaticDeploymentToken)
