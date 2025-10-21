@@ -100,8 +100,8 @@ stages:
   dependsOn: Build
   condition: succeeded()
   jobs:
-  - deployment: DeployLinuxWebApp
-    displayName: Deploy Linux Web App
+  - deployment: DeployJavaWebApp
+    displayName: Deploy Java Web App
     environment: $(environmentName)
     pool:
       vmImage: $(vmImageName)
@@ -117,10 +117,10 @@ stages:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
               appName: $(webAppName)
-              package: '$(Pipeline.Workspace)/backend/*.?(war|jar)'
+              package: '$(Pipeline.Workspace)/backend/**/target/*.?(war|jar)'
 
-  - deployment: DeployReactWebApp
-    displayName: Deploy React Web App
+  - deployment: DeployReactStaticWebApp
+    displayName: Deploy React Static Web App
     environment: $(environmentName)
     pool:
       vmImage: $(vmImageName)
@@ -133,7 +133,7 @@ stages:
           - task: AzureStaticWebApp@0
             displayName: 'Azure Static Web App Deploy: board-game-statistics'
             inputs:
-              output_location: '$(Pipeline.Workspace)/frontend'
+              app_location: '$(Pipeline.Workspace)/frontend'
               skip_app_build: true
               skip_api_build: true
               azure_static_web_apps_api_token: '$(azureStaticDeploymentToken)'
