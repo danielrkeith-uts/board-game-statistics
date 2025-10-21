@@ -18,7 +18,11 @@ public class StatisticsController {
 
     @GetMapping("/{groupId}")
     public ResponseEntity<?> getPlayerStatsByGroupId(@AuthenticationPrincipal Account account, @PathVariable Integer groupId) {
-        PlayerStatisticResponse playerStatisticResponse = statisticsService.getPlayerStatsByGroupId(account.id(), groupId);
-        return ResponseEntity.ok(playerStatisticResponse);
+        return ResponseEntity.ok(statisticsService.getPlayerStatsByGroupId(account.id(), groupId));
+    }
+
+    @GetMapping("/global")
+    public ResponseEntity<?> getGlobalPlayerStats(@AuthenticationPrincipal Account account) {
+        return ResponseEntity.ok(statisticsService.getGlobalStatisticsByAccount(account.id()));
     }
 }

@@ -69,7 +69,7 @@ CREATE TABLE bgs.played_game (
     game_id INT NOT NULL,
     group_id INT NOT NULL REFERENCES bgs.game_group(id) ON DELETE CASCADE,
     date_played DATE NOT NULL DEFAULT CURRENT_DATE,
-    FOREIGN KEY (game_id) REFERENCES bgs.temp_owned_game(game_id)
+    FOREIGN KEY (game_id) REFERENCES bgs.board_game(id)
 );
 
 CREATE TABLE bgs.player_result (
