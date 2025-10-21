@@ -20,6 +20,8 @@ variables:
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
 
+  azureStaticDeploymentToken: '6bb73151b54b08810367bbf2d55df63bcdd4130b1331827380ecaca536b012c203-5cea05e1-f234-4489-b51d-c695f53d5ea90001826037351e00'
+
 stages:
 - stage: Build
   displayName: Build stage
@@ -58,6 +60,23 @@ stages:
 
     - upload: $(Build.ArtifactStagingDirectory)
       artifact: drop
+  
+  - job: NpmInstallAndBuild
+    displayName: Npm Install and Build
+    pool:
+      vmImage: $(vmImageName)
+    
+    steps:
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.x'
+      displayName: 'Install Node.js'
+
+    - script: |
+        cd board-game-statistics
+        npm install
+        npm run build
+      displayName: 'Build React App'
 
 - stage: Deploy
   displayName: Deploy stage
@@ -80,3 +99,20 @@ stages:
               appType: webAppLinux
               appName: $(webAppName)
               package: '$(Pipeline.Workspace)/drop/**/target/*.?(war|jar)'
+  
+  - deployment: DeployReactWebApp
+    displayName: Deploy React Web App
+    environment: $(environmentName)
+    pool:
+      vmImage: $(vmImageName)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: AzureStaticWebApp@0
+            inputs:
+              app_location: 'board-game-statistics'
+              output_location: 'board-game-statistics/dist'
+              skip_api_build: true
+              is_static_export: false
+              azure_static_web_apps_api_token: $(azureStaticDeploymentToken)
