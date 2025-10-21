@@ -54,38 +54,12 @@ stages:
     - task: CopyFiles@2
       displayName: 'Copy Files to artifact staging directory'
       inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)/board-game-statistics-api'
+        SourceFolder: '$(System.DefaultWorkingDirectory)'
         Contents: '**/target/*.?(war|jar)'
-        TargetFolder: $(Build.ArtifactStagingDirectory)/backend
+        TargetFolder: $(Build.ArtifactStagingDirectory)
 
-    - publish: $(Build.ArtifactStagingDirectory)/backend
-      artifact: backend
-  
-  - job: NpmBuildAndPublishArtifacts
-    displayName: Npm Build and Publish Artifacts
-    pool:
-      vmImage: $(vmImageName)
-    
-    steps:
-    - task: NodeTool@0
-      inputs:
-        versionSpec: '20.x'
-      displayName: 'Install Node.js'
-
-    - script: |
-        cd board-game-statistics
-        npm install
-        npm run build
-      displayName: 'Build React App'
-    
-    - task: CopyFiles@2
-      displayName: 'Copy Files to artifact staging directory'
-      inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)/board-game-statistics/dist'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)/frontend'
-
-    - publish: $(Build.ArtifactStagingDirectory)/frontend
-      artifact: frontend
+    - publish: $(Build.ArtifactStagingDirectory)
+      artifact: drop
 
 - stage: Deploy
   displayName: Deploy stage
@@ -101,33 +75,10 @@ stages:
       runOnce:
         deploy:
           steps:
-          - download: current
-            artifact: backend
-
           - task: AzureWebApp@1
             displayName: 'Azure Web App Deploy: board-game-statistics'
             inputs:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
               appName: $(webAppName)
-              package: '$(Pipeline.Workspace)/backend/*.?(war|jar)'
-  
-  - deployment: DeployReactWebApp
-    displayName: Deploy React Web App
-    environment: $(environmentName)
-    pool:
-      vmImage: $(vmImageName)
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - download: current
-            artifact: frontend
-
-          - task: AzureStaticWebApp@0
-            inputs:
-              app_location: '$(Pipeline.Workspace)/frontend'
-              output_location: '$(Pipeline.Workspace)/frontend'
-              skip_api_build: true
-              is_static_export: false
-              azure_static_web_apps_api_token: $(azureStaticDeploymentToken)
+              package: '$(Pipeline.Workspace)/drop/**/target/*.?(war|jar)'
