@@ -47,8 +47,7 @@ CREATE TABLE bgs.board_game (
     name TEXT NOT NULL UNIQUE,
     publisher TEXT,
     win_condition TEXT NOT NULL DEFAULT 'HIGH_SCORE'
-        CHECK (win_condition IN ('HIGH_SCORE','LOW_SCORE','FIRST_TO_FINISH','COOPERATIVE')),
-    custom_win_condition TEXT
+        CHECK (win_condition IN ('HIGH_SCORE','LOW_SCORE','FIRST_TO_FINISH','COOPERATIVE'))
 );
 
 CREATE TABLE bgs.owned_game (

@@ -95,18 +95,18 @@ INSERT INTO bgs.group_membership (group_id, account_id, permissions_mask, join_t
 (6, 20, 0, NOW() - INTERVAL '3 hours');
 
 -- Seed board games (catalog)
-INSERT INTO bgs.board_game (name, publisher) VALUES
-('Catan', 'Kosmos'),
-('Carcassonne', 'Hans im Glück'),
-('Terraforming Mars', 'FryxGames'),
-('7 Wonders', 'Repos Production'),
-('Jails and Jaberwocks', 'Unknown Publisher'),
-('Worms and Walkways', 'Unknown Publisher'),
-('Chess 2.0', 'Unknown Publisher'),
-('One', 'Unknown Publisher'),
-('Dice', 'Unknown Publisher'),
-('Duopoly', 'Unknown Publisher'),
-('Game Board', 'Unknown Publisher')
+INSERT INTO bgs.board_game (name, publisher, win_condition) VALUES
+('Catan', 'Kosmos', 'HIGH_SCORE'),
+('Carcassonne', 'Hans im Glück', 'HIGH_SCORE'),
+('Terraforming Mars', 'FryxGames', 'HIGH_SCORE'),
+('7 Wonders', 'Repos Production', 'HIGH_SCORE'),
+('Jails and Jaberwocks', 'Unknown Publisher', 'FIRST_TO_FINISH'),
+('Worms and Walkways', 'Unknown Publisher', 'HIGH_SCORE'),
+('Chess 2.0', 'Unknown Publisher', 'FIRST_TO_FINISH'),
+('One', 'Unknown Publisher', 'FIRST_TO_FINISH'),
+('Dice', 'Unknown Publisher', 'HIGH_SCORE'),
+('Duopoly', 'Unknown Publisher', 'HIGH_SCORE'),
+('Game Board', 'Unknown Publisher', 'COOPERATIVE')
 ON CONFLICT (name) DO NOTHING;
 
 INSERT INTO bgs.owned_game (account_id, game_id) VALUES
