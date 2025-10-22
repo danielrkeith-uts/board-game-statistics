@@ -57,7 +57,10 @@ const GameResultsSection = (props: Props) => {
 										setSelected(record);
 									}}
 								>
-									<span>{`Game #${record.gameId}`}</span>
+									<span>
+										{record.gameName ||
+											`Game #${record.gameId}`}
+									</span>
 									<span className='text-muted'>
 										{new Date(
 											record.datePlayed

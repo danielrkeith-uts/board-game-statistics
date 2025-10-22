@@ -1,14 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import type {
 	Group,
 	RecordGamePayload,
 	WinCondition,
+	Game,
 } from '../../../utils/types';
-import { apiRecordGame } from '../../../utils/api/games-api-utils';
+import {
+	apiRecordGame,
+	apiGetOwnedGames,
+} from '../../../utils/api/games-api-utils';
 import GameSelectionStep from './steps/GameSelectionStep';
-import WinConditionStep from './steps/WinConditionStep';
 import PlayersStep from './steps/PlayersStep';
 
 interface RecordGameModalProps {
@@ -19,15 +22,32 @@ interface RecordGameModalProps {
 	onError?: (message: string) => void;
 }
 
+const mapWinCondition = (winCondition: WinCondition): WinCondition => {
+	switch (winCondition) {
+		case 'HIGH_SCORE':
+		case 'LOW_SCORE':
+		case 'FIRST_TO_FINISH':
+		case 'COOPERATIVE':
+		default:
+			return winCondition;
+	}
+};
+
 const RecordGameModal = (props: RecordGameModalProps) => {
 	const { show, handleClose, group, onSuccess, onError } = props;
 
 	// Step management
 	const [step, setStep] = useState<number>(1);
 
+	// Games state
+	const [ownedGames, setOwnedGames] = useState<Game[]>([]);
+	const [gamesLoading, setGamesLoading] = useState<boolean>(false);
+	const [gamesError, setGamesError] = useState<string | null>(null);
+
 	const [selectedGameId, setSelectedGameId] = useState<string>('');
 	const [selectedPlayerIds, setSelectedPlayerIds] = useState<number[]>([]);
-	const [winCondition, setWinCondition] = useState<WinCondition>('single');
+	const [winCondition, setWinCondition] =
+		useState<WinCondition>('HIGH_SCORE');
 	const [numTeams, setNumTeams] = useState<number | null>(2);
 	const [playerIdToTeam, setPlayerIdToTeam] = useState<
 		Record<number, string>
@@ -37,14 +57,54 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 	);
 	const [singleWinnerId, setSingleWinnerId] = useState<number | null>(null);
 	const [teamWinner, setTeamWinner] = useState<string>('');
-	const [coopWinner, setCoopWinner] = useState<boolean | undefined>(
-		undefined
-	);
+
+	// Load owned games when modal opens
+	useEffect(() => {
+		if (show) {
+			loadOwnedGames();
+		}
+	}, [show]);
+
+	const loadOwnedGames = async () => {
+		setGamesLoading(true);
+		setGamesError(null);
+		try {
+			const games = await apiGetOwnedGames();
+			setOwnedGames(games);
+		} catch (error) {
+			const message =
+				error instanceof Error
+					? error.message
+					: 'Failed to load owned games';
+			setGamesError(message);
+			if (onError) {
+				onError(message);
+			}
+		} finally {
+			setGamesLoading(false);
+		}
+	};
 
 	const handleNext = () =>
-		setStep((currentStep) => Math.min(currentStep + 1, 3));
+		setStep((currentStep) => Math.min(currentStep + 1, 2));
 	const handleBack = () =>
 		setStep((currentStep) => Math.max(currentStep - 1, 1));
+
+	// Handler for game selection - automatically set win condition
+	const handleGameChange = (gameId: string) => {
+		setSelectedGameId(gameId);
+		if (gameId) {
+			const selectedGame = ownedGames.find(
+				(game) => game.id === Number(gameId)
+			);
+			if (selectedGame) {
+				const mappedWinCondition = mapWinCondition(
+					selectedGame.winCondition
+				);
+				setWinCondition(mappedWinCondition);
+			}
+		}
+	};
 
 	// Handler functions for PlayersStep
 	const handlePlayerTeamChange = (playerId: number, team: string) => {
@@ -65,13 +125,14 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		setStep(1);
 		setSelectedGameId('');
 		setSelectedPlayerIds([]);
-		setWinCondition('single');
+		setWinCondition('HIGH_SCORE');
 		setNumTeams(2);
 		setPlayerIdToTeam({});
 		setPlayerPoints({});
 		setSingleWinnerId(null);
 		setTeamWinner('');
-		setCoopWinner(undefined);
+		setOwnedGames([]);
+		setGamesError(null);
 		handleClose();
 	};
 
@@ -82,13 +143,11 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 				: [...previousSelected, id]
 		);
 
-		// If enabling player in team mode, default to Team 1
+		// Clear team assignments when deselecting players
 		setPlayerIdToTeam((prev) => {
 			const newMap = { ...prev };
 			if (selectedPlayerIds.includes(id)) {
 				delete newMap[id];
-			} else if (winCondition === 'team') {
-				newMap[id] = newMap[id] ?? '1';
 			}
 			return newMap;
 		});
@@ -97,25 +156,33 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 		setSingleWinnerId((prev) => (prev === id ? null : prev));
 	};
 
-	// Placeholder games list; TODO: replace with owned games
-	const placeholderGames = [
-		{ id: 1, name: 'Sample game 1' },
-		{ id: 2, name: 'Sample game 2' },
-	];
-
 	// Use members from group as selectable players
 	const groupPlayers = group.members.map((member) => ({
 		id: member.id,
 		name: `${member.firstName} ${member.lastName}`.trim(),
 	}));
 
-	const renderGameStep = () => (
-		<GameSelectionStep
-			selectedGameId={selectedGameId}
-			onGameChange={setSelectedGameId}
-			games={placeholderGames}
-		/>
-	);
+	const renderGameStep = () => {
+		if (gamesLoading) {
+			return <div>Loading games...</div>;
+		}
+
+		if (gamesError) {
+			return (
+				<div className='text-danger'>
+					Error loading games: {gamesError}
+				</div>
+			);
+		}
+
+		return (
+			<GameSelectionStep
+				selectedGameId={selectedGameId}
+				onGameChange={handleGameChange}
+				games={ownedGames}
+			/>
+		);
+	};
 
 	const renderPlayersStep = () => (
 		<PlayersStep
@@ -124,6 +191,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			onTogglePlayer={togglePlayer}
 			winCondition={winCondition}
 			numTeams={numTeams}
+			onNumTeamsChange={setNumTeams}
 			playerIdToTeam={playerIdToTeam}
 			onPlayerTeamChange={handlePlayerTeamChange}
 			playerPoints={playerPoints}
@@ -132,17 +200,6 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			onSingleWinnerChange={setSingleWinnerId}
 			teamWinner={teamWinner}
 			onTeamWinnerChange={setTeamWinner}
-			coopWinner={coopWinner}
-			onCoopWinnerChange={setCoopWinner}
-		/>
-	);
-
-	const renderWinConditionStep = () => (
-		<WinConditionStep
-			winCondition={winCondition}
-			onWinConditionChange={setWinCondition}
-			numTeams={numTeams}
-			onNumTeamsChange={setNumTeams}
 		/>
 	);
 
@@ -151,74 +208,79 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 			case 1:
 				return renderGameStep();
 			case 2:
-				return renderWinConditionStep();
-			case 3:
 				return renderPlayersStep();
 			default:
 				return null;
 		}
 	};
 
-	const isNumTeamsValid =
-		winCondition !== 'team' || (numTeams !== null && numTeams >= 2);
-
-	const doAllPlayersHaveTeam =
-		winCondition !== 'team' ||
-		(selectedPlayerIds.length > 0 &&
-			selectedPlayerIds.every((playerId) => {
-				const teamNumber = Number(playerIdToTeam[playerId] || '0');
-				return (
-					teamNumber >= 1 &&
-					(numTeams === null ? true : teamNumber <= numTeams)
-				);
-			}));
-
-	const areAllTeamsNonEmpty =
-		winCondition !== 'team' ||
-		(() => {
-			if (!isNumTeamsValid) {
-				return false;
-			}
-			const teamPlayerCounts = new Array(numTeams ?? 0).fill(0);
-			selectedPlayerIds.forEach((playerId) => {
-				const teamNumber = Number(playerIdToTeam[playerId] || '0');
-				if (teamNumber >= 1 && teamNumber <= (numTeams ?? 0)) {
-					teamPlayerCounts[teamNumber - 1]++;
-				}
-			});
-			return teamPlayerCounts.every((playerCount) => playerCount > 0);
-		})();
-
 	const isWinnerSelected =
-		winCondition === 'single'
-			? singleWinnerId !== null
-			: winCondition === 'team'
-				? teamWinner !== ''
-				: coopWinner !== undefined;
+		winCondition === 'COOPERATIVE'
+			? teamWinner !== ''
+			: winCondition === 'FIRST_TO_FINISH'
+				? singleWinnerId !== null
+				: selectedPlayerIds.length > 0; // HIGH/LOW score only need players and points
 
 	const handleSave = async () => {
 		try {
+			// Validate required fields
+			if (!selectedGameId || selectedGameId === '') {
+				throw new Error('Please select a game');
+			}
+
+			if (selectedPlayerIds.length === 0) {
+				throw new Error('Please select at least one player');
+			}
+
 			const playerIds = selectedPlayerIds;
 			const points = selectedPlayerIds.map(
 				(playerId) => playerPoints[playerId] || 0
 			);
 			const playerTeams = selectedPlayerIds.map((playerId) => {
-				if (winCondition === 'team') {
-					return Number(playerIdToTeam[playerId] || '1');
+				if (winCondition === 'COOPERATIVE') {
+					const teamValue = playerIdToTeam[playerId];
+					return teamValue === 'unassigned'
+						? null
+						: Number(teamValue || '1');
 				} else {
-					return null; // Solo or cooperative games
+					return null; // Solo games
 				}
 			});
+
+			let getSingleWinnerId: number | null = singleWinnerId;
+
+			if (winCondition === 'HIGH_SCORE' && selectedPlayerIds.length > 0) {
+				getSingleWinnerId = selectedPlayerIds.reduce(
+					(bestId, playerId) => {
+						const currentBest = playerPoints[bestId] || 0;
+						const candidate = playerPoints[playerId] || 0;
+						return candidate > currentBest ? playerId : bestId;
+					},
+					selectedPlayerIds[0]
+				);
+			} else if (
+				winCondition === 'LOW_SCORE' &&
+				selectedPlayerIds.length > 0
+			) {
+				getSingleWinnerId = selectedPlayerIds.reduce(
+					(bestId, playerId) => {
+						const currentBest = playerPoints[bestId] || 0;
+						const candidate = playerPoints[playerId] || 0;
+						return candidate < currentBest ? playerId : bestId;
+					},
+					selectedPlayerIds[0]
+				);
+			}
+
 			const hasWon = selectedPlayerIds.map((playerId) => {
-				if (winCondition === 'single') {
-					return playerId === singleWinnerId;
-				} else if (winCondition === 'team') {
+				if (winCondition === 'COOPERATIVE') {
+					const teamValue = playerIdToTeam[playerId];
 					return (
-						String(playerIdToTeam[playerId] || '1') === teamWinner
+						teamValue !== 'unassigned' &&
+						String(teamValue || '1') === teamWinner
 					);
 				} else {
-					// coop: all players have the same win status
-					return coopWinner === true;
+					return playerId === getSingleWinnerId;
 				}
 			});
 
@@ -251,7 +313,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 				<Modal.Title>Record game</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<div className='mb-3'>Step {step} of 3</div>
+				<div className='mb-3'>Step {step} of 2</div>
 				{renderStepContent()}
 			</Modal.Body>
 			<Modal.Footer>
@@ -260,16 +322,11 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 						Back
 					</Button>
 				)}
-				{step < 3 ? (
+				{step < 2 ? (
 					<Button
 						variant='primary'
 						onClick={handleNext}
-						disabled={
-							(step === 1 && !selectedGameId) ||
-							(step === 2 &&
-								winCondition === 'team' &&
-								!isNumTeamsValid)
-						}
+						disabled={step === 1 && !selectedGameId}
 					>
 						Next
 					</Button>
@@ -277,13 +334,7 @@ const RecordGameModal = (props: RecordGameModalProps) => {
 					<Button
 						variant='success'
 						onClick={handleSave}
-						disabled={
-							(winCondition === 'team' &&
-								(!isNumTeamsValid ||
-									!doAllPlayersHaveTeam ||
-									!areAllTeamsNonEmpty)) ||
-							!isWinnerSelected
-						}
+						disabled={!isWinnerSelected}
 					>
 						Save
 					</Button>

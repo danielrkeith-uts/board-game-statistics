@@ -11,38 +11,24 @@ import {
 } from 'chart.js';
 import BarChart from './BarChart';
 import PieChart from './PieChart';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AccountContext } from '../../context/AccountContext';
-import tempData from './temp.json';
-import type { BarChartData } from '../../utils/types';
+import type { GlobalPlayerStats } from '../../utils/types';
+import { apiGetGlobalPlayerStats } from '../../utils/api/stats-api-utils';
+import { AlertContext } from '../../context/AlertContext';
+import WinRateTable from './WinRateTable';
 
 const GlobalStats = () => {
 	const { account } = useContext(AccountContext);
+	const { setError } = useContext(AlertContext);
 
-	const winData = tempData.map((gameData) => gameData.wins);
-	const lossData = tempData.map((gameData) => gameData.losses);
-	const numOfGamesPlayed = tempData.reduce(
-		(sum, currentValue) =>
-			sum +
-			currentValue.games.reduce(
-				(sum, currentValue) => sum + currentValue.numOfGamesPlayed,
-				0
-			),
-		0
-	);
+	const [globalStats, setGlobalStats] = useState<GlobalPlayerStats>();
 
-	const barChartData: BarChartData = { winData, lossData };
-
-	// const pieChartData = {};
-
-	const tableData = {
-		numOfGamesPlayed,
-		winRate: (
-			(winData.reduce((sum, currentValue) => sum + currentValue, 0) /
-				numOfGamesPlayed) *
-			100
-		).toFixed(1),
-	};
+	useEffect(() => {
+		apiGetGlobalPlayerStats()
+			.then((res) => setGlobalStats(res))
+			.catch((err: Error) => setError(err.message));
+	}, []);
 
 	ChartJS.register(
 		ArcElement,
@@ -58,38 +44,32 @@ const GlobalStats = () => {
 	return (
 		<>
 			<div className='container'>
-				{account ? (
+				{account && globalStats ? (
 					<>
 						<h1>{`${account.firstName} ${account.lastName}`}</h1>
 						<div className='d-flex flex-wrap justify-content-center overflow-y-auto overflow-x-hidden'>
 							<div className='flex-shrink-1 flex-fill flex-column d-flex'>
 								<div className='flex-grow-1'>
-									<BarChart barChartData={barChartData} />
+									<BarChart
+										barChartData={globalStats.barChartData}
+									/>
 								</div>
-								<table className='table'>
-									<tbody>
-										<tr>
-											<td>Games Played</td>
-											<td className='text-end'>
-												{tableData.numOfGamesPlayed}
-											</td>
-										</tr>
-										<tr>
-											<td>Win Rate</td>
-											<td className='text-end'>
-												{tableData.winRate}%
-											</td>
-										</tr>
-									</tbody>
-								</table>
+								<WinRateTable
+									tableData={globalStats.tableData}
+								/>
 							</div>
 							<div className='flex-lg-fill'>
-								<PieChart />
+								<PieChart
+									pieChartData={globalStats.pieChartData}
+								/>
 							</div>
 						</div>
 					</>
 				) : (
-					<>Yo ass ain't logged in</>
+					<>
+						Error fetching global statistic data. Try refreshing the
+						page, or logging in again.
+					</>
 				)}
 			</div>
 		</>

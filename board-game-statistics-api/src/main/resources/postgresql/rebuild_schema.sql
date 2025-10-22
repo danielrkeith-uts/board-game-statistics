@@ -47,8 +47,7 @@ CREATE TABLE bgs.board_game (
     name TEXT NOT NULL UNIQUE,
     publisher TEXT,
     win_condition TEXT NOT NULL DEFAULT 'HIGH_SCORE'
-        CHECK (win_condition IN ('HIGH_SCORE','LOW_SCORE','FIRST_TO_FINISH','COOPERATIVE')),
-    custom_win_condition TEXT
+        CHECK (win_condition IN ('HIGH_SCORE','LOW_SCORE','FIRST_TO_FINISH','COOPERATIVE'))
 );
 
 CREATE TABLE bgs.owned_game (
@@ -70,7 +69,7 @@ CREATE TABLE bgs.played_game (
     game_id INT NOT NULL,
     group_id INT NOT NULL REFERENCES bgs.game_group(id) ON DELETE CASCADE,
     date_played DATE NOT NULL DEFAULT CURRENT_DATE,
-    FOREIGN KEY (game_id) REFERENCES bgs.owned_game(owned_game_id)
+    FOREIGN KEY (game_id) REFERENCES bgs.board_game(id)
 );
 
 CREATE TABLE bgs.player_result (

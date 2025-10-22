@@ -1,6 +1,9 @@
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select';
+import Button from 'react-bootstrap/Button';
+import { useState } from 'react';
 import type { WinCondition, Player } from '../../../../utils/types';
+import RecordPointsModal from './RecordPointsModal';
 
 interface PlayersStepProps {
 	groupPlayers: Player[];
@@ -8,6 +11,7 @@ interface PlayersStepProps {
 	onTogglePlayer: (playerId: number) => void;
 	winCondition: WinCondition;
 	numTeams: number | null;
+	onNumTeamsChange: (numTeams: number) => void;
 	playerIdToTeam: Record<number, string>;
 	onPlayerTeamChange: (playerId: number, team: string) => void;
 	playerPoints: Record<number, number>;
@@ -16,8 +20,6 @@ interface PlayersStepProps {
 	onSingleWinnerChange: (playerId: number) => void;
 	teamWinner: string;
 	onTeamWinnerChange: (team: string) => void;
-	coopWinner: boolean | undefined;
-	onCoopWinnerChange: (won: boolean) => void;
 }
 
 const PlayersStep = (props: PlayersStepProps) => {
@@ -27,6 +29,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 		onTogglePlayer,
 		winCondition,
 		numTeams,
+		onNumTeamsChange,
 		playerIdToTeam,
 		onPlayerTeamChange,
 		playerPoints,
@@ -35,9 +38,88 @@ const PlayersStep = (props: PlayersStepProps) => {
 		onSingleWinnerChange,
 		teamWinner,
 		onTeamWinnerChange,
-		coopWinner,
-		onCoopWinnerChange,
 	} = props;
+
+	// State for points modal
+	const [pointsModalShow, setPointsModalShow] = useState(false);
+	const [selectedPlayerForPoints, setSelectedPlayerForPoints] = useState<{
+		id: number;
+		name: string;
+	} | null>(null);
+
+	// Handler functions for points modal
+	const handleOpenPointsModal = (playerId: number, playerName: string) => {
+		setSelectedPlayerForPoints({ id: playerId, name: playerName });
+		setPointsModalShow(true);
+	};
+
+	const handleClosePointsModal = () => {
+		setPointsModalShow(false);
+		setSelectedPlayerForPoints(null);
+	};
+
+	const handleSavePoints = (points: number) => {
+		if (selectedPlayerForPoints) {
+			onPlayerPointsChange(selectedPlayerForPoints.id, points);
+		}
+	};
+
+	// Helper function to format win condition display text
+	const getWinConditionText = (condition: WinCondition): string => {
+		switch (condition) {
+			case 'COOPERATIVE':
+				return 'Cooperative';
+			case 'HIGH_SCORE':
+				return 'High Score';
+			case 'LOW_SCORE':
+				return 'Low Score';
+			case 'FIRST_TO_FINISH':
+				return 'First to Finish';
+			default:
+				return 'Unknown';
+		}
+	};
+
+	const getCurrentWinnerId = (): number | null => {
+		if (selectedPlayerIds.length === 0) {
+			return null;
+		}
+
+		if (winCondition === 'COOPERATIVE') {
+			return null; // No single winner for cooperative games
+		}
+
+		if (winCondition === 'FIRST_TO_FINISH') {
+			return singleWinnerId;
+		}
+
+		// For HIGH_SCORE and LOW_SCORE, calculate based on points
+		const playersWithPoints = selectedPlayerIds
+			.map((playerId) => ({
+				id: playerId,
+				points: playerPoints[playerId] || 0,
+			}))
+			.filter((player) => player.points > 0);
+
+		if (playersWithPoints.length === 0) {
+			return null;
+		}
+
+		const winner =
+			winCondition === 'HIGH_SCORE'
+				? playersWithPoints.reduce((bestPlayer, currentPlayer) =>
+						currentPlayer.points > bestPlayer.points
+							? currentPlayer
+							: bestPlayer
+					)
+				: playersWithPoints.reduce((bestPlayer, currentPlayer) =>
+						currentPlayer.points < bestPlayer.points
+							? currentPlayer
+							: bestPlayer
+					);
+
+		return winner.id;
+	};
 
 	const PlayerRow = (args: {
 		playerId: number;
@@ -47,7 +129,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 		playerIdToTeam: Record<number, string>;
 		onPlayerTeamChange: (playerId: number, team: string) => void;
 		playerPoints: Record<number, number>;
-		onPlayerPointsChange: (playerId: number, points: number) => void;
+		isCurrentWinner: boolean;
 	}) => {
 		const {
 			playerId,
@@ -57,24 +139,28 @@ const PlayersStep = (props: PlayersStepProps) => {
 			playerIdToTeam,
 			onPlayerTeamChange,
 			playerPoints,
-			onPlayerPointsChange,
+			isCurrentWinner,
 		} = args;
 		return (
 			<div
 				key={playerId}
 				className='d-flex align-items-center gap-2 p-2 border rounded'
 			>
-				<span className='fw-medium'>{name}</span>
-				{winCondition === 'team' && (
+				<span className='fw-medium'>
+					{isCurrentWinner && '🏆 '}
+					{name}
+				</span>
+				{winCondition === 'COOPERATIVE' && (
 					<Form.Select
 						aria-label='Select team'
 						size='sm'
 						className='w-auto'
-						value={playerIdToTeam[playerId] ?? '1'}
+						value={playerIdToTeam[playerId] ?? 'unassigned'}
 						onChange={(event) =>
 							onPlayerTeamChange(playerId, event.target.value)
 						}
 					>
+						<option value='unassigned'>Unassigned</option>
 						{(numTeams ?? 0) >= 2
 							? Array.from(
 									{ length: numTeams ?? 0 },
@@ -94,19 +180,18 @@ const PlayersStep = (props: PlayersStepProps) => {
 								]}
 					</Form.Select>
 				)}
-				<Form.Control
-					type='number'
-					size='sm'
-					className='w-auto'
-					placeholder='Points'
-					value={playerPoints[playerId] || ''}
-					onChange={(event) =>
-						onPlayerPointsChange(
-							playerId,
-							Number(event.target.value) || 0
-						)
-					}
-				/>
+				{winCondition !== 'FIRST_TO_FINISH' && (
+					<Button
+						variant='outline-secondary'
+						size='sm'
+						className='w-auto'
+						onClick={() => handleOpenPointsModal(playerId, name)}
+					>
+						{playerPoints[playerId]
+							? `${playerPoints[playerId]} pts`
+							: 'Set Points'}
+					</Button>
+				)}
 			</div>
 		);
 	};
@@ -115,6 +200,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 		if (selectedPlayerIds.length === 0) {
 			return null;
 		}
+		const currentWinnerId = getCurrentWinnerId();
 		return (
 			<div className='vstack gap-2'>
 				{selectedPlayerIds.map((playerId) => {
@@ -134,7 +220,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 							playerIdToTeam={playerIdToTeam}
 							onPlayerTeamChange={onPlayerTeamChange}
 							playerPoints={playerPoints}
-							onPlayerPointsChange={onPlayerPointsChange}
+							isCurrentWinner={playerId === currentWinnerId}
 						/>
 					);
 				})}
@@ -144,17 +230,18 @@ const PlayersStep = (props: PlayersStepProps) => {
 
 	const TeamCountWarning = () => (
 		<>
-			{winCondition === 'team' && (numTeams === null || numTeams < 2) && (
-				<div className='text-danger small mt-1'>
-					Enter number of teams (2 or more).
-				</div>
-			)}
+			{winCondition === 'COOPERATIVE' &&
+				(numTeams === null || numTeams < 2) && (
+					<div className='text-danger small mt-1'>
+						Enter number of teams (2 or more).
+					</div>
+				)}
 		</>
 	);
 
 	const TeamAssignmentWarning = () => (
 		<>
-			{winCondition === 'team' &&
+			{winCondition === 'COOPERATIVE' &&
 				(numTeams ?? 0) >= 2 &&
 				selectedPlayerIds.length > 0 &&
 				selectedPlayerIds.some(
@@ -168,7 +255,7 @@ const PlayersStep = (props: PlayersStepProps) => {
 	);
 
 	const TeamEmptinessWarning = () => {
-		if (winCondition !== 'team' || (numTeams ?? 0) < 2) {
+		if (winCondition !== 'COOPERATIVE' || (numTeams ?? 0) < 2) {
 			return null;
 		}
 		const teamPlayerCounts = new Array(numTeams ?? 0).fill(0);
@@ -190,37 +277,39 @@ const PlayersStep = (props: PlayersStepProps) => {
 
 	const SingleWinnerGroup = () => (
 		<>
-			{winCondition === 'single' && selectedPlayerIds.length > 0 && (
-				<Form.Group className='mt-2'>
-					<Form.Label>Winning player</Form.Label>
-					<div>
-						{selectedPlayerIds.map((playerIdOption) => (
-							<Form.Check
-								key={`singleWinner-${playerIdOption}`}
-								inline
-								type='radio'
-								label={
-									groupPlayers.find(
-										(player) => player.id === playerIdOption
-									)?.name || `Player ${playerIdOption}`
-								}
-								name='singleWinner'
-								id={`singleWinner-${playerIdOption}`}
-								checked={singleWinnerId === playerIdOption}
-								onChange={() =>
-									onSingleWinnerChange(playerIdOption)
-								}
-							/>
-						))}
-					</div>
-				</Form.Group>
-			)}
+			{winCondition === 'FIRST_TO_FINISH' &&
+				selectedPlayerIds.length > 0 && (
+					<Form.Group className='mt-2'>
+						<Form.Label>Winning player</Form.Label>
+						<div>
+							{selectedPlayerIds.map((playerIdOption) => (
+								<Form.Check
+									key={`singleWinner-${playerIdOption}`}
+									inline
+									type='radio'
+									label={
+										groupPlayers.find(
+											(player) =>
+												player.id === playerIdOption
+										)?.name || `Player ${playerIdOption}`
+									}
+									name='singleWinner'
+									id={`singleWinner-${playerIdOption}`}
+									checked={singleWinnerId === playerIdOption}
+									onChange={() =>
+										onSingleWinnerChange(playerIdOption)
+									}
+								/>
+							))}
+						</div>
+					</Form.Group>
+				)}
 		</>
 	);
 
 	const TeamWinnerGroup = () => (
 		<>
-			{winCondition === 'team' && selectedPlayerIds.length > 0 && (
+			{winCondition === 'COOPERATIVE' && selectedPlayerIds.length > 0 && (
 				<Form.Group className='mt-2'>
 					<Form.Label>Winning team</Form.Label>
 					<div>
@@ -246,41 +335,17 @@ const PlayersStep = (props: PlayersStepProps) => {
 		</>
 	);
 
-	const CoopOutcomeGroup = () => (
-		<>
-			{winCondition === 'coop' && selectedPlayerIds.length > 0 && (
-				<Form.Group className='mt-2'>
-					<Form.Label>Game outcome</Form.Label>
-					<div>
-						<Form.Check
-							inline
-							type='radio'
-							label='Win'
-							name='coopWinner'
-							id='coopWinner-true'
-							checked={coopWinner === true}
-							onChange={() => onCoopWinnerChange(true)}
-						/>
-						<Form.Check
-							inline
-							type='radio'
-							label='Lose'
-							name='coopWinner'
-							id='coopWinner-false'
-							checked={coopWinner === false}
-							onChange={() => onCoopWinnerChange(false)}
-						/>
-					</div>
-				</Form.Group>
-			)}
-		</>
-	);
-
 	return (
 		<div className='vstack gap-2'>
 			<Form>
 				<Form.Group>
 					<Form.Label>Select players</Form.Label>
+					<div className='mb-2'>
+						<small className='text-muted'>
+							<strong>Win Condition:</strong>{' '}
+							{getWinConditionText(winCondition)}
+						</small>
+					</div>
 					<Select
 						isMulti
 						options={groupPlayers.map((player) => ({
@@ -303,19 +368,38 @@ const PlayersStep = (props: PlayersStepProps) => {
 								: [];
 
 							const addedPlayers = newSelectedIds.filter(
-								(id) => !selectedPlayerIds.includes(id)
+								(playerId) =>
+									!selectedPlayerIds.includes(playerId)
 							);
 							const removedPlayers = selectedPlayerIds.filter(
-								(id) => !newSelectedIds.includes(id)
+								(playerId) => !newSelectedIds.includes(playerId)
 							);
 
-							[...addedPlayers, ...removedPlayers].forEach((id) =>
-								onTogglePlayer(id)
+							[...addedPlayers, ...removedPlayers].forEach(
+								(playerId) => onTogglePlayer(playerId)
 							);
 						}}
 						placeholder='Select players...'
 						className='mb-3'
 					/>
+
+					{winCondition === 'COOPERATIVE' && (
+						<Form.Group className='mb-3'>
+							<Form.Label>Number of teams</Form.Label>
+							<Form.Select
+								value={numTeams || 2}
+								onChange={(event) =>
+									onNumTeamsChange(Number(event.target.value))
+								}
+							>
+								{Array.from({ length: 9 }, (_, index) => (
+									<option key={index + 2} value={index + 2}>
+										{index + 2} teams
+									</option>
+								))}
+							</Form.Select>
+						</Form.Group>
+					)}
 
 					<SelectedPlayersList />
 				</Form.Group>
@@ -324,29 +408,34 @@ const PlayersStep = (props: PlayersStepProps) => {
 				<TeamEmptinessWarning />
 				<SingleWinnerGroup />
 				<TeamWinnerGroup />
-				<CoopOutcomeGroup />
-				{winCondition === 'single' &&
+				{winCondition === 'FIRST_TO_FINISH' &&
 					selectedPlayerIds.length > 0 &&
 					singleWinnerId === null && (
 						<div className='text-danger small mt-1'>
 							Select a winning player.
 						</div>
 					)}
-				{winCondition === 'team' &&
+				{winCondition === 'COOPERATIVE' &&
 					selectedPlayerIds.length > 0 &&
 					teamWinner === '' && (
 						<div className='text-danger small mt-1'>
 							Select a winning team.
 						</div>
 					)}
-				{winCondition === 'coop' &&
-					selectedPlayerIds.length > 0 &&
-					coopWinner === undefined && (
-						<div className='text-danger small mt-1'>
-							Select whether the team won or lost.
-						</div>
-					)}
 			</Form>
+
+			{/* Points Modal */}
+			<RecordPointsModal
+				show={pointsModalShow}
+				onHide={handleClosePointsModal}
+				playerName={selectedPlayerForPoints?.name || ''}
+				currentPoints={
+					selectedPlayerForPoints
+						? playerPoints[selectedPlayerForPoints.id] || 0
+						: 0
+				}
+				onSave={handleSavePoints}
+			/>
 		</div>
 	);
 };

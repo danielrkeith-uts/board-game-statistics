@@ -30,6 +30,19 @@ public class PostgreSqlGameRecordRepository implements IGameRecordRepository {
         int playedGameId = (int) playedGame[0];
         LocalDate datePlayed = (LocalDate) playedGame[1];
 
+        // Get game name and win condition
+        String gameName = jdbcTemplate.queryForObject(
+            "SELECT name FROM bgs.board_game WHERE id = ?", 
+            String.class, 
+            request.gameId()
+        );
+        
+        String winCondition = jdbcTemplate.queryForObject(
+            "SELECT win_condition FROM bgs.board_game WHERE id = ?", 
+            String.class, 
+            request.gameId()
+        );
+
         // Insert player results
         for (int i = 0; i < request.playerIds().size(); i++) {
             Integer accountId = request.playerIds().get(i);
@@ -47,6 +60,8 @@ public class PostgreSqlGameRecordRepository implements IGameRecordRepository {
             playedGameId,
             request.groupId(),
             request.gameId(),
+            gameName,
+            winCondition,
             datePlayed.format(DateTimeFormatter.ISO_LOCAL_DATE),
             request.playerIds(),
             request.points(),
@@ -57,7 +72,13 @@ public class PostgreSqlGameRecordRepository implements IGameRecordRepository {
 
     @Override
     public List<GameRecordResponse> getGameRecordsByGroup(int groupId) {
-        String sql = "SELECT played_game_id, game_id, group_id, date_played FROM bgs.played_game WHERE group_id = ? ORDER BY date_played DESC";
+        String sql = """
+            SELECT pg.played_game_id, pg.game_id, pg.group_id, pg.date_played, bg.name as game_name, bg.win_condition
+            FROM bgs.played_game pg 
+            INNER JOIN bgs.board_game bg ON pg.game_id = bg.id 
+            WHERE pg.group_id = ? 
+            ORDER BY pg.date_played DESC
+            """;
         return jdbcTemplate.query(sql, (rs, rowNum) -> mapPlayedGame(rs), groupId);
     }
 
@@ -83,6 +104,8 @@ public class PostgreSqlGameRecordRepository implements IGameRecordRepository {
         int playedGameId = rs.getInt("played_game_id");
         int gameId = rs.getInt("game_id");
         int groupId = rs.getInt("group_id");
+        String gameName = rs.getString("game_name");
+        String winCondition = rs.getString("win_condition");
         String datePlayed = rs.getDate("date_played").toLocalDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
 
         // Fetch player results for this played game
@@ -102,6 +125,8 @@ public class PostgreSqlGameRecordRepository implements IGameRecordRepository {
             playedGameId,
             groupId,
             gameId,
+            gameName,
+            winCondition,
             datePlayed,
             playerIds,
             points,

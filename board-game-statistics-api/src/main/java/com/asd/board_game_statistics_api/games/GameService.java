@@ -5,14 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
+
+import static com.asd.board_game_statistics_api.model.Game.ALLOWED_WIN_CONDITIONS;
 
 @Service
 public class GameService implements IGameService {
-    private static final Set<String> ALLOWED_WIN_CONDITIONS = Set.of(
-            "HIGH_SCORE", "LOW_SCORE", "FIRST_TO_FINISH", "COOPERATIVE"
-    );
-
     @Autowired private IGameRepository gameRepository;
     @Autowired private IOwnedGameRepository ownedRepository;
 

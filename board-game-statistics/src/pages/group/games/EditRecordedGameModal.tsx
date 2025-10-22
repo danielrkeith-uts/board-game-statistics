@@ -22,7 +22,8 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 		null
 	);
 
-	const { getGroupPermissions } = useContext(PermissionsContext);
+	const { getGroupPermissions, loading: permissionsLoading } =
+		useContext(PermissionsContext);
 	const thisGroupsPermissions = getGroupPermissions(group.id);
 
 	useEffect(() => {
@@ -58,7 +59,8 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 				<Modal.Header closeButton>
 					<Modal.Title>
 						{visibleRecord
-							? `Game #${visibleRecord.gameId}`
+							? visibleRecord.gameName ||
+								`Game #${visibleRecord.gameId}`
 							: 'Game details'}
 					</Modal.Title>
 				</Modal.Header>
@@ -89,14 +91,19 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 											const team = visibleRecord
 												.playerTeams[index]
 												? `Team ${visibleRecord.playerTeams[index]}`
-												: 'Solo/Co-op';
+												: 'Unassigned';
 											const isWinner =
 												visibleRecord.hasWon[index];
 											return (
 												<li key={playerId}>
-													{playerName} - {points}{' '}
-													points ({team}){' '}
-													{isWinner ? '🏆' : ''}
+													{playerName}
+													{visibleRecord.winCondition !==
+														'FIRST_TO_FINISH' &&
+														` - ${points} points`}
+													{visibleRecord.winCondition ===
+														'COOPERATIVE' &&
+														` (${team})`}
+													{isWinner ? ' 🏆' : ''}
 												</li>
 											);
 										}
@@ -110,7 +117,10 @@ const EditRecordedGameModal = (props: EditRecordedGameModalProps) => {
 					<Button variant='secondary' onClick={onClose}>
 						Close
 					</Button>
-					{thisGroupsPermissions?.includes('MANAGE_GAMES_PLAYED') && (
+					{(permissionsLoading ||
+						thisGroupsPermissions?.includes(
+							'MANAGE_GAMES_PLAYED'
+						)) && (
 						<Button variant='danger' onClick={handleDelete}>
 							Delete
 						</Button>
