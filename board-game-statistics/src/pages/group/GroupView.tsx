@@ -138,7 +138,7 @@ const GroupView = () => {
 						<CreateGroupButton
 							onClick={handleOpenCreateGroupModal}
 						/>
-						<h5 />
+						<div className="mb-3" />
 						<EnterInviteCodeView />
 					</div>
 				</>
