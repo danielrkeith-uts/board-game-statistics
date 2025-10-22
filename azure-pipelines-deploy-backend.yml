@@ -3,6 +3,8 @@ trigger:
     include:
       - main
 
+pr: none
+
 variables:
 
   # Azure Resource Manager connection created during pipeline creation
