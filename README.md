@@ -172,7 +172,7 @@ https://configu.com/blog/setting-env-variables-in-windows-linux-macos-beginners-
 Guide:  
 https://www.jetbrains.com/help/idea/program-arguments-and-environment-variables.html#environment_variables
 
-If doing this, a `.env` file will need to be created inside `board-game-statistics` with the variable `BGS_BACKEND_URL`
+If doing this, two separate `.env` files will need to be created - one inside `board-game-statistics` with the variable `BGS_BACKEND_URL`, and one in `board-game-statistics-api` (or wherever IntelliJ is set to point) with the rest of the variables.
 
 
 ## Setup local PostgreSQL database
