@@ -1,5 +1,4 @@
-// TODO - move this to an ENV variable for deployment
-const baseUrl = 'http://localhost:8080/api';
+const baseUrl = import.meta.env.BGS_BACKEND_URL;
 
 export const apiPost = (endpoint: string, body?: object) =>
 	fetch(baseUrl + endpoint, {

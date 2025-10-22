@@ -155,6 +155,7 @@ These environment variables must be set to a value of your choice:
 - BGS_ADMIN_PASSWORD (A password of your choosing)
 - BGS_MAIL_USERNAME (See pinned messages in discord for username)
 - BGS_MAIL_PASSWORD (See pinned messages in discord for password)
+- BGS_BACKEND_URL (The url that the backend is running on)
 
 **Write these passwords down somewhere**
 
@@ -167,6 +168,8 @@ https://configu.com/blog/setting-env-variables-in-windows-linux-macos-beginners-
 ### Set environment variables in IntelliJ run configuration
 Guide:  
 https://www.jetbrains.com/help/idea/program-arguments-and-environment-variables.html#environment_variables
+
+If doing this, a `.env` file will need to be created inside `board-game-statistics` with the variable `BGS_BACKEND_URL`
 
 
 ## Setup local PostgreSQL database
