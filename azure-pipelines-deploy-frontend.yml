@@ -9,24 +9,31 @@ variables:
 
 steps:
 - task: NodeTool@0
+  displayName: 'Install Node.js'
   inputs:
       versionSpec: '20.x'
-  displayName: 'Install Node.js'
 
 - task: Npm@1
+  displayName: 'Npm Install'
   inputs:
     command: 'install'
     workingDir: 'board-game-statistics'
-  displayName: 'Npm Install'
 
 - task: Npm@1
+  displayName: 'Build'
   env:
     BGS_BACKEND_URL: $(BACKEND_URL)
   inputs:
     command: 'custom'
     workingDir: 'board-game-statistics'
     customCommand: 'run build'
-  displayName: 'Build'
+
+- task: CopyFiles@2
+  displayName: Copy config file to build folder
+  inputs:
+    SourceFolder: 'board-game-statistics'
+    Contents: 'staticwebapp.config.json'
+    TargetFolder: 'board-game-statistics/dist'
 
 - task: AzureStaticWebApp@0
   displayName: 'Azure Static Web App Deploy: board-game-statistics'
