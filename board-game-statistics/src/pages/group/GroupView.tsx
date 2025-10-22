@@ -12,6 +12,7 @@ import LeaveGroupModal from './LeaveGroupModal.tsx';
 import CreateGroupButton from './CreateGroupButton.tsx';
 import { PermissionsContextProvider } from '../../context/PermissionsContext.tsx';
 import { AlertContext } from '../../context/AlertContext.tsx';
+import EnterInviteCodeView from './EnterInviteCodeView.tsx';
 
 const GroupView = () => {
 	const { setSuccess, setError } = useContext(AlertContext);
@@ -131,10 +132,16 @@ const GroupView = () => {
 					handleOpenLeaveGroupModal={handleOpenLeaveGroupModal}
 				/>
 			) : (
-				<div className='container centerContainer flex-column'>
-					<h4>You are currently not a member of any groups.</h4>
-					<CreateGroupButton onClick={handleOpenCreateGroupModal} />
-				</div>
+				<>
+					<div className='container centerContainer flex-column'>
+						<h4>You are currently not a member of any groups.</h4>
+						<CreateGroupButton
+							onClick={handleOpenCreateGroupModal}
+						/>
+						<div className="mb-3" />
+						<EnterInviteCodeView />
+					</div>
+				</>
 			)}
 		</PermissionsContextProvider>
 	);

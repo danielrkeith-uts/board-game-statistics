@@ -51,10 +51,10 @@ CREATE TABLE bgs.board_game (
 );
 
 CREATE TABLE bgs.owned_game (
+    owned_game_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     account_id INT NOT NULL REFERENCES bgs.account(id) ON DELETE CASCADE,
     game_id    INT NOT NULL REFERENCES bgs.board_game(id) ON DELETE CASCADE,
-    added_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT owned_pk PRIMARY KEY (account_id, game_id)
+    added_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE bgs.temp_owned_game(

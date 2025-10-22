@@ -1,0 +1,48 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pr: none
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  azureStaticDeploymentToken: '6bb73151b54b08810367bbf2d55df63bcdd4130b1331827380ecaca536b012c203-5cea05e1-f234-4489-b51d-c695f53d5ea90001826037351e00'
+
+steps:
+- task: NodeTool@0
+  displayName: 'Install Node.js'
+  inputs:
+      versionSpec: '20.x'
+
+- task: Npm@1
+  displayName: 'Npm Install'
+  inputs:
+    command: 'install'
+    workingDir: 'board-game-statistics'
+
+- task: Npm@1
+  displayName: 'Build'
+  env:
+    BGS_BACKEND_URL: $(BACKEND_URL)
+  inputs:
+    command: 'custom'
+    workingDir: 'board-game-statistics'
+    customCommand: 'run build'
+
+- task: CopyFiles@2
+  displayName: Copy config file to build folder
+  inputs:
+    SourceFolder: 'board-game-statistics'
+    Contents: 'staticwebapp.config.json'
+    TargetFolder: 'board-game-statistics/dist'
+
+- task: AzureStaticWebApp@0
+  displayName: 'Azure Static Web App Deploy: board-game-statistics'
+  inputs:
+    app_location: 'board-game-statistics/dist'
+    skip_app_build: true
+    skip_api_build: true
+    azure_static_web_apps_api_token: '$(azureStaticDeploymentToken)'

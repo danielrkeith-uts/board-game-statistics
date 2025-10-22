@@ -118,7 +118,9 @@ INSERT INTO bgs.owned_game (account_id, game_id) VALUES
 (4, 2), -- Dave owns Carcassonne
 (5, 3), -- Eve owns Terraforming Mars
 (6, 1), -- Frank owns Catan
-(7, 4); -- Grace owns 7 Wonders
+(7, 4), -- Grace owns 7 Wonders
+(8, 4),
+(8, 7);
 
 -- Sample owned games
 INSERT INTO bgs.temp_owned_game (game_id, group_id, game_name) VALUES
@@ -240,3 +242,33 @@ INSERT INTO bgs.invitation (user_email, group_id, inviteCode) VALUES
 ('friend@example.com', 1, 555004),    -- Another invitation to Board Gamers
 ('colleague@example.com', 4, 555005), -- Invitation to Weekend Warriors
 ('family@example.com', 5, 555006);    -- Invitation to Family Fun group
+
+
+INSERT INTO bgs.played_game (game_id, group_id)
+VALUES (1, 1);
+WITH last3 AS (SELECT played_game_id FROM bgs.played_game ORDER BY played_game_id DESC LIMIT 1)
+INSERT INTO bgs.player_result (played_game_id, account_id, points, player_team, has_won)
+SELECT played_game_id, 1, 90, 1, FALSE FROM last3 UNION ALL
+SELECT played_game_id, 2, 85, 1, FALSE FROM last3 UNION ALL
+SELECT played_game_id, 5, 160, 2, TRUE  FROM last3 UNION ALL
+SELECT played_game_id, 7, 155, 2, TRUE  FROM last3 UNION ALL
+SELECT played_game_id, 9, 100, 3, FALSE FROM last3;
+
+INSERT INTO bgs.played_game (game_id, group_id)
+VALUES (1, 1);
+WITH last3 AS (SELECT played_game_id FROM bgs.played_game ORDER BY played_game_id DESC LIMIT 1)
+INSERT INTO bgs.player_result (played_game_id, account_id, points, player_team, has_won)
+SELECT played_game_id, 1, 90, 1, FALSE FROM last3 UNION ALL
+SELECT played_game_id, 2, 85, 1, FALSE FROM last3 UNION ALL
+SELECT played_game_id, 5, 160, 2, TRUE  FROM last3 UNION ALL
+SELECT played_game_id, 7, 155, 2, TRUE  FROM last3 UNION ALL
+SELECT played_game_id, 9, 100, 3, FALSE FROM last3;
+INSERT INTO bgs.played_game (game_id, group_id)
+VALUES (1, 1);
+WITH last3 AS (SELECT played_game_id FROM bgs.played_game ORDER BY played_game_id DESC LIMIT 1)
+INSERT INTO bgs.player_result (played_game_id, account_id, points, player_team, has_won)
+SELECT played_game_id, 1, 90, 1, FALSE FROM last3 UNION ALL
+SELECT played_game_id, 2, 85, 1, FALSE FROM last3 UNION ALL
+SELECT played_game_id, 5, 160, 2, TRUE  FROM last3 UNION ALL
+SELECT played_game_id, 7, 155, 2, TRUE  FROM last3 UNION ALL
+SELECT played_game_id, 9, 100, 3, FALSE FROM last3;
