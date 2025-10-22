@@ -31,7 +31,7 @@ public class LeaderboardRepository implements ILeaderboardRepository {
     @Override
     public List<LeaderboardResponse> getLeaderboard(int groupId, int gameId) {
         String sql = """
-                SELECT bgs.player_result.account_id, bgs.account.first_name, bgs.account.last_name, count(bgs.player_result.has_won = TRUE) AS Wins
+                SELECT bgs.player_result.account_id, bgs.account.first_name, bgs.account.last_name, SUM(CASE WHEN bgs.player_result.has_won = TRUE THEN 1 ELSE 0 END) AS Wins
                 FROM bgs.group_membership
                 INNER JOIN bgs.account
                 ON bgs.account.id = bgs.group_membership.account_id
