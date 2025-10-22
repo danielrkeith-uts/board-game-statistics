@@ -41,7 +41,7 @@ public class LeaderboardRepository implements ILeaderboardRepository {
                 ON bgs.player_result.played_game_id = bgs.played_game.played_game_id
                 WHERE bgs.group_membership.group_id = ?
                 AND bgs.played_game.game_id = ?
-                GROUP BY bgs.player_result.account_id, bgs.player_result.account_id, bgs.account.first_name, bgs.account.last_name
+                GROUP BY bgs.player_result.account_id, bgs.account.first_name, bgs.account.last_name
                 ORDER BY Wins DESC;
         """;
         return jdbcTemplate.query(sql, LeaderboardResponse::fromRow, groupId, gameId);
