@@ -20,6 +20,8 @@ steps:
   displayName: 'Npm Install'
 
 - task: Npm@1
+  env:
+    BGS_BACKEND_URL: $(BACKEND_URL)
   inputs:
     command: 'custom'
     workingDir: 'board-game-statistics'
