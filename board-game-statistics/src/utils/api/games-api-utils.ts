@@ -1,6 +1,6 @@
 import { apiDelete, apiGet, apiPost } from './api-utils';
 import type { RecordGamePayload } from '../types';
-import type { Game, TempWinCondition } from '../types';
+import type { Game, WinCondition } from '../types';
 
 export const apiRecordGame = async (payload: RecordGamePayload) => {
 	const res = await apiPost('/results/record', payload);
@@ -71,7 +71,7 @@ export const apiRemoveOwnedGame = (gameId: number): Promise<boolean> =>
 export const apiCreateOrAddOwnedCustom = (payload: {
 	name: string;
 	publisher?: string | null;
-	winCondition: TempWinCondition;
+	winCondition: WinCondition;
 	customWinCondition?: string | null;
 }): Promise<Game> =>
 	apiPost('/games/owned/custom', payload).then(async (res) => {
