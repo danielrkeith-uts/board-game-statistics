@@ -55,6 +55,7 @@ jobs:
       BGS_DB_USERNAME: ""
       BGS_DB_PASSWORD: ""
       BGS_ADMIN_PASSWORD: ""
+      BGS_FRONTEND_URL: ""
       BGS_MAIL_USERNAME: $(MAIL_USERNAME)
       BGS_MAIL_PASSWORD: $(MAIL_PASSWORD)
     inputs:
