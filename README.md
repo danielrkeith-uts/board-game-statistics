@@ -156,6 +156,9 @@ These environment variables must be set to a value of your choice:
 - BGS_MAIL_USERNAME (See pinned messages in discord for username)
 - BGS_MAIL_PASSWORD (See pinned messages in discord for password)
 - BGS_BACKEND_URL (The url that the backend is running on)
+  - If running locally, this is likely `http://localhost:8080`
+- BGS_FRONTEND_URL (The url that the frontend is running on)
+  - If running locally, this is likely `http://localhost:3000`
 
 **Write these passwords down somewhere**
 
