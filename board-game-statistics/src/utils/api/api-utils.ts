@@ -1,4 +1,4 @@
-const baseUrl = import.meta.env.BGS_BACKEND_URL;
+const baseUrl = import.meta.env.BGS_BACKEND_URL + '/api';
 
 export const apiPost = (endpoint: string, body?: object) =>
 	fetch(baseUrl + endpoint, {
