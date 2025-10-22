@@ -22,8 +22,8 @@ const LeaderboardTableView = (props: LeaderboardTableViewProps) => {
 									onClick={() => {}}
 								>
 									{leaderboardRow.firstName}{' '}
-									{leaderboardRow.lastName} - Points:{' '}
-									{leaderboardRow.points}
+									{leaderboardRow.lastName} - Wins:{' '}
+									{leaderboardRow.wins}
 								</a>
 							)
 						)
