@@ -141,4 +141,9 @@ public class GroupService implements IGroupService {
         groupMembershipRepository.create(groupId, accountId, permissions, Instant.now());
     }
 
+    @Override
+    public void removeGroupMember(int accountId, int groupId) {
+        groupMembershipRepository.delete(groupId, accountId);
+    }
+
 }

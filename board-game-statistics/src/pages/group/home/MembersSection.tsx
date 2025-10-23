@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 import { PermissionsContext } from '../../../context/PermissionsContext';
 import { apiGetGroupOwner } from '../../../utils/api/permissions-api-utils';
 import EditPermissionsModal from './EditPermissionsModal';
+import { apiRemoveGroupMember } from '../../../utils/api/group-api-utils';
 
 interface MembersSectionProps {
 	group: Group;
@@ -36,6 +37,11 @@ const MembersSection = (props: MembersSectionProps) => {
 	const editPermissions = (member: GroupMember) => {
 		setEditPermissionsModalMember(member);
 		setShowEditPermissions(true);
+	};
+
+	const removeMember = (member: GroupMember) => {
+		apiRemoveGroupMember(member.id, group.id);
+		window.location.reload();
 	};
 
 	return (
@@ -81,6 +87,7 @@ const MembersSection = (props: MembersSectionProps) => {
 														editPermissions(member);
 														break;
 													case 'removeMember':
+														removeMember(member);
 														break;
 													default:
 														break;

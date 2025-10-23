@@ -1,0 +1,3 @@
+package com.asd.board_game_statistics_api.group.dto;
+
+public record RemoveGroupMemberRequest(int groupId, int accountId) { }
