@@ -22,10 +22,8 @@ function getErrorMessage(err: unknown): string {
 export default function AddCustomGameModal({ show, onClose, onAdded }: Props) {
 	const [name, setName] = useState('');
 	const [publisher, setPublisher] = useState('');
-	const [winCondition, setWinCondition] = useState<WinCondition | 'CUSTOM'>(
-		'HIGH_SCORE'
-	);
-	const [customWinCondition, setCustomWinCondition] = useState('');
+	const [winCondition, setWinCondition] =
+		useState<WinCondition>('HIGH_SCORE');
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -34,7 +32,6 @@ export default function AddCustomGameModal({ show, onClose, onAdded }: Props) {
 			setName('');
 			setPublisher('');
 			setWinCondition('HIGH_SCORE');
-			setCustomWinCondition('');
 			setSubmitting(false);
 			setError(null);
 		}
@@ -48,22 +45,13 @@ export default function AddCustomGameModal({ show, onClose, onAdded }: Props) {
 			setError('Please enter a game name.');
 			return;
 		}
-		if (winCondition === 'CUSTOM' && !customWinCondition.trim()) {
-			setError('Please describe your custom win condition.');
-			return;
-		}
 
 		setSubmitting(true);
 		try {
 			const game = await apiCreateOrAddOwnedCustom({
 				name: name.trim(),
 				publisher: publisher.trim() || null,
-				winCondition:
-					winCondition === 'CUSTOM' ? 'HIGH_SCORE' : winCondition,
-				customWinCondition:
-					winCondition === 'CUSTOM'
-						? customWinCondition.trim()
-						: null,
+				winCondition,
 			});
 			onAdded?.(game);
 			onClose();
@@ -113,9 +101,7 @@ export default function AddCustomGameModal({ show, onClose, onAdded }: Props) {
 						<Form.Select
 							value={winCondition}
 							onChange={(e) =>
-								setWinCondition(
-									e.target.value as WinCondition | 'CUSTOM'
-								)
+								setWinCondition(e.target.value as WinCondition)
 							}
 						>
 							<option value='HIGH_SCORE'>
@@ -128,28 +114,8 @@ export default function AddCustomGameModal({ show, onClose, onAdded }: Props) {
 							<option value='COOPERATIVE'>
 								Co-operative / team success
 							</option>
-							<option value='CUSTOM'>Custom (describe)</option>
 						</Form.Select>
 					</Form.Group>
-
-					{winCondition === 'CUSTOM' && (
-						<div className='form-floating mt-2'>
-							<textarea
-								id='customWinCondition'
-								className='form-control'
-								placeholder='Describe the win condition'
-								style={{ height: 100 }}
-								value={customWinCondition}
-								onChange={(e) =>
-									setCustomWinCondition(e.target.value)
-								}
-								required
-							/>
-							<label htmlFor='customWinCondition'>
-								Describe your custom win condition
-							</label>
-						</div>
-					)}
 				</Modal.Body>
 				<Modal.Footer>
 					<Button
