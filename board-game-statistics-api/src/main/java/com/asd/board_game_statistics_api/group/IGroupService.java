@@ -16,4 +16,6 @@ public interface IGroupService {
     boolean belongsToGroup(int accountId, int groupId);
 
     void addGroupMember(int accountId, int groupId);
+
+    void removeGroupMember(int accountId, int groupId);
 }

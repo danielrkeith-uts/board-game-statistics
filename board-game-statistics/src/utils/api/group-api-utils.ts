@@ -49,3 +49,20 @@ export const apiLeaveGroup = (groupId: number): Promise<boolean> =>
 
 		throw new Error(`Error leaving group.`);
 	});
+
+export const apiRemoveGroupMember = (
+	accountId: number,
+	groupId: number
+): Promise<boolean> =>
+	apiPost('/group/remove', { groupId, accountId }).then((res) => {
+		if (res.ok) {
+			return true;
+		}
+		if (res.status === 400) {
+			return res.text().then((err) => {
+				throw new Error(err);
+			});
+		}
+
+		throw new Error(`Error removing group member.`);
+	});
