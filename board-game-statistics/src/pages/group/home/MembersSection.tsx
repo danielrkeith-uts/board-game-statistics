@@ -40,8 +40,9 @@ const MembersSection = (props: MembersSectionProps) => {
 	};
 
 	const removeMember = (member: GroupMember) => {
-		apiRemoveGroupMember(member.id, group.id);
-		window.location.reload();
+		apiRemoveGroupMember(member.id, group.id).then(() =>
+			window.location.reload()
+		);
 	};
 
 	return (
