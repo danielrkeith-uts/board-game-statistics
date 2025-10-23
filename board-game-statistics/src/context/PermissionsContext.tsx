@@ -56,7 +56,7 @@ const PermissionsContextProvider = ({
 				setPermissions(null);
 			})
 			.finally(() => setLoading(false));
-	}, []);
+	}, [account]);
 
 	const contextValue: PermissionsContextType = {
 		permissions,
