@@ -13,9 +13,11 @@ import CreateGroupButton from './CreateGroupButton.tsx';
 import { PermissionsContextProvider } from '../../context/PermissionsContext.tsx';
 import { AlertContext } from '../../context/AlertContext.tsx';
 import EnterInviteCodeView from './EnterInviteCodeView.tsx';
+import { AccountContext } from '../../context/AccountContext.tsx';
 
 const GroupView = () => {
 	const { setSuccess, setError } = useContext(AlertContext);
+	const { loading } = useContext(AccountContext);
 
 	// Data state
 	const [groups, setGroups] = useState<Group[]>([]);
@@ -44,20 +46,22 @@ const GroupView = () => {
 
 	// On page load, get groups for current user
 	useEffect(() => {
-		setIsLoading(true);
+		if (!loading) {
+			setIsLoading(true);
 
-		apiGetGroupsByAccountId()
-			.then((groups) => {
-				setGroups(groups ? groups : []);
+			apiGetGroupsByAccountId()
+				.then((groups) => {
+					setGroups(groups ? groups : []);
 
-				if (groups.length > 0) {
-					setCurrentGroup(groups[0]);
-				}
-			})
-			.catch((err: Error) => setError(err.message))
-			.finally(() =>
-				setTimeout(() => setIsLoading(false), minPageLoadTime)
-			);
+					if (groups.length > 0) {
+						setCurrentGroup(groups[0]);
+					}
+				})
+				.catch((err: Error) => setError(err.message))
+				.finally(() =>
+					setTimeout(() => setIsLoading(false), minPageLoadTime)
+				);
+		}
 	}, []);
 
 	const handleCreateGroup = (e: React.FormEvent<HTMLFormElement>) => {
@@ -138,7 +142,7 @@ const GroupView = () => {
 						<CreateGroupButton
 							onClick={handleOpenCreateGroupModal}
 						/>
-						<div className="mb-3" />
+						<div className='mb-3' />
 						<EnterInviteCodeView />
 					</div>
 				</>
