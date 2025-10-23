@@ -10,7 +10,7 @@ const HomeView = () => {
 		<>
 			<div className='container d-flex flex-column justify-content-center align-items-center mb-3'>
 				<h1>Board Games Statistics</h1>
-				<h4 className='mt-0'>Track games with your friends!</h4>
+				<h4 className='mt-0'>Track games with your enemies!</h4>
 				{!account && (
 					<Link to={CREATE_ACCOUNT_PAGE_URL}>
 						<button className='btn btn-primary mt-3'>
