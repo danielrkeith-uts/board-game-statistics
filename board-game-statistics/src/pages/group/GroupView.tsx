@@ -64,7 +64,7 @@ const GroupView = () => {
 			.finally(() =>
 				setTimeout(() => setIsLoading(false), minPageLoadTime)
 			);
-	}, []);
+	}, [account]);
 
 	const handleCreateGroup = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
