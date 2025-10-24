@@ -13,9 +13,11 @@ import CreateGroupButton from './CreateGroupButton.tsx';
 import { PermissionsContextProvider } from '../../context/PermissionsContext.tsx';
 import { AlertContext } from '../../context/AlertContext.tsx';
 import EnterInviteCodeView from './EnterInviteCodeView.tsx';
+import { AccountContext } from '../../context/AccountContext.tsx';
 
 const GroupView = () => {
 	const { setSuccess, setError } = useContext(AlertContext);
+	const { account } = useContext(AccountContext);
 
 	// Data state
 	const [groups, setGroups] = useState<Group[]>([]);
@@ -44,6 +46,10 @@ const GroupView = () => {
 
 	// On page load, get groups for current user
 	useEffect(() => {
+		if (!account) {
+			return;
+		}
+
 		setIsLoading(true);
 
 		apiGetGroupsByAccountId()
@@ -58,7 +64,7 @@ const GroupView = () => {
 			.finally(() =>
 				setTimeout(() => setIsLoading(false), minPageLoadTime)
 			);
-	}, []);
+	}, [account]);
 
 	const handleCreateGroup = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -138,7 +144,7 @@ const GroupView = () => {
 						<CreateGroupButton
 							onClick={handleOpenCreateGroupModal}
 						/>
-						<div className="mb-3" />
+						<div className='mb-3' />
 						<EnterInviteCodeView />
 					</div>
 				</>

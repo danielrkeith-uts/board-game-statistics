@@ -122,16 +122,6 @@ INSERT INTO bgs.owned_game (account_id, game_id) VALUES
 (8, 4),
 (8, 7);
 
--- Sample owned games
-INSERT INTO bgs.temp_owned_game (game_id, group_id, game_name) VALUES
-(5, 1, 'Jails and Jaberwocks'),
-(6, 1, 'Worms and Walkways'),
-(7, 1, 'Chess 2.0'),
-(8, 1, 'One'),
-(9, 1, 'Dice'),
-(10, 1, 'Duopoly'),
-(11, 2, 'Game Board');
-
 -- Sample played games
 INSERT INTO bgs.played_game (game_id, group_id, date_played)
 VALUES (5, 1, CURRENT_DATE - INTERVAL '1 day');

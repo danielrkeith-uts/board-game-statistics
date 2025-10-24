@@ -57,13 +57,6 @@ CREATE TABLE bgs.owned_game (
     added_timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE bgs.temp_owned_game(
-    game_id INT PRIMARY KEY,
-    group_id INT NOT NULL,
-    game_name VARCHAR(100),
-    FOREIGN KEY (group_id) REFERENCES bgs.game_group(id)
-);
-
 CREATE TABLE bgs.played_game (
     played_game_id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     game_id INT NOT NULL,
