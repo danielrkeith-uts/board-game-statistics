@@ -1,6 +1,11 @@
 # Board Game Statistics
 Project for 41026 Advanced Software Development
 
+## Accessing production website
+This project is hosted on `https://delightful-tree-037351e00.3.azurestaticapps.net`
+
+_Note: If on Safari, the following setting must be disabled: Settings > Privacy > Website tracking: Prevent cross-site tracking_
+
 ## Project structure and responsibilities
 This project is divided into a frontend folder `board-game-statistics` and a backend folder `board-game-statistics-api`.
 Each of these components have parts relevant to each feature.
