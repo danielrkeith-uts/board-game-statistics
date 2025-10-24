@@ -37,8 +37,6 @@ public class GameOwnedFeatureTests extends TestsWithMockedDatabase {
 
         Assertions.assertNotNull(game);
         Assertions.assertTrue(ownedRepo.exists(accountId, game.id()));
-//        Assertions.assertEquals("HIGH_SCORE", profileRepo.getWinCondition(accountId, game.id()));
-//        Assertions.assertNull(profileRepo.getCustomWinCondition(accountId, game.id()));
     }
 
     @Test
@@ -62,7 +60,6 @@ public class GameOwnedFeatureTests extends TestsWithMockedDatabase {
 
         Assertions.assertEquals(g1.id(), g2.id(), "Should resolve to the same catalog game");
         Assertions.assertTrue(ownedRepo.exists(accountId, g1.id()));
-//        Assertions.assertEquals("FIRST_TO_FINISH", profileRepo.getWinCondition(accountId, g1.id()));
     }
 
     @Test
@@ -77,12 +74,10 @@ public class GameOwnedFeatureTests extends TestsWithMockedDatabase {
                 null
         );
         Assertions.assertTrue(ownedRepo.exists(accountId, game.id()));
-//        Assertions.assertEquals("COOPERATIVE", profileRepo.getWinCondition(accountId, game.id()));
 
         gameService.removeOwned(accountId, game.id());
 
         Assertions.assertFalse(ownedRepo.exists(accountId, game.id()), "Owned row should be gone");
-//        Assertions.assertNull(profileRepo.getWinCondition(accountId, game.id()), "Profile should be deleted too");
     }
 
     @Test
@@ -99,6 +94,5 @@ public class GameOwnedFeatureTests extends TestsWithMockedDatabase {
                         null 
                 )
         );
-//        Assertions.assertTrue(ex.getMessage().toLowerCase().contains("customwincondition"));
     }
 }
